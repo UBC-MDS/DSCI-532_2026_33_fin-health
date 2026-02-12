@@ -105,9 +105,25 @@ app_ui = ui.page_fillable(
                 ui.p("[Bar chart placeholder — yearly revenue from 2009-2023]"),
             ),
         ),
-    )
-)
 
+        # Financial health row
+        ui.layout_columns(
+            # Vertical label
+            ui.div(ui.div("FINANCIAL HEALTH", class_="section-label"), style="display:flex; align-items:stretch;"),
+
+            # Current Ratio card
+            ui.card(
+                ui.card_header("Current Ratio"),
+                ui.div(
+                    ui.span("0.88", class_="kpi-big"),
+                    ui.br(),
+                    ui.span("Current Ratio over time", class_="kpi-label"),
+                ),
+                ui.p("[Line chart placeholder — current ratio by year]"),
+            ),
+        ),     
+    ),
+)
 
 # Server
 def server(input, output, session):
