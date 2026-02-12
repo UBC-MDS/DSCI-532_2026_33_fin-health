@@ -27,6 +27,11 @@ app_ui = ui.page_fillable(
             letter-spacing: 4px;
             font-size: 0.7em;
         }
+        .label-wrapper {
+            display: flex;
+            align-items: stretch;
+            height: 100%;
+        }
         .section-label-blue { background-color: #2980b9; }
         .section-label-red { background-color: #c0392b; }
         .kpi-big { font-size: 2em; font-weight: bold; }
@@ -64,7 +69,7 @@ app_ui = ui.page_fillable(
         # Profitability row
         ui.layout_columns(
             # Vertical label
-            ui.div(ui.div("PROFITABILITY", class_="section-label section-label-blue"), style="display:flex; align-items:stretch;"),
+            ui.div(ui.div("PROFITABILITY", class_="section-label section-label-blue"), class_="label-wrapper"),
 
             # Net Profit Margin card
             ui.card(
@@ -112,7 +117,7 @@ app_ui = ui.page_fillable(
         # Financial health row
         ui.layout_columns(
             # Vertical label
-            ui.div(ui.div("FINANCIAL HEALTH", class_="section-label section-label-red"), style="display:flex; align-items:stretch;"),
+            ui.div(ui.div("FINANCIAL HEALTH", class_="section-label section-label-red"), class_="label-wrapper"),
 
             # Current Ratio card
             ui.card(
