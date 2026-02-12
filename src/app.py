@@ -58,7 +58,23 @@ app_ui = ui.page_fillable(
                 selected="2022",
             ),
             open="desktop",
-        )
+        ),
+
+        # Profitability row
+        ui.layout_columns(
+            # Vertical label
+            ui.div(ui.div("PROFITABILITY", class_="section-label"), style="display:flex; align-items:stretch;"),
+
+            # Net Profit Margin card
+            ui.card(
+                ui.card_header("Net Profit Margin"),
+                ui.div(
+                    ui.span("25.3%", class_="kpi-big"),
+                    ui.br(),
+                    ui.span("[Sparkline chart placeholder — margin trend over years]", class_="kpi-label"),
+                )
+            )
+        ),
     )
 )
 
