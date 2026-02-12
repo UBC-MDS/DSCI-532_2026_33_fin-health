@@ -1,0 +1,12 @@
+pandas
+numpy
+matplotlib
+seaborn
+altair
+vegafusion[embed]
+plotly
+jupyterlab
+ipykernel
+quarto-cli
+shiny
+shinywidgets
