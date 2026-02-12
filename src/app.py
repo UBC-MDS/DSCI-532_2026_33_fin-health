@@ -10,6 +10,7 @@ CATEGORY_COMPANIES = {
     "LOGI": ["AMZN"],
     "Manufacturing": ["PCG"],
 }
+
 ALL_CATEGORIES = sorted(CATEGORY_COMPANIES.keys())
 
 # UI
@@ -63,7 +64,7 @@ app_ui = ui.page_fillable(
         # Profitability row
         ui.layout_columns(
             # Vertical label
-            ui.div(ui.div("PROFITABILITY", class_="section-label"), style="display:flex; align-items:stretch;"),
+            ui.div(ui.div("PROFITABILITY", class_="section-label section-label-blue"), style="display:flex; align-items:stretch;"),
 
             # Net Profit Margin card
             ui.card(
@@ -111,7 +112,7 @@ app_ui = ui.page_fillable(
         # Financial health row
         ui.layout_columns(
             # Vertical label
-            ui.div(ui.div("FINANCIAL HEALTH", class_="section-label"), style="display:flex; align-items:stretch;"),
+            ui.div(ui.div("FINANCIAL HEALTH", class_="section-label section-label-red"), style="display:flex; align-items:stretch;"),
 
             # Current Ratio card
             ui.card(
@@ -149,9 +150,10 @@ app_ui = ui.page_fillable(
             ),
 
             col_widths=[1, 4, 4, 3],
-        ),     
+        ),
     ),
 )
+
 
 # Server
 def server(input, output, session):
