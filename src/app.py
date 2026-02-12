@@ -104,6 +104,8 @@ app_ui = ui.page_fillable(
                 ui.card_header("Revenue Over Time"),
                 ui.p("[Bar chart placeholder — yearly revenue from 2009-2023]"),
             ),
+
+            col_widths=[1, 2, 2, 3, 4],
         ),
 
         # Financial health row
@@ -132,7 +134,7 @@ app_ui = ui.page_fillable(
                 ),
                 ui.p("[Line chart placeholder — debt/equity ratio by year]"),
             ),
-            
+
             # Cash Flows card
             ui.card(
                 ui.card_header("Cash Flows"),
@@ -145,6 +147,8 @@ app_ui = ui.page_fillable(
                 ),
                 ui.p("[Grouped bar chart placeholder — cash flows by year]"),
             ),
+
+            col_widths=[1, 4, 4, 3],
         ),     
     ),
 )
