@@ -22,7 +22,7 @@ Interested in contributing? Check out the contributing guidelines [here](./CONTR
 
 ## Copyright
 
-- Copyright © 2026 Seungmyun Park, Shruti Sasi, Jiro Amato
+- Copyright © 2026 Seungmyun Park, Shruti Sasi, Jiro Amato, Luke Ni
 
 - Free software distributed under the [MIT License](./LICENSE.md).
 - Documentation made available under **Creative Commons By 4.0 - Attribution 4.0 International** ([CC-BY-4.0](./LICENSE.md))
