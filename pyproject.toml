@@ -34,5 +34,5 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health"
 "Source Code" = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/src"
-"Bug Tracker" = "https://github.com/UBC-MDS/deepworks/issues"
-Documentation = "https://github.com/UBC-MDS/deepworks/blob/main/README.md"
+"Bug Tracker" = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/issues"
+Documentation = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/blob/main/README.md"
