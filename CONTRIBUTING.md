@@ -105,23 +105,25 @@ main
 Ready to contribute? Here's how to set up fin-health for
 local development.
 
-1. Fork the <https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health>
+1. Install [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) as a prerequisite.
+
+2. Fork the <https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health>
    repository on GitHub.
 
-2. Clone your fork locally (*if you want to work locally*)
+3. Clone your fork locally (*if you want to work locally*)
 
     ```shell
     git clone git@github.com:your_name_here/DSCI-532_2026_33_fin-health.git
     ```
 
-3. Create and activate the conda environment
+4. Create and activate the conda environment
 
    ```bash
    conda env create -f environment.yml
    conda activate fin-health
    ```
 
-4. Create a branch for local development using the default branch (typically `main`) as a starting point. Use `fix` or `feature` as a prefix for your branch name.
+5. Create a branch for local development using the default branch (typically `develop`) as a starting point. Use `fix` or `feature` as a prefix for your branch name.
 
     ```shell
     git checkout develop
@@ -130,13 +132,20 @@ local development.
 
     Now you can make your changes locally.
 
-2. When you're done making changes, apply the quality assurance tools and check that your changes pass our test suite. This is all included with tox.
+6. When you're done making changes, lint and format your code with [Ruff](https://docs.astral.sh/ruff/):
 
-    ```shell
-    hatch run test:run
+    ```bash
+    ruff check src/ --fix .
+    ruff format src/
     ```
 
-3. Commit your changes and push your branch to GitHub. Please use [semantic
+7. Check that your changes pass our test suite.
+
+    ```bash
+    pytest -v --cov=fin-health --cov-branch --cov-report=term-missing --cov-report=xml
+    ```
+
+8. Commit your changes and push your branch to GitHub. Please use [semantic
    commit messages](https://www.conventionalcommits.org/).
 
     ```shell
@@ -145,7 +154,7 @@ local development.
     git push -u origin fix-name-of-your-bugfix
     ```
 
-4. Open the link displayed in the message when pushing your new branch in order to submit a pull request.
+9. Open the link displayed in the message when pushing your new branch in order to submit a pull request.
 
 ### Pull Request Guidelines
 
