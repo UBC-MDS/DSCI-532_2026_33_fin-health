@@ -2,6 +2,7 @@
 
 | | |
 | --- | --- |
+| CI/CD | [![CI](https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/actions/workflows/ci.yml/badge.svg)](https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/actions/workflows/ci.yml) [![Build/Deploy Docs](https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/actions/workflows/docs-publish.yml/badge.svg)](https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/actions/workflows/docs-publish.yml) [![codecov](https://codecov.io/github/UBC-MDS/DSCI-532_2026_33_fin-health/graph/badge.svg?token=X0sTndIrUu)](https://codecov.io/github/UBC-MDS/DSCI-532_2026_33_fin-health) |
 | Project | [![GitHub Release](https://img.shields.io/github/v/release/UBC-MDS/DSCI-532_2026_33_fin-health?color=green)](https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/releases) [![Python Version](https://img.shields.io/badge/Python-3.12-green)](https://www.python.org/downloads/release/python-3120/) [![Repo Status](https://img.shields.io/badge/repo%20status-Active-brightgreen)](https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health) |
 | Meta | [![Code of Conduct](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT.md) [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) |
 
