@@ -211,6 +211,7 @@ __marimo__/
 
 # Quarto artifacts
 /.quarto/
+_site/
 **/*.quarto_ipynb
 
 # Coverage files from pytest
