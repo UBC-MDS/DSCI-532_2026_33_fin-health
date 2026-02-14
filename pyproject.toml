@@ -1,0 +1,38 @@
+################################################################################
+# Project Configuration
+################################################################################
+
+[project]
+name = "fin-health"
+version = "0.1.0"
+description = "An interactive dashboard that visualizes the financial health of publicly traded companies."
+authors = [
+    { name = "Seungmyun Park", email = "seungmyu@student.ubc.ca" },
+    { name = "Shruti Sasi", email = "csasi@student.ubc.ca" },
+    { name = "Jiro Amato", email = "jiromig@student.ubc.ca" },
+    { name = "Luke Ni", email = "lukeni@student.ubc.ca" },
+]
+license = [
+    { text = "MIT" },
+    { text = "CC-BY-4.0" },
+]
+requires-python = ">=3.12"
+dependencies = [
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "seaborn",
+    "altair",
+    "vegafusion[embed]",
+    "plotly",
+    "jupyterlab",
+    "ipykernel",
+    "shiny",
+    "shinywidgets",
+]
+
+[project.urls]
+Homepage = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health"
+"Source Code" = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/src"
+"Bug Tracker" = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/issues"
+Documentation = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/blob/main/README.md"
