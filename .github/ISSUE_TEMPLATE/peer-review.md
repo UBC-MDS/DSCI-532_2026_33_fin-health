@@ -13,7 +13,7 @@ assignees: ShrutiSasi, eddeness, jiroamato, lukeni777
 
 - [ ] As the reviewer, I confirm that there are no conflicts of interest for me to review this work (If you are unsure whether you are in conflict, please speak to your editor _before_ starting your review).
 
-Reviewed by: <full_name> - @<github_username>
+**Reviewed by**: <full_name> - @<github_username>
 
 #### Documentation
 
