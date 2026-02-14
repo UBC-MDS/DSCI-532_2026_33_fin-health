@@ -4,7 +4,7 @@
 
 Copyright (c) 2026 Seungmyun Park, Shruti Sasi, Jiro Amato, Luke Ni
 
-Documentation in the `reports/` and `notebooks/` directory is made available under the **Attribution 4.0 International** ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).
+Documentation in the `reports/` and `notebooks/` directory and all the other documentation in this project is made available under the **Attribution 4.0 International** ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).
 
 This is a human-readable summary of (and not a substitute for) the [license](https://creativecommons.org/licenses/by/4.0/legalcode).
 
