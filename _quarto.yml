@@ -1,0 +1,23 @@
+project:
+  type: website
+  render:
+    - README.md
+    - CONTRIBUTING.md
+    - LICENSE.md
+
+website:
+  title: "fin-health"
+  navbar:
+    title-href: README.md
+    left:
+      - text: "Contributing"
+        href: CONTRIBUTING.md
+      - text: "License"
+        href: LICENSE.md
+
+format:
+  html:
+    theme:
+      - darkly
+      - custom.scss
+    toc: true
