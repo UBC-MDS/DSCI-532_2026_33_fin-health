@@ -10,6 +10,13 @@
 
 `fin-health` is an interactive dashboard that visualizes the financial health of publicly traded companies. It allows users to explore key financial metrics such as revenue, profitability, debt ratios, and cash flow across companies and time periods. Fin-Health aims to support investors and analysts in making data-driven comparisons and assessments of corporate financial performance.
 
+## Deployment
+
+| Build | URL |
+|-------|-----|
+| Stable (`main`) | [https://jiroamato-dsci-532-2026-33-fin-health-stable.share.connect.posit.cloud/](https://jiroamato-dsci-532-2026-33-fin-health-stable.share.connect.posit.cloud/) |
+| Preview (`dev`) | [https://jiroamato-dsci-532-2026-33-fin-health-dev.share.connect.posit.cloud/](https://jiroamato-dsci-532-2026-33-fin-health-dev.share.connect.posit.cloud/) |
+
 ## Developer Setup
 
 ### Dependencies
