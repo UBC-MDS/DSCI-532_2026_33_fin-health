@@ -7,3 +7,21 @@ dependencies:
   - pip
   - pip:
       - -r requirements.txt
+      # Dev / analysis tools
+      - numpy
+      - matplotlib
+      - seaborn
+      - plotly
+      - jupyterlab
+      - ipykernel
+      - quarto-cli
+      - quartodoc
+      # Linting
+      - ruff
+      # Testing
+      - pytest
+      - pytest-cov
+      - pytest-raises
+      - pytest-randomly
+      - pytest-xdist
+      - pytest-playwright
