@@ -18,7 +18,16 @@ CATEGORY_COMPANIES = {
     "Manufacturing": ["PCG"],
 }
 ALL_CATEGORIES = sorted(CATEGORY_COMPANIES.keys())
-ALL_SECTORS = ["Bank", "ELEC", "Finance", "FinTech", "FOOD", "IT", "LOGI", "Manufacturing"]
+ALL_SECTORS = [
+    "Bank",
+    "ELEC",
+    "Finance",
+    "FinTech",
+    "FOOD",
+    "IT",
+    "LOGI",
+    "Manufacturing",
+]
 
 METRIC_CHOICES = [
     "Net Profit Margin",
@@ -33,7 +42,6 @@ METRIC_CHOICES = [
 ]
 
 
-
 # Page 1: Sector Analysis
 def page1_sector_analysis():
     return ui.page_fillable(
@@ -41,10 +49,7 @@ def page1_sector_analysis():
             .kpi-big { font-size: 2em; font-weight: bold; }
             .kpi-label { font-size: 0.9em; color: #666; }
         """),
-
         ui.h2("US Corporate Profitability Analytics"),
-
-
         ui.layout_columns(
             ui.card(
                 ui.card_header("Avg Profit Margin"),
@@ -66,7 +71,6 @@ def page1_sector_analysis():
             ),
             col_widths=[4, 4, 4],
         ),
-
         # Sidebar + Charts
         ui.layout_sidebar(
             ui.sidebar(
@@ -147,7 +151,9 @@ def page2_company_health():
             .kpi-label { font-size: 0.9em; color: #666; }
         """),
         ui.h2("Financial Health Dashboard"),
-        ui.p("A comprehensive KPI dashboard highlighting key financial metrics of public companies."),
+        ui.p(
+            "A comprehensive KPI dashboard highlighting key financial metrics of public companies."
+        ),
         ui.layout_sidebar(
             ui.sidebar(
                 ui.h4("Filters"),
@@ -198,7 +204,8 @@ def page2_company_health():
                         ui.span("$394,328M", class_="kpi-big"),
                         ui.br(),
                         ui.span("Revenue", class_="kpi-label"),
-                        ui.br(), ui.br(),
+                        ui.br(),
+                        ui.br(),
                         ui.span("$99,803M", class_="kpi-big"),
                         ui.br(),
                         ui.span("Net Income", class_="kpi-label"),
@@ -213,7 +220,9 @@ def page2_company_health():
             # Financial health row
             ui.layout_columns(
                 ui.div(
-                    ui.div("FINANCIAL HEALTH", class_="section-label section-label-red"),
+                    ui.div(
+                        "FINANCIAL HEALTH", class_="section-label section-label-red"
+                    ),
                     class_="label-wrapper",
                 ),
                 ui.card(
@@ -265,8 +274,16 @@ def server(input, output, session):
     # Page 1: Sector Analysis
     @reactive.calc
     def p1_filtered_data():
-        """Placeholder: will filter df by year range and sector."""
-        return None
+        """Filter dataset by selected year range and sector."""
+        year_min, year_max = input.p1_year_range()
+        sector = input.p1_sector()
+
+        filtered = df[(df["Year"] >= year_min) & (df["Year"] <= year_max)]
+
+        if sector != "All":
+            filtered = filtered[filtered["Category"] == sector]
+
+        return filtered
 
     @render.text
     def p1_avg_margin():
