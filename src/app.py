@@ -2,6 +2,7 @@ from pathlib import Path
 import pandas as pd
 from shiny import App, reactive, render, ui
 
+# Data loading from module level
 DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
 df = pd.read_csv(DATA_PATH, encoding="utf-8-sig")
 df.columns = df.columns.str.strip()
@@ -73,9 +74,9 @@ def page1_sector_analysis():
                 ui.input_slider(
                     id="p1_year_range",
                     label="Period",
-                    min=2009,
-                    max=2022,
-                    value=[2009, 2022],
+                    min=int(df["Year"].min()),
+                    max=int(df["Year"].max()),
+                    value=[int(df["Year"].min()), int(df["Year"].max())],
                     sep="",
                 ),
                 ui.input_select(
@@ -265,15 +266,7 @@ def server(input, output, session):
     @reactive.calc
     def p1_filtered_data():
         """Placeholder: will filter df by year range and sector."""
-        year_min, year_max = input.p1_year_range()
-        sector = input.p1_sector()
-
-        filtered = df[(df["Year"] >= year_min) & (df["Year"] <= year_max)]
-
-        if sector != "All":
-            filtered = filtered[filtered["Category"] == sector]
-
-        return filtered
+        return None
 
     @render.text
     def p1_avg_margin():
