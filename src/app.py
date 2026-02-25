@@ -1,4 +1,10 @@
+from pathlib import Path
+import pandas as pd
 from shiny import App, reactive, render, ui
+
+DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
+df = pd.read_csv(DATA_PATH, encoding="utf-8-sig")
+df.columns = df.columns.str.strip()
 
 CATEGORY_COMPANIES = {
     "Bank": ["AIG", "BCS"],
@@ -259,7 +265,15 @@ def server(input, output, session):
     @reactive.calc
     def p1_filtered_data():
         """Placeholder: will filter df by year range and sector."""
-        return None
+        year_min, year_max = input.p1_year_range()
+        sector = input.p1_sector()
+
+        filtered = df[(df["Year"] >= year_min) & (df["Year"] <= year_max)]
+
+        if sector != "All":
+            filtered = filtered[filtered["Category"] == sector]
+
+        return filtered
 
     @render.text
     def p1_avg_margin():
