@@ -1,3 +1,4 @@
+# Only runtime packages
 shiny==1.5.1
 shinywidgets==0.7.1
 pandas==3.0.0
