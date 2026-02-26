@@ -18,25 +18,25 @@ with open(CSS_PATH, "r") as css_file:
     CUSTOM_CSS = ui.tags.style(css_file.read())
 
 CATEGORY_COMPANIES = {
-    "Bank": ["AIG", "BCS"],
+    "BANK": ["AIG", "BCS"],
     "ELEC": ["INTC", "NVDA"],
-    "Finance": ["SHLDQ"],
-    "FinTech": ["PYPL"],
+    "FINANCE": ["SHLDQ"],
+    "FINTECH": ["PYPL"],
     "FOOD": ["MCD"],
     "IT": ["AAPL", "GOOG", "MSFT"],
     "LOGI": ["AMZN"],
-    "Manufacturing": ["PCG"],
+    "MANUFACTURING": ["PCG"],
 }
 ALL_CATEGORIES = sorted(CATEGORY_COMPANIES.keys())
 ALL_SECTORS = [
-    "Bank",
+    "BANK",
     "ELEC",
-    "Finance",
-    "FinTech",
+    "FINANCE",
+    "FINTECH",
     "FOOD",
     "IT",
     "LOGI",
-    "Manufacturing",
+    "MANUFACTURING",
 ]
 
 METRIC_CHOICES = {
