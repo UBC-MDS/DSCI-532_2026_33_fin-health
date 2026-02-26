@@ -287,10 +287,12 @@ def server(input, output, session):
 
         return filtered
 
+    # KPI outputs
     @render.text
     def p1_avg_margin():
-        p1_filtered_data()
-        return "14.2%"
+        filtered = p1_filtered_data()
+        avg = filtered["Net Profit Margin"].mean()
+        return f"{avg:.1f}%"
 
     @render.text
     def p1_top_sector():
