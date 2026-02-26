@@ -1,6 +1,8 @@
 from pathlib import Path
+import altair as alt
 import pandas as pd
 from shiny import App, reactive, render, ui
+from shinywidgets import output_widget, render_widget
 
 # Data loading from module level
 DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
@@ -113,7 +115,7 @@ def page1_sector_analysis():
             ui.layout_columns(
                 ui.card(
                     ui.card_header("C. Peer Benchmarking"),
-                    ui.output_ui("p1_chart_c"),
+                    output_widget("p1_chart_c"),
                 ),
                 ui.card(
                     ui.card_header("D. Company Detail"),
@@ -285,10 +287,12 @@ def server(input, output, session):
 
         return filtered
 
+    # KPI outputs
     @render.text
     def p1_avg_margin():
-        p1_filtered_data()
-        return "14.2%"
+        filtered = p1_filtered_data()
+        avg = filtered["Net Profit Margin"].mean()
+        return f"{avg:.1f}%"
 
     @render.text
     def p1_top_sector():
@@ -310,10 +314,30 @@ def server(input, output, session):
         p1_filtered_data()
         return ui.p("[Line chart placeholder — metric trend over time by sector]")
 
-    @render.ui
+    # Chart C: Peer Benchmarking Scatter Plot
+    @render_widget
     def p1_chart_c():
-        p1_filtered_data()
-        return ui.p("[Scatter plot placeholder — Revenue vs Net Income]")
+        filtered = p1_filtered_data()
+        metric = input.p1_metric()
+
+        chart = (
+            alt.Chart(filtered)
+            .mark_circle(size=60)
+            .encode(
+                x=alt.X("Revenue:Q", title="Revenue ($)"),
+                y=alt.Y(f"{metric}:Q", title=metric),
+                color=alt.Color("Category:N", scale=alt.Scale(scheme="tableau10")),
+                tooltip=[
+                    "Company",
+                    "Category",
+                    "Year:O",
+                    alt.Tooltip("Revenue:Q", format=",.0f"),
+                    alt.Tooltip(f"{metric}:Q", format=",.2f"),
+                ],
+            )
+            .properties(title=f"Revenue vs {metric}", width="container")
+        )
+        return chart
 
     @render.data_frame
     def p1_table_d():
