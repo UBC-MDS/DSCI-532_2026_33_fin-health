@@ -95,6 +95,9 @@ h3, h4 {
 
 .card-body { 
     padding: 0.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers content vertically in large cards */
 }
 
 /* KPI Value Styling */
@@ -288,6 +291,49 @@ select:focus {
     color: var(--primary);
 }
 
+/* Page 2 Vertical group styling*/
+.section-label {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    color: white;
+    font-weight: bold;
+    /*padding: 0.5rem 0.4rem 1rem 0.4rem;*/
+    border-radius: 6px;
+    text-align: center;
+    letter-spacing: 1px;
+    font-size: 0.65em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.label-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.section-label-blue { 
+    background-color: #2980b9; 
+}
+
+.section-label-red { 
+    background-color: #c0392b; 
+}
+
+.kpi-big { 
+    font-size: 2em; 
+    font-weight: bold; 
+}
+
+.kpi-label { 
+    font-size: 0.9em; 
+    color: #666; 
+}
+
 /* Footer styling */
 .footer-container {
     padding: 2rem 0;
@@ -308,4 +354,34 @@ select:focus {
 
 .footer-container strong {
     color: var(--slate-900);
+}
+
+/* The Grid Container */
+.grid-section {
+    display: grid;
+    grid-template-columns: 40px 1fr; /* Fixed label width, flexible card width */
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+    align-items: stretch;
+}
+
+/* Ensure the cards inside the grid take full width */
+.grid-section .shiny-layout-column {
+    width: 100%;
+}
+
+/* Updated label styling to ensure it fills the grid height */
+.section-label {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Fill the grid height */
 }

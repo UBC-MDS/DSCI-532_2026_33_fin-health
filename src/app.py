@@ -125,10 +125,12 @@ def page1_sector_analysis():
                 ui.card(
                     ui.card_header("Sector Profitability"),
                     output_widget("p1_chart_a"),
+                    full_screen=True,  # allows users to expand the chart
                 ),
                 ui.card(
                     ui.card_header(ui.output_ui("trend_header")),
                     output_widget("p1_chart_b"),
+                    full_screen=True,  # allows users to expand the chart
                 ),
                 col_widths=[6, 6],
             ),
@@ -137,6 +139,7 @@ def page1_sector_analysis():
                 ui.card(
                     ui.card_header("Peer Benchmarking"),
                     output_widget("p1_chart_c"),
+                    full_screen=True,  # allows users to expand the chart
                 ),
                 ui.card(
                     ui.card_header("Company Details"),
@@ -177,61 +180,77 @@ def page2_company_health():
             ui.p(
                 "A comprehensive KPI dashboard highlighting key financial metrics of public companies."
             ),
-            # Profitability Row
-            ui.layout_columns(
-                ui.card(
-                    ui.card_header("Net Profit Margin"),
-                    ui.tags.h3("25.3%", class_="kpi-value"),
-                ),
-                ui.card(
-                    ui.card_header("Return on Equity (ROE)"),
-                    ui.tags.h3("196.96%", class_="kpi-value"),
-                ),
-                ui.card(
-                    ui.card_header("Revenue & Net Income"),
-                    ui.tags.span("REVENUE", class_="kpi-label"),
-                    ui.tags.h3("$394,328M", class_="kpi-value"),
-                    ui.tags.span(
-                        "NET INCOME",
-                        class_="kpi-label",
-                        style="display: block; margin-top: 1rem;",
+            # Profitability Section
+            ui.div(
+                ui.div("PROFITABILITY", class_="section-label section-label-blue"),
+                ui.layout_columns(
+                    ui.div(
+                        ui.card(
+                            ui.card_header("Net Profit Margin"),
+                            ui.tags.h3(
+                                ui.output_text("p2_net_margin", inline=True),
+                                class_="kpi-value",
+                            ),
+                            style="height: calc(50% - 0.5rem); margin-bottom: 1rem;",
+                        ),
+                        ui.card(
+                            ui.card_header("Return on Equity (ROE)"),
+                            ui.tags.h3(
+                                ui.output_text("p2_roe", inline=True),
+                                class_="kpi-value",
+                            ),
+                            style="height: calc(50% - 0.5rem);",
+                        ),
+                        style="height: 100%;",
                     ),
-                    ui.tags.h3("$99,803M", class_="kpi-value"),
+                    ui.card(
+                        ui.card_header("Revenue & Net Income"),
+                        ui.tags.span("REVENUE", class_="kpi-label"),
+                        ui.tags.h3(
+                            ui.output_text("p2_revenue", inline=True),
+                            class_="kpi-value",
+                        ),
+                        ui.tags.span(
+                            "NET INCOME",
+                            class_="kpi-label",
+                            style="display: block; margin-top: 1rem;",
+                        ),
+                        ui.tags.h3(
+                            ui.output_text("p2_net_income", inline=True),
+                            class_="kpi-value",
+                        ),
+                    ),
+                    ui.card(
+                        ui.card_header("Revenue Over Time"),
+                        output_widget("p2_chart_revenue"),
+                        full_screen=True,  # allows users to expand the chart
+                    ),
+                    col_widths=[3, 3, 6],
                 ),
-                ui.card(
-                    ui.card_header("Revenue Over Time"),
-                    ui.tags.p("[Bar chart placeholder]", style="color: #64748b;"),
-                ),
-                col_widths=[3, 3, 3, 3],
+                class_="grid-section",
             ),
-            # Financial Health Row
-            ui.layout_columns(
-                ui.card(
-                    ui.card_header("Current Ratio"),
-                    ui.tags.h3("0.88", class_="kpi-value"),
-                    ui.tags.p(
-                        "[Line chart placeholder]",
-                        style="color: #64748b; margin-top: 1rem;",
+            # Financial Health Section
+            ui.div(
+                ui.div("FINANCIAL HEALTH", class_="section-label section-label-red"),
+                ui.layout_columns(
+                    ui.card(
+                        ui.card_header("Current Ratio"),
+                        output_widget("p2_chart_current_ratio"),
+                        full_screen=True,  # allows users to expand the chart
                     ),
-                ),
-                ui.card(
-                    ui.card_header("Debt / Equity Ratio"),
-                    ui.tags.h3("2.37", class_="kpi-value"),
-                    ui.tags.p(
-                        "[Line chart placeholder]",
-                        style="color: #64748b; margin-top: 1rem;",
+                    ui.card(
+                        ui.card_header("Debt / Equity Ratio"),
+                        output_widget("p2_chart_debt_equity"),
+                        full_screen=True,  # allows users to expand the chart
                     ),
-                ),
-                ui.card(
-                    ui.card_header("Cash Flows"),
-                    ui.tags.p("Operating: $122,151M"),
-                    ui.tags.p("Investing: -$22,354M"),
-                    ui.tags.p("Financing: -$110,749M"),
-                    ui.tags.p(
-                        "[Grouped bar chart]", style="color: #64748b; margin-top: 1rem;"
+                    ui.card(
+                        ui.card_header("Cash Flows"),
+                        output_widget("p2_chart_cashflow"),
+                        full_screen=True,  # allows users to expand the chart
                     ),
+                    col_widths=[4, 4, 4],
                 ),
-                col_widths=[4, 4, 4],
+                class_="grid-section",
             ),
         ),
     )
@@ -342,7 +361,6 @@ def server(input, output, session):
         filtered = p1_filtered_data()
         if filtered.empty:
             return "Data Unavailable"
-        print("filtered : ", filtered)
         top = filtered.groupby("Category")["Net Profit Margin"].mean().idxmax()
         return top
 
@@ -549,6 +567,230 @@ def server(input, output, session):
     def _update_company_choices():
         companies = CATEGORY_COMPANIES.get(input.category(), [])
         ui.update_select("company", choices=companies, selected=companies[0])
+
+    @reactive.calc
+    def p2_filtered_data():
+        """Filter dataset by selected company, category, and year."""
+        company = input.company()
+        year = int(input.year())
+
+        filtered = df[(df["Company"] == company) & (df["Year"] == year)]
+        return filtered
+
+    # KPI Outputs for Page 2
+    @render.text
+    def p2_net_margin():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
+        margin = filtered["Net Profit Margin"].iloc[0]
+        return f"{margin:.1f}%" if pd.notna(margin) else "Data Unavailable"
+
+    @render.text
+    def p2_roe():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
+        roe = filtered["ROE"].iloc[0]
+        return f"{roe:.2f}%" if pd.notna(roe) else "Data Unavailable"
+
+    @render.text
+    def p2_revenue():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
+        revenue = filtered["Revenue"].iloc[0]
+        return f"${revenue:,.0f}M" if pd.notna(revenue) else "Data Unavailable"
+
+    @render.text
+    def p2_net_income():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
+        income = filtered["Net Income"].iloc[0]
+        return f"${income:,.0f}M" if pd.notna(income) else "Data Unavailable"
+
+    @render.text
+    def p2_current_ratio():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
+        ratio = filtered["Current Ratio"].iloc[0]
+        return f"{ratio:.2f}" if pd.notna(ratio) else "Data Unavailable"
+
+    @render.text
+    def p2_debt_equity():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
+        ratio = filtered["Debt/Equity Ratio"].iloc[0]
+        return f"{ratio:.2f}" if pd.notna(ratio) else "Data Unavailable"
+
+    @render.text
+    def p2_operating_cf():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Operating: Data Unavailable"
+        cf = (
+            filtered["Operating Cash Flow"].iloc[0]
+            if "Operating Cash Flow" in filtered.columns
+            else filtered["Revenue"].iloc[0] * 0.3
+        )
+        return (
+            f"Operating: ${cf:,.0f}M" if pd.notna(cf) else "Operating: Data Unavailable"
+        )
+
+    @render.text
+    def p2_investing_cf():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Investing: Data Unavailable"
+        cf = (
+            filtered["Investing Cash Flow"].iloc[0]
+            if "Investing Cash Flow" in filtered.columns
+            else -filtered["Revenue"].iloc[0] * 0.1
+        )
+        return (
+            f"Investing: ${cf:,.0f}M" if pd.notna(cf) else "Investing: Data Unavailable"
+        )
+
+    @render.text
+    def p2_financing_cf():
+        filtered = p2_filtered_data()
+        if filtered.empty:
+            return "Financing: Data Unavailable"
+        cf = (
+            filtered["Financing Cash Flow"].iloc[0]
+            if "Financing Cash Flow" in filtered.columns
+            else -filtered["Revenue"].iloc[0] * 0.2
+        )
+        return (
+            f"Financing: ${cf:,.0f}M" if pd.notna(cf) else "Financing: Data Unavailable"
+        )
+
+    @render_altair
+    def p2_chart_revenue():
+        company = input.company()
+        company_data = df[df["Company"] == company].sort_values("Year")
+
+        if company_data.empty:
+            return (
+                alt.Chart(
+                    pd.DataFrame({"x": [0], "y": [0], "text": ["Data Unavailable"]})
+                )
+                .mark_text(size=18)
+                .encode(text="text:N")
+            )
+
+        chart = (
+            alt.Chart(company_data)
+            .mark_bar()
+            .encode(
+                x=alt.X("Year:O", title="Year"),
+                y=alt.Y("Revenue:Q", title="Revenue ($M)"),
+                color=alt.value("#4F81BD"),
+                tooltip=["Year", alt.Tooltip("Revenue:Q", format=",.0f")],
+            )
+            .properties(width="container")
+        )
+        return chart
+
+    @render_altair
+    def p2_chart_current_ratio():
+        company = input.company()
+        company_data = df[df["Company"] == company].sort_values("Year")
+
+        if company_data.empty:
+            return (
+                alt.Chart(
+                    pd.DataFrame({"x": [0], "y": [0], "text": ["Data Unavailable"]})
+                )
+                .mark_text(size=18)
+                .encode(text="text:N")
+            )
+
+        chart = (
+            alt.Chart(company_data)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("Year:O", title="Year"),
+                y=alt.Y("Current Ratio:Q", title="Current Ratio"),
+                color=alt.value("#70AD47"),
+                tooltip=["Year", alt.Tooltip("Current Ratio:Q", format=".2f")],
+            )
+            .properties(width="container")
+        )
+        return chart
+
+    @render_altair
+    def p2_chart_debt_equity():
+        company = input.company()
+        company_data = df[df["Company"] == company].sort_values("Year")
+
+        if company_data.empty:
+            return (
+                alt.Chart(
+                    pd.DataFrame({"x": [0], "y": [0], "text": ["Data Unavailable"]})
+                )
+                .mark_text(size=18)
+                .encode(text="text:N")
+            )
+
+        chart = (
+            alt.Chart(company_data)
+            .mark_line(point=True)
+            .encode(
+                x=alt.X("Year:O", title="Year"),
+                y=alt.Y("Debt/Equity Ratio:Q", title="Debt/Equity Ratio"),
+                color=alt.value("#FFC000"),
+                tooltip=["Year", alt.Tooltip("Debt/Equity Ratio:Q", format=".2f")],
+            )
+            .properties(width="container")
+        )
+        return chart
+
+    @render_altair
+    def p2_chart_cashflow():
+        company = input.company()
+        company_data = df[df["Company"] == company].sort_values("Year")
+
+        if company_data.empty:
+            return (
+                alt.Chart(
+                    pd.DataFrame({"x": [0], "y": [0], "text": ["Data Unavailable"]})
+                )
+                .mark_text(size=18)
+                .encode(text="text:N")
+            )
+
+        # Create a placeholder for cash flows until actual data is available
+        chart = (
+            alt.Chart(
+                pd.DataFrame(
+                    {
+                        "Year": [2022, 2022, 2022],
+                        "Type": ["Operating", "Investing", "Financing"],
+                        "Amount": [100, -30, -60],
+                    }
+                )
+            )
+            .mark_bar()
+            .encode(
+                x=alt.X("Type:N", title="Cash Flow Type"),
+                y=alt.Y("Amount:Q", title="Amount ($M)"),
+                color=alt.Color(
+                    "Type:N",
+                    scale=alt.Scale(
+                        domain=["Operating", "Investing", "Financing"],
+                        range=["#70AD47", "#F79646", "#4F81BD"],
+                    ),
+                    legend=alt.Legend(orient="bottom", title=None),
+                ),
+                tooltip=["Type", alt.Tooltip("Amount:Q", format=",.0f")],
+            )
+            .properties(width="container")
+        )
+        return chart
 
     # footer date
     @render.text
