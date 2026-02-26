@@ -72,6 +72,7 @@ def page1_sector_analysis():
                 ),
             ),
             col_widths=[4, 4, 4],
+            fill=False
         ),
         # Sidebar + Charts
         ui.layout_sidebar(
@@ -103,7 +104,7 @@ def page1_sector_analysis():
             ui.layout_columns(
                 ui.card(
                     ui.card_header("A. Sector Profitability"),
-                    ui.output_ui("p1_chart_a"),
+                    output_widget("p1_chart_a"),
                 ),
                 ui.card(
                     ui.card_header("B. Profitability Trend"),
@@ -296,18 +297,41 @@ def server(input, output, session):
 
     @render.text
     def p1_top_sector():
-        p1_filtered_data()
-        return "Tech"
+        filtered = p1_filtered_data()
+        print("filtered : ", filtered)
+        top = filtered.groupby("Category")["Net Profit Margin"].mean().idxmax()
+        return top
 
     @render.text
     def p1_revenue_growth():
         p1_filtered_data()
         return "+5.8%"
 
-    @render.ui
+    @render_widget
     def p1_chart_a():
-        p1_filtered_data()
-        return ui.p("[Bar chart placeholder — comparing avg metric across sectors]")
+        filtered = p1_filtered_data()
+        metric = input.p1_metric()
+        
+        avg_by_sector = (
+            filtered.groupby("Category")[metric].mean().reset_index()
+        )
+
+        chart = (
+            alt.Chart(avg_by_sector)
+            .mark_bar()
+            .encode(
+                x=alt.X("Category:N", title="Sector", sort="-y"),
+                y=alt.Y(f"{metric}:Q", title=metric),
+                color=alt.Color(
+                    "Category:N",
+                    scale=alt.Scale(scheme="tableau10"),
+                    legend=None,
+                ),
+                tooltip=["Category", alt.Tooltip(f"{metric}:Q", format=".2f")],
+            )
+            .properties(title=f"Average {metric} by Sector", width="container")
+        )
+        return chart
 
     @render.ui
     def p1_chart_b():
