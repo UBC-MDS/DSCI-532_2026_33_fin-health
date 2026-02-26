@@ -25,7 +25,7 @@
     "href": "README.html",
     "title": "fin-health",
     "section": "",
-    "text": "CI/CD\n  \n\n\nProject\n  \n\n\nMeta\n  \n\n\n\n\n\nfin-health is an interactive dashboard that visualizes the financial health of publicly traded companies. It allows users to explore key financial metrics such as revenue, profitability, debt ratios, and cash flow across companies and time periods. Fin-Health aims to support investors and analysts in making data-driven comparisons and assessments of corporate financial performance.\n\n\n\n\n\n\nconda (version 26.1.0 or higher)\nconda-lock (version 3.0.4 or higher - optional)\nPython and packages listed in requirements.txt\n\nFor a more comprehensive guide on development guidelines for this project, check out our contributing page here.\n\nInstall conda as a prerequisite.\nClone the repository:\n\ngit clone https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health.git\ncd DSCI-532_2026_33_fin-health\n\nCreate and activate the conda environment:\n\nconda env create -f environment.yml\nconda activate fin-health\nOr install environment via conda-lock\nconda-lock install -n fin-health conda-lock.yml\nconda activate fin-health\n\n\n\n\n\nSeungmyun Park\nShruti Sasi\nJiro Amato\nLuke Ni\n\n\n\n\nInterested in contributing? Check out the contributing guidelines here. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.\n\n\n\n\nCopyright © 2026 Seungmyun Park, Shruti Sasi, Jiro Amato, Luke Ni\nFree software distributed under the MIT License.\nDocumentation made available under Creative Commons By 4.0 - Attribution 4.0 International (CC-BY-4.0)"
+    "text": "CI/CD\n  \n\n\nProject\n  \n\n\nMeta\n  \n\n\n\n\n\nfin-health is an interactive dashboard that visualizes the financial health of publicly traded companies. It allows users to explore key financial metrics such as revenue, profitability, debt ratios, and cash flow across companies and time periods. Fin-Health aims to support investors and analysts in making data-driven comparisons and assessments of corporate financial performance.\n\n\n\n\n\n\nBuild\nURL\n\n\n\n\nStable (main)\nhttps://jiroamato-dsci-532-2026-33-fin-health-stable.share.connect.posit.cloud/\n\n\nPreview (dev)\nhttps://jiroamato-dsci-532-2026-33-fin-health-dev.share.connect.posit.cloud/\n\n\n\n\n\n\n\n\n\nconda (version 26.1.0 or higher)\nconda-lock (version 3.0.4 or higher - optional)\nPython and packages listed in requirements.txt\n\nFor a more comprehensive guide on development guidelines for this project, check out our contributing page here.\n\nInstall conda as a prerequisite.\nClone the repository:\n\ngit clone https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health.git\ncd DSCI-532_2026_33_fin-health\n\nCreate and activate the conda environment:\n\nconda env create -f environment.yml\nconda activate fin-health\nOr install environment via conda-lock\nconda-lock install -n fin-health conda-lock.yml\nconda activate fin-health\n\n\n\n\n\nSeungmyun Park\nShruti Sasi\nJiro Amato\nLuke Ni\n\n\n\n\nInterested in contributing? Check out the contributing guidelines here. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.\n\n\n\n\nCopyright © 2026 Seungmyun Park, Shruti Sasi, Jiro Amato, Luke Ni\nFree software distributed under the MIT License.\nDocumentation made available under Creative Commons By 4.0 - Attribution 4.0 International (CC-BY-4.0)"
   },
   {
     "objectID": "README.html#project-synopsis",
@@ -33,6 +33,13 @@
     "title": "fin-health",
     "section": "",
     "text": "fin-health is an interactive dashboard that visualizes the financial health of publicly traded companies. It allows users to explore key financial metrics such as revenue, profitability, debt ratios, and cash flow across companies and time periods. Fin-Health aims to support investors and analysts in making data-driven comparisons and assessments of corporate financial performance."
+  },
+  {
+    "objectID": "README.html#deployment",
+    "href": "README.html#deployment",
+    "title": "fin-health",
+    "section": "",
+    "text": "Build\nURL\n\n\n\n\nStable (main)\nhttps://jiroamato-dsci-532-2026-33-fin-health-stable.share.connect.posit.cloud/\n\n\nPreview (dev)\nhttps://jiroamato-dsci-532-2026-33-fin-health-dev.share.connect.posit.cloud/"
   },
   {
     "objectID": "README.html#developer-setup",
