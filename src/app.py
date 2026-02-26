@@ -39,17 +39,17 @@ ALL_SECTORS = [
     "Manufacturing",
 ]
 
-METRIC_CHOICES = [
-    "Net Profit Margin",
-    "ROE",
-    "ROA",
-    "ROI",
-    "Revenue",
-    "Net Income",
-    "EBITDA",
-    "Current Ratio",
-    "Debt/Equity Ratio",
-]
+METRIC_CHOICES = {
+    "Net Profit Margin": "%",
+    "ROE": "%",
+    "ROA": "%",
+    "ROI": "%",
+    "Revenue": "USD",
+    "Net Income": "USD",
+    "EBITDA": "USD",
+    "Current Ratio": "",
+    "Debt/Equity Ratio": "",
+}
 
 
 # Page 1: Sector Analysis
@@ -74,7 +74,7 @@ def page1_sector_analysis():
             ui.input_select(
                 id="p1_metric",
                 label="Metric",
-                choices=METRIC_CHOICES,
+                choices=list(METRIC_CHOICES.keys()),
                 selected="Net Profit Margin",
             ),
             open="desktop",
@@ -346,6 +346,7 @@ def server(input, output, session):
     def p1_chart_a():
         filtered = p1_filtered_data()
         metric = input.p1_metric()
+        unit =METRIC_CHOICES[metric]
 
         avg_by_sector = filtered.groupby("Category")[metric].mean().reset_index()
         if avg_by_sector.empty:
@@ -361,7 +362,7 @@ def server(input, output, session):
             .mark_bar()
             .encode(
                 x=alt.X("Category:N", title="Sector", sort="-y"),
-                y=alt.Y(f"{metric}:Q", title=metric),
+                y=alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
                 color=alt.Color(
                     "Category:N",
                     scale=alt.Scale(scheme="viridis"),
@@ -384,6 +385,7 @@ def server(input, output, session):
     def p1_chart_b():        
         filtered = p1_filtered_data()
         metric = input.p1_metric()
+        unit =METRIC_CHOICES[metric]
         
         observed_trend = (
             filtered.groupby(["Year","Category"], as_index=False)[metric]
@@ -403,7 +405,7 @@ def server(input, output, session):
             alt.Chart(observed_trend)
             .mark_line(point=True).encode(
                 alt.X("Year:O", title="Year"),
-                alt.Y(f"{metric}:Q", title=metric),
+                alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
                 color=alt.Color("Category:N", scale=alt.Scale(scheme="viridis")),
                 tooltip=[
                     "Year",
@@ -419,6 +421,8 @@ def server(input, output, session):
     def p1_chart_c():
         filtered = p1_filtered_data()
         metric = input.p1_metric()
+        unit =METRIC_CHOICES[metric]
+
         if filtered.empty:
             return (
                     alt.Chart(pd.DataFrame({"x":[0], "y":[0], "text":["Data Unavailable"]}))
@@ -433,7 +437,7 @@ def server(input, output, session):
             .mark_circle(size=60)
             .encode(
                 x=alt.X("Revenue:Q", title="Revenue ($)"),
-                y=alt.Y(f"{metric}:Q", title=metric),
+                y=alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
                 color=alt.Color("Category:N", scale=alt.Scale(scheme="viridis")),
                 tooltip=[
                     "Company",
