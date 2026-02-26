@@ -326,9 +326,7 @@ def server(input, output, session):
             .encode(
                 x=alt.X("Revenue:Q", title="Revenue ($)"),
                 y=alt.Y(f"{metric}:Q", title=metric),
-                color=alt.Color(
-                    "Category:N", scale=alt.Scale(scheme="tableau10")
-                ),
+                color=alt.Color("Category:N", scale=alt.Scale(scheme="tableau10")),
                 tooltip=[
                     "Company",
                     "Category",
