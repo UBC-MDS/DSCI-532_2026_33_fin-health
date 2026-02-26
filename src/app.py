@@ -72,7 +72,7 @@ def page1_sector_analysis():
                 ),
             ),
             col_widths=[4, 4, 4],
-            fill=False
+            fill=False,
         ),
         # Sidebar + Charts
         ui.layout_sidebar(
@@ -311,10 +311,8 @@ def server(input, output, session):
     def p1_chart_a():
         filtered = p1_filtered_data()
         metric = input.p1_metric()
-        
-        avg_by_sector = (
-            filtered.groupby("Category")[metric].mean().reset_index()
-        )
+
+        avg_by_sector = filtered.groupby("Category")[metric].mean().reset_index()
 
         chart = (
             alt.Chart(avg_by_sector)
