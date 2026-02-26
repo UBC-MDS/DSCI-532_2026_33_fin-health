@@ -317,8 +317,16 @@ def server(input, output, session):
 
     @render.data_frame
     def p1_table_d():
-        p1_filtered_data()
-        return None
+        filtered = p1_filtered_data()
+        cols = [
+            "Company",
+            "Category",
+            "Year",
+            "Revenue",
+            "Net Income",
+            "Net Profit Margin",
+        ]
+        return filtered[cols]
 
     # Page 2: Company Financial Health
     @reactive.effect
