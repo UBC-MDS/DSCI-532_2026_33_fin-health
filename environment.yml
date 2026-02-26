@@ -6,6 +6,7 @@ dependencies:
   - python=3.12
   - pip
   - pip:
+      # Only runtime packages
       - -r requirements.txt
       # Dev / analysis tools
       - numpy
