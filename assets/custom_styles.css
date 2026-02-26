@@ -287,3 +287,25 @@ select:focus {
 .nav-link.active {
     color: var(--primary);
 }
+
+/* Footer styling */
+.footer-container {
+    padding: 2rem 0;
+    margin-top: 3rem;
+    color: var(--slate-600);
+    font-size: 0.875rem;
+    border-top: 1px solid var(--slate-200);
+}
+
+.footer-container a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.footer-container a:hover {
+    text-decoration: underline;
+}
+
+.footer-container strong {
+    color: var(--slate-900);
+}

@@ -1,8 +1,10 @@
 from pathlib import Path
 import altair as alt
 import pandas as pd
+from datetime import datetime
 from shiny import App, reactive, render, ui
 from shinywidgets import output_widget, render_altair
+
 
 # Data loading from module level
 DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
@@ -243,6 +245,39 @@ app_ui = ui.page_fluid(
         title="fin-health",
         id="main_nav",
         fillable=True,
+    ),
+    ui.tags.footer(
+        ui.tags.div(
+            ui.layout_columns(
+                ui.tags.div(
+                    ui.tags.strong("Financial Health Dashboard"),
+                    ui.tags.p(
+                        "A comprehensive tool for analyzing US corporate profitability and sector trends."
+                    ),
+                ),
+                ui.tags.div(
+                    ui.tags.p(
+                        ui.tags.strong("Authors: "),
+                        "Jiro Amato, Luke Ni, Seungmyun Park, Shruti Sasi",
+                    ),
+                    ui.tags.p(
+                        ui.tags.strong("Source: "),
+                        ui.tags.a(
+                            "GitHub Repository",
+                            href="https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health",
+                            target="_blank",
+                        ),
+                    ),
+                ),
+                ui.tags.div(
+                    ui.tags.p(ui.tags.strong("Last Updated:")),
+                    ui.output_text("last_updated_date"),
+                    style="text-align: right;",
+                ),
+                col_widths=[5, 4, 3],
+            ),
+            class_="footer-container",
+        )
     ),
 )
 
@@ -514,6 +549,11 @@ def server(input, output, session):
     def _update_company_choices():
         companies = CATEGORY_COMPANIES.get(input.category(), [])
         ui.update_select("company", choices=companies, selected=companies[0])
+
+    # footer date
+    @render.text
+    def last_updated_date():
+        return datetime.now().strftime("%B %d, %Y")
 
 
 # Create app
