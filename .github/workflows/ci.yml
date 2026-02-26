@@ -31,11 +31,11 @@ jobs:
         run: |
           pytest --cov=src --cov-report=xml:coverage.xml
 
-      - name: Upload to codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
+      # - name: Upload to codecov
+      #   uses: codecov/codecov-action@v5
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: ./coverage.xml
 
   style-check:
     name: Run linter and format check (ruff)
