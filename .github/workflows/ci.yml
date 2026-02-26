@@ -59,10 +59,10 @@ jobs:
           python -m pip install ruff
 
       - name: Run ruff linter
-        run: ruff check --fix .
+        run: ruff check --fix src/app.py
 
       - name: Run ruff formatter
-        run: ruff format .
+        run: ruff format src/app.py
 
       - name: Commit formatting changes
         uses: stefanzweifel/git-auto-commit-action@v7
