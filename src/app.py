@@ -1,13 +1,21 @@
+from ipywidgets.widgets.widget_selection import _MultipleSelection
+from click import style
 from pathlib import Path
 import altair as alt
 import pandas as pd
 from shiny import App, reactive, render, ui
-from shinywidgets import output_widget, render_widget
+from shinywidgets import output_widget, render_widget, render_altair
 
 # Data loading from module level
 DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
 df = pd.read_csv(DATA_PATH, encoding="utf-8-sig")
 df.columns = df.columns.str.strip()
+df["Category"] = df["Category"].str.upper() # Fix: Category column has 'BANK' and 'bank'
+
+# Load custom CSS from external file
+CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
+with open(CSS_PATH, "r") as css_file:
+    CUSTOM_CSS = ui.tags.style(css_file.read())
 
 CATEGORY_COMPANIES = {
     "Bank": ["AIG", "BCS"],
@@ -46,80 +54,80 @@ METRIC_CHOICES = [
 
 # Page 1: Sector Analysis
 def page1_sector_analysis():
-    return ui.page_fillable(
-        ui.tags.style("""
-            .kpi-big { font-size: 2em; font-weight: bold; }
-            .kpi-label { font-size: 0.9em; color: #666; }
-        """),
-        ui.h2("US Corporate Profitability Analytics"),
-        ui.layout_columns(
-            ui.card(
-                ui.card_header("Avg Profit Margin"),
-                ui.div(
-                    ui.output_text("p1_avg_margin", inline=True),
-                ),
+    return ui.layout_sidebar(
+        ui.sidebar(
+            ui.h4("Analytics Filters"),
+            ui.input_slider(
+                id="p1_year_range",
+                label="Period",
+                min=int(df["Year"].min()),
+                max=int(df["Year"].max()),
+                value=[int(df["Year"].min()), int(df["Year"].max())],
+                sep="",
             ),
-            ui.card(
-                ui.card_header("Top Sector"),
-                ui.div(
-                    ui.output_text("p1_top_sector", inline=True),
-                ),
+            ui.input_selectize(
+                id="p1_sector",
+                label="Sector",
+                choices=["All"] + ALL_SECTORS,
+                selected="All",
             ),
-            ui.card(
-                ui.card_header("Revenue Growth"),
-                ui.div(
-                    ui.output_text("p1_revenue_growth", inline=True),
-                ),
+            ui.input_select(
+                id="p1_metric",
+                label="Metric",
+                choices=METRIC_CHOICES,
+                selected="Net Profit Margin",
             ),
-            col_widths=[4, 4, 4],
-            fill=False,
+            open="desktop",
         ),
-        # Sidebar + Charts
-        ui.layout_sidebar(
-            ui.sidebar(
-                ui.h4("Filters"),
-                ui.input_slider(
-                    id="p1_year_range",
-                    label="Period",
-                    min=int(df["Year"].min()),
-                    max=int(df["Year"].max()),
-                    value=[int(df["Year"].min()), int(df["Year"].max())],
-                    sep="",
-                ),
-                ui.input_select(
-                    id="p1_sector",
-                    label="Sector",
-                    choices=["All"] + ALL_SECTORS,
-                    selected="All",
-                ),
-                ui.input_select(
-                    id="p1_metric",
-                    label="Metric",
-                    choices=METRIC_CHOICES,
-                    selected="Net Profit Margin",
-                ),
-                open="desktop",
-            ),
-            # Row 1: bar + line
+        ui.page_fillable(
+            ui.h2("US Corporate Profitability Analytics"),
+            # Row 1: KPI Cards
             ui.layout_columns(
                 ui.card(
-                    ui.card_header("A. Sector Profitability"),
+                    ui.card_header("Avg Profit Margin"),
+                    ui.tags.div(
+                        ui.tags.h3(ui.output_text("p1_avg_margin", inline=True), class_="kpi-value", style="display: inline;"),
+                        ui.output_ui("p1_margin_trend", style="display: inline;"),
+                    ),
+                    ui.output_ui("p1_margin_badge"),
+                ),
+                ui.card(
+                    ui.card_header("Top Sector"),
+                    ui.tags.h3(ui.output_text("p1_top_sector", inline=True), class_="kpi-value", style="display: inline;"),
+                    ui.output_ui("p1_index_performance_display"),
+                ),
+                ui.card(
+                    ui.card_header("Revenue Growth"),
+                    ui.tags.div(
+                        ui.output_ui("p1_revenue_growth_display"),
+                        ui.output_ui("p1_revenue_trend", style="display: inline;"),
+                    ),
+                    ui.tags.p("YEAR OVER YEAR", class_="kpi-label", style="margin-top: 0.5rem;"),
+                ),
+                col_widths=[4, 4, 4],
+            ),
+            # Row 2: Charts
+            ui.layout_columns(
+                ui.card(
+                    ui.card_header("Sector Profitability"),
                     output_widget("p1_chart_a"),
                 ),
                 ui.card(
-                    ui.card_header("B. Profitability Trend"),
-                    ui.output_ui("p1_chart_b"),
+                    ui.card_header(
+                        ui.output_ui("trend_header")
+                    ),
+                    output_widget("p1_chart_b"),
                 ),
                 col_widths=[6, 6],
             ),
-            # Row 2: scatter + table
+            # Row 3: Peer + Table
             ui.layout_columns(
                 ui.card(
-                    ui.card_header("C. Peer Benchmarking"),
+                    ui.card_header("Peer Benchmarking"),
                     output_widget("p1_chart_c"),
                 ),
                 ui.card(
-                    ui.card_header("D. Company Detail"),
+                    ui.card_header("Company Details"),
                     ui.output_data_frame("p1_table_d"),
                 ),
                 col_widths=[6, 6],
@@ -130,145 +138,88 @@ def page1_sector_analysis():
 
 # Page 2: Company Financial Health
 def page2_company_health():
-    return ui.page_fillable(
-        ui.tags.style("""
-            .section-label {
-                writing-mode: vertical-rl;
-                text-orientation: upright;
-                color: white;
-                font-weight: bold;
-                padding: 10px 6px;
-                border-radius: 6px;
-                text-align: center;
-                letter-spacing: 4px;
-                font-size: 0.7em;
-            }
-            .label-wrapper {
-                display: flex;
-                align-items: stretch;
-                height: 100%;
-            }
-            .section-label-blue { background-color: #2980b9; }
-            .section-label-red { background-color: #c0392b; }
-            .kpi-big { font-size: 2em; font-weight: bold; }
-            .kpi-label { font-size: 0.9em; color: #666; }
-        """),
-        ui.h2("Financial Health Dashboard"),
-        ui.p(
-            "A comprehensive KPI dashboard highlighting key financial metrics of public companies."
-        ),
-        ui.layout_sidebar(
-            ui.sidebar(
-                ui.h4("Filters"),
-                ui.input_select(
-                    id="category",
-                    label="Industry",
-                    choices=ALL_CATEGORIES,
-                    selected=ALL_CATEGORIES[0],
-                ),
-                ui.input_select(
-                    id="company",
-                    label="Company",
-                    choices=[],
-                ),
-                ui.input_select(
-                    id="year",
-                    label="Year",
-                    choices=[str(y) for y in range(2023, 2008, -1)],
-                    selected="2022",
-                ),
-                open="desktop",
+    return ui.layout_sidebar(
+        ui.sidebar(
+            ui.h4("Analytics Filters"),
+            ui.input_select(
+                id="category",
+                label="Industry",
+                choices=ALL_CATEGORIES,
+                selected=ALL_CATEGORIES[0],
             ),
-            # Profitability row
+            ui.input_select(
+                id="company",
+                label="Company",
+                choices=[],
+            ),
+            ui.input_select(
+                id="year",
+                label="Year",
+                choices=[str(y) for y in range(2023, 2008, -1)],
+                selected="2022",
+            ),
+            open="desktop",
+        ),
+        ui.page_fillable(
+            ui.h2("Financial Health Dashboard"),
+            ui.p("A comprehensive KPI dashboard highlighting key financial metrics of public companies."),
+            # Profitability Row
             ui.layout_columns(
-                ui.div(
-                    ui.div("PROFITABILITY", class_="section-label section-label-blue"),
-                    class_="label-wrapper",
-                ),
                 ui.card(
                     ui.card_header("Net Profit Margin"),
-                    ui.div(
-                        ui.span("25.3%", class_="kpi-big"),
-                        ui.br(),
-                        ui.span("[Sparkline chart placeholder]", class_="kpi-label"),
-                    ),
+                    ui.tags.h3("25.3%", class_="kpi-value"),
                 ),
                 ui.card(
                     ui.card_header("Return on Equity (ROE)"),
-                    ui.div(
-                        ui.span("196.96%", class_="kpi-big"),
-                        ui.br(),
-                        ui.span("[Sparkline chart placeholder]", class_="kpi-label"),
-                    ),
+                    ui.tags.h3("196.96%", class_="kpi-value"),
                 ),
                 ui.card(
                     ui.card_header("Revenue & Net Income"),
-                    ui.div(
-                        ui.span("$394,328M", class_="kpi-big"),
-                        ui.br(),
-                        ui.span("Revenue", class_="kpi-label"),
-                        ui.br(),
-                        ui.br(),
-                        ui.span("$99,803M", class_="kpi-big"),
-                        ui.br(),
-                        ui.span("Net Income", class_="kpi-label"),
-                    ),
+                    ui.tags.span("REVENUE", class_="kpi-label"),
+                    ui.tags.h3("$394,328M", class_="kpi-value"),
+                    ui.tags.span("NET INCOME", class_="kpi-label", style="display: block; margin-top: 1rem;"),
+                    ui.tags.h3("$99,803M", class_="kpi-value"),
                 ),
                 ui.card(
                     ui.card_header("Revenue Over Time"),
-                    ui.p("[Bar chart placeholder — yearly revenue from 2009-2023]"),
+                    ui.tags.p("[Bar chart placeholder]", style="color: #64748b;"),
                 ),
-                col_widths=[1, 2, 2, 3, 4],
+                col_widths=[3, 3, 3, 3],
             ),
-            # Financial health row
+            # Financial Health Row
             ui.layout_columns(
-                ui.div(
-                    ui.div(
-                        "FINANCIAL HEALTH", class_="section-label section-label-red"
-                    ),
-                    class_="label-wrapper",
-                ),
                 ui.card(
                     ui.card_header("Current Ratio"),
-                    ui.div(
-                        ui.span("0.88", class_="kpi-big"),
-                        ui.br(),
-                        ui.span("Current Ratio over time", class_="kpi-label"),
-                    ),
-                    ui.p("[Line chart placeholder]"),
+                    ui.tags.h3("0.88", class_="kpi-value"),
+                    ui.tags.p("[Line chart placeholder]", style="color: #64748b; margin-top: 1rem;"),
                 ),
                 ui.card(
                     ui.card_header("Debt / Equity Ratio"),
-                    ui.div(
-                        ui.span("2.37", class_="kpi-big"),
-                        ui.br(),
-                        ui.span("Debt/Equity over time", class_="kpi-label"),
-                    ),
-                    ui.p("[Line chart placeholder]"),
+                    ui.tags.h3("2.37", class_="kpi-value"),
+                    ui.tags.p("[Line chart placeholder]", style="color: #64748b; margin-top: 1rem;"),
                 ),
                 ui.card(
                     ui.card_header("Cash Flows"),
-                    ui.div(
-                        ui.span("Operating: $122,151M", class_="kpi-label"),
-                        ui.br(),
-                        ui.span("Investing: -$22,354M", class_="kpi-label"),
-                        ui.br(),
-                        ui.span("Financing: -$110,749M", class_="kpi-label"),
-                    ),
-                    ui.p("[Grouped bar chart placeholder]"),
+                    ui.tags.p("Operating: $122,151M"),
+                    ui.tags.p("Investing: -$22,354M"),
+                    ui.tags.p("Financing: -$110,749M"),
+                    ui.tags.p("[Grouped bar chart]", style="color: #64748b; margin-top: 1rem;"),
                 ),
-                col_widths=[1, 4, 4, 3],
+                col_widths=[4, 4, 4],
             ),
         ),
     )
 
 
-app_ui = ui.page_navbar(
-    ui.nav_panel("Sector Analysis", page1_sector_analysis()),
-    ui.nav_panel("Company Health", page2_company_health()),
-    title="fin-health",
-    id="main_nav",
-    fillable=True,
+app_ui = ui.page_fluid(
+    CUSTOM_CSS,
+    ui.page_navbar(
+        ui.nav_panel("Sector Analysis", page1_sector_analysis()),
+        ui.nav_panel("Company Health", page2_company_health()),
+        title="fin-health",
+        id="main_nav",
+        fillable=True,
+    ),
 )
 
 
@@ -289,31 +240,122 @@ def server(input, output, session):
         return filtered
 
     # KPI outputs
+    # ------------------ Avg Profit Margin --------------------
     @render.text
     def p1_avg_margin():
         filtered = p1_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
         avg = filtered["Net Profit Margin"].mean()
         return f"{avg:.1f}%"
 
+    @render.ui
+    def p1_margin_trend():
+        """Render trend indicator for profit margin based on actual data."""
+        filtered_df = p1_filtered_data()
+        if filtered_df.empty:
+            return ui.tags.span()
+        
+        # Get years sorted
+        years = sorted(filtered_df["Year"].unique())
+        if len(years) < 2:
+            return ui.tags.span()  # No trend to show with single year
+        
+        # Compare most recent year to previous year
+        current_year_margin = filtered_df[filtered_df["Year"] == years[-1]]["Net Profit Margin"].mean()
+        previous_year_margin = filtered_df[filtered_df["Year"] == years[-2]]["Net Profit Margin"].mean()
+        
+        if pd.isna(current_year_margin) or pd.isna(previous_year_margin):
+            return ui.tags.span()
+        
+        is_positive = current_year_margin >= previous_year_margin
+        trend_char = "▲" if is_positive else "▼"
+        trend_class = "up" if is_positive else "down"
+        return ui.tags.span(trend_char, class_=f"trend-indicator {trend_class}")
+
+    # ------------------ Top Sector --------------------
     @render.text
     def p1_top_sector():
         filtered = p1_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
         print("filtered : ", filtered)
         top = filtered.groupby("Category")["Net Profit Margin"].mean().idxmax()
         return top
 
-    @render.text
-    def p1_revenue_growth():
-        p1_filtered_data()
-        return "+5.8%"
+    @reactive.calc
+    def p1_index_margin():
+        filtered_df = p1_filtered_data()
+        if filtered_df.empty:
+            return 0.0
+        
+        # Aggregated Index Formula: Total Income / Total Revenue
+        total_revenue = filtered_df["Revenue"].sum()
+        total_net_income = filtered_df["Net Income"].sum()
+        
+        if total_revenue == 0:
+            return 0.0
+            
+        return (total_net_income / total_revenue) * 100
 
-    @render_widget
+    @render.ui
+    def p1_index_performance_display():
+        margin = p1_index_margin()
+        return ui.tags.p("INDEX PERFORMANCE: ", ui.tags.strong(f"{margin:.1f}%")," NET MARGIN", class_="kpi-label")
+
+    # ------------------ Revenue growth --------------------
+    @reactive.calc
+    def p1_revenue_change():
+        """Calculate revenue change value and direction (shared by display and trend)."""
+        filtered_df = p1_filtered_data()
+        yearly_revenue = filtered_df.groupby("Year")["Revenue"].sum().sort_index(ascending=False)
+        
+        if len(yearly_revenue) < 2:
+            return None
+        
+        current = yearly_revenue.iloc[0]
+        previous = yearly_revenue.iloc[1]
+        
+        if pd.isna(current) or pd.isna(previous) or previous == 0:
+            return None
+        
+        revenue_growth = (current - previous) / previous * 100
+        return {"value": revenue_growth, "is_positive": revenue_growth >= 0}
+
+    @render.ui
+    def p1_revenue_growth_display():
+        change = p1_revenue_change()
+        if change is None:
+            return ui.tags.h3("Data Unavailable", class_="kpi-value", style="display: inline;")
+        sign = "+" if change["is_positive"] else ""
+        return ui.tags.h3(f"{sign}{change['value']:.1f}%", class_="kpi-value", style="display: inline;")
+    
+    @render.ui
+    def p1_revenue_trend():
+        """Render trend indicator for revenue growth based on actual data."""
+        change = p1_revenue_change()
+        if change is None:
+            return ui.tags.span()
+        trend_char = "▲" if change["is_positive"] else "▼"
+        trend_class = "up" if change["is_positive"] else "down"
+        return ui.tags.span(trend_char, class_=f"trend-indicator {trend_class}")
+
+    # Charts
+    # ------------------ Sector Profitability --------------------
+    @render_altair
     def p1_chart_a():
         filtered = p1_filtered_data()
         metric = input.p1_metric()
 
         avg_by_sector = filtered.groupby("Category")[metric].mean().reset_index()
-
+        if avg_by_sector.empty:
+                return (
+                        alt.Chart(pd.DataFrame({"x":[0], "y":[0], "text":["Data Unavailable"]}))
+                        .mark_text(size=18)
+                        .encode(
+                            text="text:N",
+                        )
+                    )
         chart = (
             alt.Chart(avg_by_sector)
             .mark_bar()
@@ -322,7 +364,7 @@ def server(input, output, session):
                 y=alt.Y(f"{metric}:Q", title=metric),
                 color=alt.Color(
                     "Category:N",
-                    scale=alt.Scale(scheme="tableau10"),
+                    scale=alt.Scale(scheme="viridis"),
                     legend=None,
                 ),
                 tooltip=["Category", alt.Tooltip(f"{metric}:Q", format=".2f")],
@@ -331,24 +373,68 @@ def server(input, output, session):
         )
         return chart
 
+    # ------------------ Metric based Trend --------------------
+    # Change p1_chart_b header based on metric filter selection
     @render.ui
-    def p1_chart_b():
-        p1_filtered_data()
-        return ui.p("[Line chart placeholder — metric trend over time by sector]")
+    def trend_header():
+        min_year, max_year = input.p1_year_range()
+        return f"Trend - {input.p1_metric()}  ({min_year}-{max_year})"
 
-    # Chart C: Peer Benchmarking Scatter Plot
-    @render_widget
+    @render_altair
+    def p1_chart_b():        
+        filtered = p1_filtered_data()
+        metric = input.p1_metric()
+        
+        observed_trend = (
+            filtered.groupby(["Year","Category"], as_index=False)[metric]
+            .mean()
+        )
+
+        if observed_trend.empty:
+            return (
+                    alt.Chart(pd.DataFrame({"x":[0], "y":[0], "text":["Data Unavailable"]}))
+                    .mark_text(size=18)
+                    .encode(
+                        text="text:N",
+                    )
+                )
+
+        metric_trend = (
+            alt.Chart(observed_trend)
+            .mark_line(point=True).encode(
+                alt.X("Year:O", title="Year"),
+                alt.Y(f"{metric}:Q", title=metric),
+                color=alt.Color("Category:N", scale=alt.Scale(scheme="viridis")),
+                tooltip=[
+                    "Year",
+                    "Category",
+                    alt.Tooltip(f"{metric}:Q", format=".2f")
+                ]
+            )            
+        )
+        return metric_trend
+
+    # ------------------ Peer Benchmarking Scatter Plot --------------------
+    @render_altair
     def p1_chart_c():
         filtered = p1_filtered_data()
         metric = input.p1_metric()
-
+        if filtered.empty:
+            return (
+                    alt.Chart(pd.DataFrame({"x":[0], "y":[0], "text":["Data Unavailable"]}))
+                    .mark_text(size=18)
+                    .encode(
+                        text="text:N",
+                    )
+                )
+        
         chart = (
             alt.Chart(filtered)
             .mark_circle(size=60)
             .encode(
                 x=alt.X("Revenue:Q", title="Revenue ($)"),
                 y=alt.Y(f"{metric}:Q", title=metric),
-                color=alt.Color("Category:N", scale=alt.Scale(scheme="tableau10")),
+                color=alt.Color("Category:N", scale=alt.Scale(scheme="viridis")),
                 tooltip=[
                     "Company",
                     "Category",
@@ -361,6 +447,7 @@ def server(input, output, session):
         )
         return chart
 
+    # ------------------ Company Details --------------------
     @render.data_frame
     def p1_table_d():
         filtered = p1_filtered_data()
