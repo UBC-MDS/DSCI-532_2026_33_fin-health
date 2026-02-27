@@ -8,7 +8,17 @@
 
 ## Project Synopsis
 
-`fin-health` is an interactive dashboard that visualizes the financial health of publicly traded companies. It allows users to explore key financial metrics such as revenue, profitability, debt ratios, and cash flow across companies and time periods. Fin-Health aims to support investors and analysts in making data-driven comparisons and assessments of corporate financial performance.
+`fin-health` is an interactive dashboard that visualizes the financial health of publicly traded companies. It allows users to explore key financial metrics such as revenue, profitability, debt ratios, and cash flow across companies and time periods. fin-health supports investors and analysts in making data-driven comparisons and evaluating corporate financial performance across sectors and time.
+
+## Motivation
+Investment analysts and portfolio managers often need to compare financial performance across sectors and individual companies to support data-driven investment decisions. However, extracting insights from financial statements typically requires manually compiling data and creating ad-hoc visualizations, a process that can be both time-consuming and prone to errors.
+
+`fin-health` addresses this challenge by providing a centralized, interactive dashboard that enables users to explore financial performance efficiently. By allowing users to filter data by time period, sector, and financial metrics, the dashboard facilitates rapid analysis of profitability trends, peer benchmarking, and key financial indicators.
+
+## Demo
+
+Below is a short preview of the dashboard interface.
+![Dashboard demo](img/demo.gif)
 
 ## Deployment
 
@@ -29,14 +39,16 @@ For a more comprehensive guide on development guidelines for this project, check
 
 1. Install [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) as a prerequisite.
 
-2. Clone the repository:
+2. Open terminal and run the following commands.
+
+3. Clone the repository:
 
 ```bash
 git clone https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health.git
 cd DSCI-532_2026_33_fin-health
 ```
 
-3. Create and activate the conda environment:
+4. Create and activate the conda environment:
 
 ```bash
 conda env create -f environment.yml
@@ -50,6 +62,12 @@ conda-lock install -n fin-health conda-lock.yml
 conda activate fin-health
 ```
 
+5. Run fin-health Shiny dashboard locally:
+
+```bash
+shiny run --reload src/app.py
+```
+
 ## Contributors
 
 - Seungmyun Park
@@ -61,7 +79,7 @@ conda activate fin-health
 
 Interested in contributing? Check out the contributing guidelines [here](./CONTRIBUTING.md). Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.
 
-## Copyright
+## License
 
 - Copyright © 2026 Seungmyun Park, Shruti Sasi, Jiro Amato, Luke Ni
 
