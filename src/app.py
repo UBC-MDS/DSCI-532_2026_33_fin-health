@@ -1,7 +1,6 @@
 from pathlib import Path
 import altair as alt
 import pandas as pd
-from datetime import datetime
 from shiny import App, reactive, render, ui
 from shinywidgets import output_widget, render_altair
 
@@ -286,7 +285,9 @@ app_ui = ui.page_fluid(
             ui.p(
                 "US Corporate Financial Health Dashboard | ",
                 "Team: Jiro Amato, Eddeness, ShrutiSasi, lukeni777 | ",
-                ui.a("GitHub Repo", href="https://github.com/UBC-MDS/532-finance-health"),
+                ui.a(
+                    "GitHub Repo", href="https://github.com/UBC-MDS/532-finance-health"
+                ),
                 " | Last updated: 2026-02-26",
                 style="text-align: center; font-size: 0.85em; color: #888;",
             ),
@@ -562,6 +563,7 @@ def server(input, output, session):
     def _update_company_choices():
         companies = CATEGORY_COMPANIES.get(input.category(), [])
         ui.update_select("company", choices=companies, selected=companies[0])
+
 
 # Create app
 app = App(app_ui, server)
