@@ -305,7 +305,7 @@ app_ui = ui.page_fluid(
         ui.tags.div(
             ui.p(
                 "US Corporate Financial Health Dashboard | ",
-                "Team: Jiro Amato, Eddeness, ShrutiSasi, lukeni777 | ",
+                "Team: Jiro Amato, Seungmyun Park, Shruti Sasi, Luke Ni | ",
                 ui.a(
                     "GitHub Repo", href="https://github.com/UBC-MDS/532-finance-health"
                 ),
