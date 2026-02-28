@@ -35,17 +35,7 @@ CATEGORY_COMPANIES = {
     "LOGI": ["AMZN"],
     "MANUFACTURING": ["PCG"],
 }
-ALL_CATEGORIES = sorted(CATEGORY_COMPANIES.keys())
-ALL_SECTORS = [
-    "BANK",
-    "ELEC",
-    "FINANCE",
-    "FINTECH",
-    "FOOD",
-    "IT",
-    "LOGI",
-    "MANUFACTURING",
-]
+ALL_SECTORS = sorted(CATEGORY_COMPANIES.keys())
 
 METRIC_CHOICES = {
     "Net Profit Margin": "%",
@@ -192,8 +182,8 @@ def page2_company_health():
     category_select = ui.input_select(
         id="category",
         label="Industry",
-        choices=ALL_CATEGORIES,
-        selected=ALL_CATEGORIES[0],
+        choices=ALL_SECTORS,
+        selected=ALL_SECTORS[0],
     )
     company_select = ui.input_select(
         id="company",
