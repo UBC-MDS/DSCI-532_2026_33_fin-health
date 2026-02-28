@@ -5,13 +5,20 @@ from shiny import App, reactive, render, ui
 from shinywidgets import output_widget, render_altair
 
 
-# Data loading from module level
 DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
-df = pd.read_csv(DATA_PATH, encoding="utf-8-sig")
-df.columns = df.columns.str.strip()
-df["Category"] = df[
-    "Category"
-].str.upper()  # Fix: Category column has 'BANK' and 'bank'
+
+
+def load_data(path: Path) -> pd.DataFrame:
+    """Load and clean the financial dataset."""
+    if not path.exists():
+        raise FileNotFoundError(f"Dataset not found: {path}")
+    data = pd.read_csv(path, encoding="utf-8-sig")
+    data.columns = data.columns.str.strip()
+    data["Category"] = data["Category"].str.upper()
+    return data
+
+
+df = load_data(DATA_PATH)
 
 # Load custom CSS from external file
 CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
