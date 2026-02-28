@@ -67,7 +67,7 @@ def page1_sector_analysis():
         choices=["All"] + ALL_SECTORS,
         selected="All",
     )
-    metric_select = ui.input_select(
+    metric_select = ui.input_selectize(
         id="p1_metric",
         label="Metric",
         choices=list(METRIC_CHOICES.keys()),
@@ -337,10 +337,20 @@ def server(input, output, session):
 
     # Page 1: Sector Analysis
     @reactive.calc
+    def p1_selected_metric():
+        """Return the selected metric, falling back to default if cleared."""
+        metric = input.p1_metric()
+        if not metric or metric not in METRIC_CHOICES:
+            return "Net Profit Margin"
+        return metric
+
+    @reactive.calc
     def p1_filtered_data():
         """Filter dataset by selected year range and sector."""
         year_min, year_max = input.p1_year_range()
         sector = input.p1_sector()
+        if not sector:
+            sector = "All"
 
         filtered = df[(df["Year"] >= year_min) & (df["Year"] <= year_max)]
 
@@ -483,7 +493,7 @@ def server(input, output, session):
     @render_altair
     def p1_chart_a():
         filtered = p1_filtered_data()
-        metric = input.p1_metric()
+        metric = p1_selected_metric()
         unit = METRIC_CHOICES[metric]
 
         avg_by_sector = filtered.groupby("Category")[metric].mean().reset_index()
@@ -519,12 +529,12 @@ def server(input, output, session):
     @render.ui
     def trend_header():
         min_year, max_year = input.p1_year_range()
-        return f"Trend - {input.p1_metric()}  ({min_year}-{max_year})"
+        return f"Trend - {p1_selected_metric()}  ({min_year}-{max_year})"
 
     @render_altair
     def p1_chart_b():
         filtered = p1_filtered_data()
-        metric = input.p1_metric()
+        metric = p1_selected_metric()
         unit = METRIC_CHOICES[metric]
 
         observed_trend = filtered.groupby(["Year", "Category"], as_index=False)[
@@ -558,7 +568,7 @@ def server(input, output, session):
     @render_altair
     def p1_chart_c():
         filtered = p1_filtered_data()
-        metric = input.p1_metric()
+        metric = p1_selected_metric()
         unit = METRIC_CHOICES[metric]
 
         if filtered.empty:
