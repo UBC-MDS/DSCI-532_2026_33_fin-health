@@ -130,7 +130,9 @@ def page1_sector_analysis():
         ),
     )
     kpi_row = ui.layout_columns(
-        card_avg_margin, card_top_sector, card_revenue_growth,
+        card_avg_margin,
+        card_top_sector,
+        card_revenue_growth,
         col_widths=[4, 4, 4],
     )
 
@@ -146,7 +148,8 @@ def page1_sector_analysis():
         full_screen=True,
     )
     chart_row = ui.layout_columns(
-        card_sector_profitability, card_trend,
+        card_sector_profitability,
+        card_trend,
         col_widths=[6, 6],
     )
 
@@ -161,7 +164,8 @@ def page1_sector_analysis():
         ui.output_data_frame("p1_table_d"),
     )
     peer_row = ui.layout_columns(
-        card_peer, card_details,
+        card_peer,
+        card_details,
         col_widths=[6, 6],
     )
 
@@ -244,7 +248,10 @@ def page2_company_health():
     profitability_section = ui.div(
         ui.div("PROFITABILITY", class_="section-label section-label-blue"),
         ui.layout_columns(
-            card_npm, card_roe, card_rev_income, card_rev_time,
+            card_npm,
+            card_roe,
+            card_rev_income,
+            card_rev_time,
             col_widths=[3, 3, 3, 3],
         ),
         class_="grid-section",
@@ -286,7 +293,9 @@ def page2_company_health():
     health_section = ui.div(
         ui.div("FINANCIAL HEALTH", class_="section-label section-label-red"),
         ui.layout_columns(
-            card_current_ratio, card_debt_equity, card_cash_flows,
+            card_current_ratio,
+            card_debt_equity,
+            card_cash_flows,
             col_widths=[4, 4, 4],
         ),
         class_="grid-section",
@@ -320,9 +329,7 @@ footer = ui.tags.footer(
         ui.p(
             "US Corporate Financial Health Dashboard | ",
             "Team: Jiro Amato, Seungmyun Park, Shruti Sasi, Luke Ni | ",
-            ui.a(
-                "GitHub Repo", href="https://github.com/UBC-MDS/532-finance-health"
-            ),
+            ui.a("GitHub Repo", href="https://github.com/UBC-MDS/532-finance-health"),
             " | Last updated: 2026-02-26",
             style="text-align: center; font-size: 0.85em; color: #888;",
         ),
