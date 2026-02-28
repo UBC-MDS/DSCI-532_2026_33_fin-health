@@ -1,4 +1,5 @@
 from pathlib import Path
+import subprocess
 import altair as alt
 import pandas as pd
 from shiny import App, reactive, render, ui
@@ -330,7 +331,11 @@ footer = ui.tags.footer(
             "US Corporate Financial Health Dashboard | ",
             "Team: Jiro Amato, Seungmyun Park, Shruti Sasi, Luke Ni | ",
             ui.a("GitHub Repo", href="https://github.com/UBC-MDS/532-finance-health"),
-            " | Last updated: 2026-02-26",
+            " | Last updated: "
+            + subprocess.run(
+                ["git", "log", "-1", "--format=%ci"],
+                capture_output=True, text=True
+            ).stdout.strip()[:10],
             style="text-align: center; font-size: 0.85em; color: #888;",
         ),
         class_="footer-container",
