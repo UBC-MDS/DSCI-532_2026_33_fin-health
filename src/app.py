@@ -314,7 +314,7 @@ def server(input, output, session):
         return filtered
 
     # KPI outputs
-    # ------------------ Avg Profit Margin --------------------
+    # Avg Profit Margin
     @render.text
     def p1_avg_margin():
         filtered = p1_filtered_data()
@@ -351,7 +351,19 @@ def server(input, output, session):
         trend_class = "up" if is_positive else "down"
         return ui.tags.span(trend_char, class_=f"trend-indicator {trend_class}")
 
-    # ------------------ Top Sector --------------------
+    @render.ui
+    def p1_margin_badge():
+        filtered = p1_filtered_data()
+        if filtered.empty:
+            return ui.tags.span()
+        n = filtered["Company"].nunique()
+        return ui.tags.p(
+            f"BASED ON {n} COMPANIES",
+            class_="kpi-label",
+            style="margin-top: 0.5rem;",
+        )
+
+    # Top Sector
     @render.text
     def p1_top_sector():
         filtered = p1_filtered_data()
@@ -381,11 +393,11 @@ def server(input, output, session):
         return ui.tags.p(
             "INDEX PERFORMANCE: ",
             ui.tags.strong(f"{margin:.1f}%"),
-            " NET MARGIN",
+            " NET PROFIT MARGIN",
             class_="kpi-label",
         )
 
-    # ------------------ Revenue growth --------------------
+    # Revenue Growth
     @reactive.calc
     def p1_revenue_change():
         """Calculate revenue change value and direction (shared by display and trend)."""
@@ -431,7 +443,7 @@ def server(input, output, session):
         return ui.tags.span(trend_char, class_=f"trend-indicator {trend_class}")
 
     # Charts
-    # ------------------ Sector Profitability --------------------
+    # Sector Profitability
     @render_altair
     def p1_chart_a():
         filtered = p1_filtered_data()
@@ -466,7 +478,7 @@ def server(input, output, session):
         )
         return chart
 
-    # ------------------ Metric based Trend --------------------
+    # Metric Based Trend
     # Change p1_chart_b header based on metric filter selection
     @render.ui
     def trend_header():
@@ -506,7 +518,7 @@ def server(input, output, session):
         )
         return metric_trend
 
-    # ------------------ Peer Benchmarking Scatter Plot --------------------
+    # Peer Benchmarking Scatterplot
     @render_altair
     def p1_chart_c():
         filtered = p1_filtered_data()
@@ -543,7 +555,7 @@ def server(input, output, session):
         )
         return chart
 
-    # ------------------ Company Details --------------------
+    # Company Details
     @render.data_frame
     def p1_table_d():
         filtered = p1_filtered_data()
