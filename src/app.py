@@ -93,28 +93,42 @@ def page1_sector_analysis():
                             style="display: inline;",
                         ),
                         ui.output_ui("p1_margin_trend", style="display: inline;"),
+                        class_="kpi-value-row",
                     ),
-                    ui.output_ui("p1_margin_badge"),
+                    ui.tags.div(
+                        ui.output_ui("p1_margin_badge"),
+                        class_="kpi-label-row",
+                    ),
                 ),
                 ui.card(
                     ui.card_header("Top Sector"),
-                    ui.tags.h3(
-                        ui.output_text("p1_top_sector", inline=True),
-                        class_="kpi-value",
-                        style="display: inline;",
+                    ui.tags.div(
+                        ui.tags.h3(
+                            ui.output_text("p1_top_sector", inline=True),
+                            class_="kpi-value",
+                            style="display: inline;",
+                        ),
+                        class_="kpi-value-row",
                     ),
-                    ui.output_ui("p1_index_performance_display"),
+                    ui.tags.div(
+                        ui.output_ui("p1_index_performance_display"),
+                        class_="kpi-label-row",
+                    ),
                 ),
                 ui.card(
                     ui.card_header("Revenue Growth"),
                     ui.tags.div(
                         ui.output_ui("p1_revenue_growth_display"),
                         ui.output_ui("p1_revenue_trend", style="display: inline;"),
+                        class_="kpi-value-row",
                     ),
-                    ui.tags.p(
-                        "YEAR OVER YEAR",
-                        class_="kpi-label",
-                        style="margin-top: 0.5rem;",
+                    ui.tags.div(
+                        ui.tags.p(
+                            "YEAR OVER YEAR",
+                            class_="kpi-label",
+                            style="margin-top: 0.5rem;",
+                        ),
+                        class_="kpi-label-row",
                     ),
                 ),
                 col_widths=[4, 4, 4],
