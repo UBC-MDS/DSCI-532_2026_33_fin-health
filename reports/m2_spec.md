@@ -41,7 +41,7 @@ The following user stories were defined in the M1 proposal and updated here with
 | `p1_chart_c` | Output | `@render_altair` | `p1_filtered_data`, `p1_metric` | #2 |
 | `p1_table_d` | Output | `@render.data_frame` | `p1_filtered_data` | #2 |
 
-> **Note:** `p1_margin_badge` is referenced in the UI template but has no server-side renderer defined; it currently renders as empty.
+> **Note:** All 18 components listed above have server-side renderers defined and are fully reactive.
 
 ### Page 2 — Company Health (⏳ Pending M3)
 
@@ -144,7 +144,7 @@ flowchart TD
 |--------|-------------|
 | `p1_avg_margin` | Mean of `Net Profit Margin` column from `p1_filtered_data()`, displayed with `%` unit |
 | `p1_margin_trend` | Compares mean `Net Profit Margin` of the most recent year to the previous year; renders `▲` (up) or `▼` (down) trend indicator |
-| `p1_margin_badge` | UI placeholder (no server-side renderer currently defined) |
+| `p1_margin_badge` | Displays "BASED ON {n} COMPANIES" where `n` is the count of unique companies in `p1_filtered_data()` |
 | `p1_top_sector` | Sector (`Category`) with the highest mean `Net Profit Margin` from `p1_filtered_data()` |
 | `p1_index_performance_display` | Displays "INDEX PERFORMANCE: {margin}% NET MARGIN" using the value from `p1_index_margin` |
 | `p1_revenue_growth_display` | Displays the `p1_revenue_change` value as `+X.X%` or `-X.X%` |
