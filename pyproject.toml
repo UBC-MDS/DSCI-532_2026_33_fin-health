@@ -36,3 +36,6 @@ Homepage = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health"
 "Source Code" = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/src"
 "Bug Tracker" = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/issues"
 Documentation = "https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health/blob/main/README.md"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
