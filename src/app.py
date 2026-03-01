@@ -333,8 +333,7 @@ footer = ui.tags.footer(
             ui.a("GitHub Repo", href="https://github.com/UBC-MDS/532-finance-health"),
             " | Last updated: "
             + subprocess.run(
-                ["git", "log", "-1", "--format=%ci"],
-                capture_output=True, text=True
+                ["git", "log", "-1", "--format=%ci"], capture_output=True, text=True
             ).stdout.strip()[:10],
             style="text-align: center; font-size: 0.85em; color: #888;",
         ),
