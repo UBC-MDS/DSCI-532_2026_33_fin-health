@@ -6,19 +6,9 @@ from functools import cache
 import querychat
 from chatlas import ChatGithub
 from shiny import render, ui
-from shinywidgets import output_widget, render_altair
+from shinywidgets import output_widget
 
-from charts.altair_charts import (
-    build_company_comparison_bar,
-    build_company_trend,
-    build_cash_flows,
-    build_metric_trend,
-    build_peer_scatter,
-    build_sector_bar,
-    build_single_company_summary,
-)
-from components.empty_chart import empty_chart
-from data import METRIC_CHOICES, df
+from data import df
 
 DEFAULT_METRIC = "Net Profit Margin"
 
@@ -52,6 +42,7 @@ def _infer_metric(title: str | None) -> str:
         if keyword in lower:
             return metric
     return DEFAULT_METRIC
+
 
 DATA_DESCRIPTION = """
 US Corporate financial statement data (2009–2023), covering 12 publicly
@@ -124,6 +115,7 @@ You are a financial data analyst assistant. Follow these rules strictly:
 4. Keep responses concise — no more than 5 sentences outside the structured format.
 """
 
+
 @cache
 def _get_qc():
     """Lazily create the QueryChat instance (deferred until first use)."""
@@ -140,6 +132,7 @@ def _get_qc():
 def _has_token():
     """Check whether GITHUB_TOKEN is available."""
     return bool(os.environ.get("GITHUB_TOKEN"))
+
 
 def ai_explorer_ui():
     """Return the fin-chat page layout."""
@@ -196,6 +189,7 @@ def ai_explorer_ui():
             chart_row,
         ),
     )
+
 
 def ai_explorer_server(input, output, session):
     """Server logic for the fin-chat page."""
