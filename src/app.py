@@ -1,6 +1,6 @@
 from pathlib import Path
 import subprocess
-from data import df, CATEGORY_COMPANIES, ALL_SECTORS, METRIC_CHOICES
+from data import CATEGORY_COMPANIES, ALL_SECTORS, METRIC_CHOICES
 import altair as alt
 import pandas as pd
 from shiny import App, reactive, render, ui
@@ -26,6 +26,7 @@ df = load_data(DATA_PATH)
 CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
 with open(CSS_PATH, "r") as css_file:
     CUSTOM_CSS = ui.tags.style(css_file.read())
+
 
 # Page 1: Sector Analysis
 def page1_sector_analysis():
