@@ -140,3 +140,59 @@ def _get_qc():
 def _has_token():
     """Check whether GITHUB_TOKEN is available."""
     return bool(os.environ.get("GITHUB_TOKEN"))
+
+def ai_explorer_ui():
+    """Return the fin-chat page layout."""
+    if not _has_token():
+        return ui.page_fillable(
+            ui.h2("fin-chat"),
+            ui.card(
+                ui.card_header("Configuration Required"),
+                ui.p("Set the GITHUB_TOKEN environment variable to enable fin-chat."),
+            ),
+        )
+
+    qc = _get_qc()
+    sidebar = ui.sidebar(
+        qc.ui(),
+        open="desktop",
+        width=400,
+    )
+
+    data_card = ui.card(
+        ui.card_header(
+            ui.div(
+                ui.output_text("ai_title"),
+                ui.span(" | "),
+                ui.output_text("ai_row_count", inline=True),
+            )
+        ),
+        ui.output_data_frame("ai_data_table"),
+        ui.download_button("ai_download", "Download CSV"),
+        full_screen=True,
+        height="auto",
+        fill=False,
+    )
+
+    chart_row = ui.layout_columns(
+        ui.card(
+            ui.card_header("Sector Profitability"),
+            output_widget("ai_chart_a"),
+            full_screen=True,
+        ),
+        ui.card(
+            ui.card_header("Metric Trend"),
+            output_widget("ai_chart_b"),
+            full_screen=True,
+        ),
+        col_widths=[6, 6],
+    )
+
+    return ui.layout_sidebar(
+        sidebar,
+        ui.page_fillable(
+            ui.h2("fin-chat"),
+            data_card,
+            chart_row,
+        ),
+    )
