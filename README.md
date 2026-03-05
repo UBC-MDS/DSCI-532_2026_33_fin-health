@@ -32,7 +32,6 @@ Below is a short preview of the dashboard interface.
 ### Dependencies
 
 -   `conda` (version 26.1.0 or higher)
--   `conda-lock` (version 3.0.4 or higher - **optional**)
 -   Python and packages listed in [`requirements.txt`](requirements.txt)
 
 For a more comprehensive guide on development guidelines for this project, check out our contributing page [here](./CONTRIBUTING.md).
@@ -52,13 +51,6 @@ cd DSCI-532_2026_33_fin-health
 
 ```bash
 conda env create -f environment.yml
-conda activate fin-health
-```
-
-Or install environment via [`conda-lock`](https://conda.github.io/conda-lock/basic_usage/)
-
-```bash
-conda-lock install -n fin-health conda-lock.yml
 conda activate fin-health
 ```
 
