@@ -123,3 +123,20 @@ You are a financial data analyst assistant. Follow these rules strictly:
 
 4. Keep responses concise — no more than 5 sentences outside the structured format.
 """
+
+@cache
+def _get_qc():
+    """Lazily create the QueryChat instance (deferred until first use)."""
+    return querychat.QueryChat(
+        df,
+        "financial_data",
+        data_description=DATA_DESCRIPTION,
+        extra_instructions=EXTRA_INSTRUCTIONS,
+        greeting=GREETING,
+        client=ChatGithub(model="gpt-4.1-mini"),
+    )
+
+
+def _has_token():
+    """Check whether GITHUB_TOKEN is available."""
+    return bool(os.environ.get("GITHUB_TOKEN"))
