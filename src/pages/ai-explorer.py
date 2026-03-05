@@ -196,3 +196,37 @@ def ai_explorer_ui():
             chart_row,
         ),
     )
+
+def ai_explorer_server(input, output, session):
+    """Server logic for the fin-chat page."""
+    if not _has_token():
+        return
+
+    qc = _get_qc()
+    qc_vals = qc.server()
+
+    @render.text
+    def ai_title():
+        title = qc_vals.title()
+        return title if title else "Filtered Data"
+
+    MAX_ROWS = 10
+    ROW_HEIGHT_PX = 32
+    HEADER_HEIGHT_PX = 40
+
+    @render.data_frame
+    def ai_data_table():
+        filtered = qc_vals.df()
+        n = len(filtered)
+        height = f"{HEADER_HEIGHT_PX + min(n, MAX_ROWS) * ROW_HEIGHT_PX}px"
+        return render.DataGrid(filtered, height=height)
+
+    @render.text
+    def ai_row_count():
+        filtered = qc_vals.df()
+        return f"{len(filtered)} rows"
+
+    @render.download(filename="filtered_financial_data.csv")
+    def ai_download():
+        filtered = qc_vals.df()
+        yield filtered.to_csv(index=False)
