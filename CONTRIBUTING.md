@@ -107,16 +107,6 @@ local development.
 
 1. Install [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) as a prerequisite.
 
-   Optionally, you can also install [`conda-lock`](https://github.com/conda/conda-lock) by using **one** of the following commands:
-
-   ```bash
-   pipx install conda-lock
-   condax install conda-lock
-   pip install conda-lock
-   conda install --channel=conda-forge --name=base conda-lock
-   mamba install --channel=conda-forge --name=base conda-lock
-   ```
-
 2. Fork the <https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health>
    repository on GitHub.
 
@@ -132,13 +122,6 @@ local development.
 
    ```bash
    conda env create -f environment.yml
-   conda activate fin-health
-   ```
-
-   Or install via `conda-lock` (faster installation):
-
-   ```bash
-   conda-lock install -n fin-health conda-lock.yml
    conda activate fin-health
    ```
 
