@@ -1,5 +1,6 @@
 from pathlib import Path
 import subprocess
+from data import CATEGORY_COMPANIES, ALL_SECTORS, METRIC_CHOICES
 import altair as alt
 import pandas as pd
 from shiny import App, reactive, render, ui
@@ -25,30 +26,6 @@ df = load_data(DATA_PATH)
 CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
 with open(CSS_PATH, "r") as css_file:
     CUSTOM_CSS = ui.tags.style(css_file.read())
-
-CATEGORY_COMPANIES = {
-    "BANK": ["AIG", "BCS"],
-    "ELEC": ["INTC", "NVDA"],
-    "FINANCE": ["SHLDQ"],
-    "FINTECH": ["PYPL"],
-    "FOOD": ["MCD"],
-    "IT": ["AAPL", "GOOG", "MSFT"],
-    "LOGI": ["AMZN"],
-    "MANUFACTURING": ["PCG"],
-}
-ALL_SECTORS = sorted(CATEGORY_COMPANIES.keys())
-
-METRIC_CHOICES = {
-    "Net Profit Margin": "%",
-    "ROE": "%",
-    "ROA": "%",
-    "ROI": "%",
-    "Revenue": "USD",
-    "Net Income": "USD",
-    "EBITDA": "USD",
-    "Current Ratio": "",
-    "Debt/Equity Ratio": "",
-}
 
 
 # Page 1: Sector Analysis

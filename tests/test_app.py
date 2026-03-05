@@ -12,5 +12,18 @@ def test_data_loaded_successfully():
 def test_expected_columns_present():
     """Verify key columns required by the app exist after loading."""
     df = load_data(DATA_PATH)
-    expected = {"Year", "Company", "Category", "Net Profit Margin", "ROE", "ROA", "ROI", "Revenue", "Net Income", "EBITDA", "Current Ratio", "Debt/Equity Ratio"}
+    expected = {
+        "Year",
+        "Company",
+        "Category",
+        "Net Profit Margin",
+        "ROE",
+        "ROA",
+        "ROI",
+        "Revenue",
+        "Net Income",
+        "EBITDA",
+        "Current Ratio",
+        "Debt/Equity Ratio",
+    }
     assert expected.issubset(set(df.columns))
