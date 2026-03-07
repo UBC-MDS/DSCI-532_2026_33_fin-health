@@ -24,22 +24,6 @@ sys.path.insert(0, str(Path(__file__).parent))
 # Uncomment after decomposition is finished
 # from pages.ai_explorer import ai_explorer_server, ai_explorer_ui
 
-DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
-
-
-def load_data(path: Path) -> pd.DataFrame:
-    """Load and clean the financial dataset."""
-    if not path.exists():
-        raise FileNotFoundError(f"Dataset not found: {path}")
-    data = pd.read_csv(path, encoding="utf-8-sig")
-    data.columns = data.columns.str.strip()
-    data["Category"] = data["Category"].str.upper()
-    return data
-
-
-df = load_data(DATA_PATH)
-
-# Load custom CSS from external file
 CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
 with open(CSS_PATH, "r") as css_file:
     CUSTOM_CSS = ui.tags.style(css_file.read())
@@ -540,5 +524,4 @@ def server(input, output, session):
         ui.update_select("company", choices=companies, selected=selected)
 
 
-# Create app
 app = App(app_ui, server)
