@@ -1,14 +1,18 @@
 """fin-health dashboard — entry point."""
 
 import subprocess
-from charts.altair_charts import build_metric_trend, build_peer_scatter, build_sector_bar
+from charts.altair_charts import (
+    build_metric_trend,
+    build_peer_scatter,
+    build_sector_bar,
+)
 from data import CATEGORY_COMPANIES, ALL_SECTORS, METRIC_CHOICES
-import altair as alt
 import pandas as pd
 from shiny import App, reactive, render, ui
 from shinywidgets import output_widget, render_altair
 import sys
 from pathlib import Path
+from components.kpi_card import kpi_card
 
 from dotenv import load_dotenv
 
@@ -16,11 +20,6 @@ load_dotenv(Path(__file__).parent.parent / ".env")
 
 sys.path.insert(0, str(Path(__file__).parent))
 
-from data import CATEGORY_COMPANIES, ALL_SECTORS, METRIC_CHOICES  # noqa: E402
-import altair as alt  # noqa: E402
-import pandas as pd  # noqa: E402
-from shiny import App, reactive, render, ui  # noqa: E402
-from shinywidgets import output_widget, render_altair  # noqa: E402
 
 # Uncomment after decomposition is finished
 # from pages.ai_explorer import ai_explorer_server, ai_explorer_ui
@@ -81,21 +80,11 @@ def page1_sector_analysis():
     )
 
     # KPI cards
-    card_avg_margin = ui.card(
-        ui.card_header("Avg Profit Margin"),
-        ui.tags.div(
-            ui.tags.h3(
-                ui.output_text("p1_avg_margin", inline=True),
-                class_="kpi-value",
-                style="display: inline;",
-            ),
-            ui.output_ui("p1_margin_trend", style="display: inline;"),
-            class_="kpi-value-row",
-        ),
-        ui.tags.div(
-            ui.output_ui("p1_margin_badge"),
-            class_="kpi-label-row",
-        ),
+    card_avg_margin = kpi_card(
+        header="Avg Profit Margin",
+        value_id="p1_avg_margin",
+        trend_id="p1_margin_trend",
+        label_id="p1_margin_badge",
     )
     card_top_sector = ui.card(
         ui.card_header("Top Sector"),
@@ -505,7 +494,7 @@ def server(input, output, session):
         metric = p1_selected_metric()
         unit = METRIC_CHOICES[metric]
         return build_sector_bar(filtered, metric, unit)
-    
+
     # Metric Based Trend
     # Change p1_chart_b header based on metric filter selection
     @render.ui
@@ -519,7 +508,7 @@ def server(input, output, session):
         metric = p1_selected_metric()
         unit = METRIC_CHOICES[metric]
         return build_metric_trend(filtered, metric, unit)
-    
+
     # Peer Benchmarking Scatterplot
     @render_altair
     def p1_chart_c():
