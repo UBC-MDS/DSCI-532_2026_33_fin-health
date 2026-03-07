@@ -8,7 +8,6 @@ from shiny import App, reactive, render, ui
 from shinywidgets import output_widget, render_altair
 
 
-
 DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
 
 
