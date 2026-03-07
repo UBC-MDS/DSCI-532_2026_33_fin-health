@@ -118,7 +118,7 @@ h3, h4 {
 }
 
 .kpi-label {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -225,8 +225,13 @@ select:focus {
     padding: 1rem;
 }
 
-/* Transitions for micro-interactions */
-* {
+/* Transitions for micro-interactions — scoped to interactive elements */
+a,
+button,
+input,
+select,
+.btn,
+.nav-link {
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
