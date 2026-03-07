@@ -17,6 +17,7 @@ PALETTE = [
     "#334155",
 ]
 
+
 def _register_theme():
     """Register and enable the fin-health Altair theme."""
 
@@ -77,6 +78,7 @@ def _register_theme():
 
 
 _register_theme()
+
 
 def build_sector_bar(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
     """Bar chart of average metric by sector."""
@@ -145,6 +147,7 @@ def build_peer_scatter(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
         )
         .properties(title=f"Revenue vs {metric}", width="container", height="container")
     )
+
 
 def build_revenue_over_time(data: pd.DataFrame, company: str) -> alt.Chart:
     """Grouped bar chart of Revenue and Net Income over time (Page 2)."""
@@ -253,6 +256,7 @@ def build_cash_flows(data: pd.DataFrame, company: str) -> alt.Chart:
             height="container",
         )
     )
+
 
 def build_company_comparison_bar(
     data: pd.DataFrame, metric: str, unit: str
