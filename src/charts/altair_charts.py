@@ -254,3 +254,67 @@ def build_cash_flows(data: pd.DataFrame, company: str) -> alt.Chart:
         )
     )
 
+def build_company_comparison_bar(
+    data: pd.DataFrame, metric: str, unit: str
+) -> alt.Chart:
+    """Bar chart comparing companies on a metric (used when 1 sector or 1 year)."""
+    if data.empty:
+        return empty_chart()
+    avg_by_company = data.groupby("Company")[metric].mean().reset_index()
+    return (
+        alt.Chart(avg_by_company)
+        .mark_bar(cornerRadiusTopLeft=3, cornerRadiusTopRight=3)
+        .encode(
+            x=alt.X("Company:N", title="Company", sort="-y"),
+            y=alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
+            color=alt.Color("Company:N", scale=alt.Scale(range=PALETTE), legend=None),
+            tooltip=["Company", alt.Tooltip(f"{metric}:Q", format=".2f")],
+        )
+        .properties(title=f"{metric} by Company", width="container", height="container")
+    )
+
+
+def build_single_company_summary(
+    data: pd.DataFrame, metric: str, unit: str
+) -> alt.Chart:
+    """Horizontal bar of key metrics for a single company (1 company, 1 year)."""
+    if data.empty:
+        return empty_chart()
+    key_metrics = ["Revenue", "Net Income", "EBITDA", "ROE", "ROA", "Net Profit Margin"]
+    available = [m for m in key_metrics if m in data.columns]
+    row = data.iloc[0]
+    company = row.get("Company", "Company")
+    melted = pd.DataFrame({"Metric": available, "Value": [row[m] for m in available]})
+    return (
+        alt.Chart(melted)
+        .mark_bar(cornerRadiusEnd=3)
+        .encode(
+            y=alt.Y("Metric:N", title=None, sort=available),
+            x=alt.X("Value:Q", title="Value"),
+            color=alt.Color("Metric:N", scale=alt.Scale(range=PALETTE), legend=None),
+            tooltip=["Metric", alt.Tooltip("Value:Q", format=",.2f")],
+        )
+        .properties(
+            title=f"Key Metrics — {company}", width="container", height="container"
+        )
+    )
+
+
+def build_company_trend(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
+    """Trend line colored by company (used when few companies, many years)."""
+    if data.empty:
+        return empty_chart()
+    trend = data.groupby(["Year", "Company"], as_index=False)[metric].mean()
+    return (
+        alt.Chart(trend)
+        .mark_line(point=True)
+        .encode(
+            alt.X("Year:O", title="Year"),
+            alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
+            color=alt.Color("Company:N", scale=alt.Scale(range=PALETTE)),
+            tooltip=["Year", "Company", alt.Tooltip(f"{metric}:Q", format=".2f")],
+        )
+        .properties(
+            title=f"{metric} Trend by Company", width="container", height="container"
+        )
+    )
