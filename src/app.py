@@ -22,6 +22,7 @@ CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
 with open(CSS_PATH, "r") as css_file:
     CUSTOM_CSS = ui.tags.style(css_file.read())
 
+
 nav_sector = ui.nav_panel("Sector Analysis", sector_ui())
 nav_company = ui.nav_panel("Company Health", company_ui())
 navbar = ui.page_navbar(
