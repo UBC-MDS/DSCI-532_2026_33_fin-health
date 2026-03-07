@@ -1,5 +1,6 @@
 :root {
     --primary: #2563eb;
+    --primary-light: #60a5fa;
     --success: #009e73;
     --danger: #d55e00;
     --warning: #f59e0b;
@@ -253,24 +254,25 @@ select:focus {
     text-orientation: upright;
     color: white;
     font-weight: bold;
-    /*padding: 0.5rem 0.4rem 1rem 0.4rem;*/
     border-radius: 6px;
     text-align: center;
     letter-spacing: 1px;
-    font-size: 0.65em;
+    font-size: 0.65rem;
     display: flex;
     align-items: center;
     justify-content: center;
     white-space: nowrap;
     flex-shrink: 0;
+    height: 100%;
+    overflow: hidden;
 }
 
-.section-label-blue { 
-    background-color: #2980b9; 
+.section-label-blue {
+    background-color: var(--section-blue);
 }
 
-.section-label-red { 
-    background-color: #c0392b; 
+.section-label-red {
+    background-color: var(--section-red);
 }
 
 /* Footer styling */
@@ -310,17 +312,3 @@ select:focus {
     width: 100%;
 }
 
-/* Updated label styling to ensure it fills the grid height */
-.section-label {
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    color: white;
-    font-weight: bold;
-    border-radius: 6px;
-    text-align: center;
-    font-size: 0.7rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%; /* Fill the grid height */
-}
