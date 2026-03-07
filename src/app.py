@@ -1,4 +1,5 @@
-from pathlib import Path
+"""fin-health dashboard — entry point."""
+
 import subprocess
 from charts.altair_charts import build_metric_trend, build_peer_scatter, build_sector_bar
 from data import CATEGORY_COMPANIES, ALL_SECTORS, METRIC_CHOICES
@@ -6,7 +7,23 @@ import altair as alt
 import pandas as pd
 from shiny import App, reactive, render, ui
 from shinywidgets import output_widget, render_altair
+import sys
+from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parent.parent / ".env")
+
+sys.path.insert(0, str(Path(__file__).parent))
+
+from data import CATEGORY_COMPANIES, ALL_SECTORS, METRIC_CHOICES  # noqa: E402
+import altair as alt  # noqa: E402
+import pandas as pd  # noqa: E402
+from shiny import App, reactive, render, ui  # noqa: E402
+from shinywidgets import output_widget, render_altair  # noqa: E402
+
+# Uncomment after decomposition is finished
+# from pages.ai_explorer import ai_explorer_server, ai_explorer_ui
 
 DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
 
@@ -27,6 +44,9 @@ df = load_data(DATA_PATH)
 CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
 with open(CSS_PATH, "r") as css_file:
     CUSTOM_CSS = ui.tags.style(css_file.read())
+
+# Navbar with page tabs (uncomment after decomposition is finished)
+# nav_ai = ui.nav_panel("fin-chat", ai_explorer_ui())
 
 
 # Page 1: Sector Analysis
