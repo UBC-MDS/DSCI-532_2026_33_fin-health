@@ -1,0 +1,9 @@
+query,expected_type,expected_tool,expected_description
+Show only IT companies,filter,querychat_update_dashboard,Filter Category=IT → AAPL GOOG MSFT
+Which company had the highest ROE in 2022?,query,querychat_query,Should query data and return specific company
+Filter to banks with debt/equity above 2,filter,querychat_update_dashboard,Category=BANK and Debt/Equity Ratio > 2
+Compare all companies in 2020,filter,querychat_update_dashboard,Year=2020 all 12 companies
+What is the average revenue by sector?,aggregate,querychat_query,Should compute and return sector averages
+Show NVDA history,filter,querychat_update_dashboard,Company=NVDA all years
+Rank companies by net profit margin in 2023,compare,querychat_query,Year=2023 sorted by Net Profit Margin
+Which sector is most profitable?,aggregate,querychat_query,Should query data not hallucinate
