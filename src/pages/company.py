@@ -26,14 +26,7 @@ def company_ui():
         label="Company",
         choices=[],
     )
-    year_select = ui.input_slider(
-        id="year",
-        label="Year",
-        min=int(df["Year"].min()),
-        max=int(df["Year"].max()),
-        value=int(df["Year"].max()),
-        sep="",
-    )
+    year_select = ui.output_ui("p2_year_slider")
     sidebar = ui.sidebar(
         ui.h4("Analytics Filters"),
         category_select,
@@ -153,6 +146,31 @@ def company_server(input, output, session):
         companies = CATEGORY_COMPANIES.get(input.category(), [])
         selected = companies[0] if companies else None
         ui.update_select("company", choices=companies, selected=selected)
+
+    @render.ui
+    def p2_year_slider():
+        company = input.company()
+        company_data = df[df["Company"] == company]
+        if company_data.empty:
+            year_min = int(df["Year"].min())
+            year_max = int(df["Year"].max())
+        else:
+            year_min = int(company_data["Year"].min())
+            year_max = int(company_data["Year"].max())
+        if year_min == year_max:
+            return ui.div(
+                ui.tags.label("Year", class_="control-label"),
+                ui.tags.p(str(year_max), style="font-weight: 600; font-size: 1.1rem;"),
+                ui.input_slider(
+                    id="year", label="", min=year_min, max=year_max,
+                    value=year_max, sep="",
+                ),
+                ui.tags.style("#year-label { display: none; } #year .irs { display: none; }"),
+            )
+        return ui.input_slider(
+            id="year", label="Year", min=year_min, max=year_max,
+            value=year_max, sep="",
+        )
 
     @reactive.calc
     def p2_filtered_data():
@@ -290,12 +308,14 @@ def company_server(input, output, session):
         op = row["Cash Flow from Operating"]
         inv = row["Cash Flow from Investing"]
         fin = row["Cash Flow from Financial Activities"]
+        fmt = lambda v: f"-${abs(v):,.0f}M" if v < 0 else f"${v:,.0f}M"
         return ui.div(
-            ui.span(f"Operating: ${op:,.0f}M", class_="kpi-label"),
+            ui.span(f"Operating: {fmt(op)}", class_="kpi-label"),
             ui.br(),
-            ui.span(f"Investing: ${inv:,.0f}M", class_="kpi-label"),
+            ui.span(f"Investing: {fmt(inv)}", class_="kpi-label"),
             ui.br(),
-            ui.span(f"Financing: ${fin:,.0f}M", class_="kpi-label"),
+            ui.span(f"Financing: {fmt(fin)}", class_="kpi-label"),
+            style="text-align: center;",
         )
 
     @render.ui
