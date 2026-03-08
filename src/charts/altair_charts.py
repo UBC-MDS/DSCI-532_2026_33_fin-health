@@ -122,7 +122,11 @@ def build_metric_trend(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
             color=alt.Color("Category:N", scale=alt.Scale(range=PALETTE)),
             tooltip=["Year", "Category", alt.Tooltip(f"{metric}:Q", format=".2f")],
         )
-        .properties(width="container", height="container")
+        .properties(
+            title=f"{metric} Trend by Sector",
+            width="container",
+            height="container",
+        )
     )
 
 

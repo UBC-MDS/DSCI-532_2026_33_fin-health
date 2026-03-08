@@ -76,12 +76,12 @@ def sector_ui():
 
     # Chart cards
     card_sector_profitability = ui.card(
-        ui.card_header("Sector Profitability"),
+        ui.card_header("Sector Comparison"),
         output_widget("p1_chart_a"),
         full_screen=True,
     )
     card_trend = ui.card(
-        ui.card_header(ui.output_ui("trend_header")),
+        ui.card_header("Historical Trend"),
         output_widget("p1_chart_b"),
         full_screen=True,
     )
