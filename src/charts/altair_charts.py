@@ -5,15 +5,15 @@ import pandas as pd
 
 from components.empty_chart import empty_chart
 
-# Custom warm palette for categorical data
+# Okabe-Ito colour-blind-safe categorical palette
 PALETTE = [
-    "#2563eb",
-    "#c0392b",
-    "#f59e0b",
-    "#009e73",
-    "#8e44ad",
-    "#e67e22",
-    "#1abc9c",
+    "#E69F00",
+    "#56B4E9",
+    "#009E73",
+    "#F0E442",
+    "#0072B2",
+    "#D55E00",
+    "#CC79A7",
     "#334155",
 ]
 
