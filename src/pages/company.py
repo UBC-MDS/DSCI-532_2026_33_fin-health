@@ -308,7 +308,8 @@ def company_server(input, output, session):
         op = row["Cash Flow from Operating"]
         inv = row["Cash Flow from Investing"]
         fin = row["Cash Flow from Financial Activities"]
-        fmt = lambda v: f"-${abs(v):,.0f}M" if v < 0 else f"${v:,.0f}M"
+        def fmt(v):
+            return f"-${abs(v):,.0f}M" if v < 0 else f"${v:,.0f}M"
         return ui.div(
             ui.span(f"Operating: {fmt(op)}", class_="kpi-label"),
             ui.br(),
