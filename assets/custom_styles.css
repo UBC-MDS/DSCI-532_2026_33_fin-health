@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
 :root {
     --primary: #2563eb;
     --primary-light: #60a5fa;
@@ -12,18 +14,53 @@
     --slate-600: #475569;
     --slate-700: #334155;
     --slate-900: #0f172a;
+    --section-blue: #2980b9;
+    --section-red: #c0392b;
 }
 
-body { 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: var(--slate-50);
 }
 
+/* Viewport-contained app layout */
+body > .container-fluid {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Navbar stays fixed at top */
+body > .container-fluid > .navbar {
+    flex-shrink: 0;
+}
+
+/* Tab content fills remaining space — no scroll */
+body > .container-fluid > .navbar + .container-fluid,
+body > .container-fluid > .tab-content,
+.navbar + .container-fluid {
+    flex: 1 1 auto;
+    overflow: hidden;
+    min-height: 0;
+}
+
+/* Footer pinned at bottom */
+body > .container-fluid > footer {
+    flex-shrink: 0;
+}
+
 h2 {
+    font-family: 'DM Sans', sans-serif;
     font-weight: 700;
     color: var(--slate-900);
-    margin-bottom: 2rem;
-    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
+    flex-shrink: 0;
 }
 
 h3, h4 {
@@ -31,31 +68,12 @@ h3, h4 {
     color: var(--slate-900);
 }
 
-.btn:hover{
-    background-color: #007bc2;
-    color: white;
-}
-
-.sidebar { 
+.sidebar {
     background-color: white;
     border-right: 1px solid var(--slate-200);
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
-}
-
-/* Scoped fin-chat sidebar scroll */
-.fin-chat-sidebar {
-    height: calc(100vh - 60px);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.fin-chat-sidebar > .sidebar-content {
+    max-height: calc(100vh - 80px);
     overflow-y: auto;
-    flex: 1 1 auto;
-    min-height: 0;
-    scrollbar-width: thin;
-    scrollbar-color: var(--slate-400) transparent;
 }
 
 .sidebar h4 {
@@ -67,74 +85,65 @@ h3, h4 {
     margin-bottom: 1.5rem;
 }
 
-/* Card Styling with elevation */
-.card { 
+/* Card Styling — flat, clean, flex-fill */
+.card {
     border: 1px solid var(--slate-200);
-    border-radius: 1rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
+    border-radius: 0.75rem;
+    box-shadow: none;
     background-color: white;
     position: relative;
     overflow: hidden;
+    transition: box-shadow 0.2s ease;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0;
 }
 
-.card::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background: linear-gradient(180deg, var(--primary) 0%, var(--info) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+.card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.card:hover { 
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12), 0 15px 35px rgba(0, 0, 0, 0.05);
-    transform: translateY(-2px);
-}
-
-.card:hover::before {
-    opacity: 1;
-}
-
-.card-header { 
+.card-header {
     background-color: transparent;
-    border-bottom: 1px solid var(--slate-100);
-    padding: 0.5rem 1rem 0.5rem 1rem;
+    border-bottom: none;
+    padding: clamp(0.25rem, 0.5vh, 0.5rem) clamp(0.5rem, 1vw, 1rem) 0;
+    flex-shrink: 0;
 }
 
 .card-header .card-title,
 .card-header h5 {
-    font-size: 0.75rem;
+    font-size: clamp(0.55rem, 0.8vw, 0.7rem);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
     color: var(--slate-600);
     margin: 0;
 }
 
-.card-body { 
-    padding: 0.5rem 2rem;
+.card-body {
+    padding: clamp(0.15rem, 0.3vh, 0.25rem) clamp(0.5rem, 1vw, 1rem) clamp(0.25rem, 0.5vh, 0.5rem);
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Centers content vertically in large cards */
+    justify-content: center;
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
 }
 
-
-
-/* KPI Value Styling */
+/* KPI Value Styling — large and prominent, scales with viewport */
 .kpi-value {
-    font-size: 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1.1;
     color: var(--slate-900);
-    margin: 0.25rem 0;
+    margin: 0;
+    letter-spacing: -0.02em;
 }
 
 .kpi-label {
-    font-size: 0.7rem;
+    font-size: clamp(0.5rem, 0.75vw, 0.7rem);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -144,20 +153,55 @@ h3, h4 {
 
 /* KPI Card alignment rows */
 .kpi-value-row {
-    min-height: 2.5rem;
+    min-height: 0;
     display: flex;
     align-items: baseline;
-    padding-top: 0.75rem;
+    justify-content: center;
+    padding-top: 0.25rem;
 }
 
 .kpi-label-row {
-    margin-top: auto;
+    margin-top: 0.25rem;
+    text-align: center;
+}
+
+/* KPI cards — compact, centered, stretch to match tallest */
+.kpi-card-row .card {
+    flex: 1 1 auto;
+    text-align: center;
+}
+
+.kpi-card-row .card .card-header {
+    text-align: center;
+}
+
+.kpi-card-row .card .card-body {
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 1rem 0.5rem;
+}
+
+/* KPI row itself should not grow */
+.kpi-card-row {
+    flex: 0 0 auto;
+    margin-bottom: 0;
+}
+
+/* Ensure KPI row columns stretch cards to equal height */
+.kpi-card-row bslib-layout-columns {
+    align-items: stretch;
+}
+
+.kpi-card-row bslib-layout-columns > .bslib-grid-item {
+    display: flex;
+    flex-direction: column;
 }
 
 /* Trend Indicator - Triangle Style */
 .trend-indicator {
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: clamp(0.85rem, 1.5vw, 1.25rem);
     margin-left: 0.5rem;
     display: inline-block;
     line-height: 1;
@@ -171,9 +215,39 @@ h3, h4 {
     color: var(--danger);
 }
 
+/* KPI Health Status Icons */
+.kpi-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-left: 0.75rem;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.kpi-status.healthy {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.kpi-status.warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.kpi-status.danger {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
 /* Table Styling */
 .table {
-    font-size: 0.875rem;
+    font-size: clamp(0.65rem, 0.9vw, 0.875rem);
     color: var(--slate-700);
 }
 
@@ -187,8 +261,8 @@ h3, h4 {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--slate-900);
-    padding: 0.875rem 1rem;
-    font-size: 0.75rem;
+    padding: clamp(0.4rem, 0.8vh, 0.875rem) clamp(0.5rem, 1vw, 1rem);
+    font-size: clamp(0.55rem, 0.8vw, 0.75rem);
 }
 
 .table tbody tr {
@@ -205,7 +279,7 @@ h3, h4 {
 }
 
 .table tbody td {
-    padding: 0.875rem 1rem;
+    padding: clamp(0.3rem, 0.7vh, 0.875rem) clamp(0.5rem, 1vw, 1rem);
     vertical-align: middle;
 }
 
@@ -236,9 +310,24 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1), 0 0 0 1px var(--primary);
 }
 
-/* Layout and Spacing */
+/* Layout — viewport-fit, no scroll */
 .page-fillable {
-    padding: 1rem;
+    padding: 0.75rem 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 0.85rem;
+}
+
+/* Page 1: sidebar layout main panel — override bslib's 1.5rem gap */
+.bslib-sidebar-layout > .main.bslib-gap-spacing {
+    gap: clamp(0.4rem, 1vh, 0.85rem) !important;
+    padding: clamp(0.4rem, 0.8vh, 0.75rem) clamp(0.5rem, 1vw, 1rem);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 /* Transitions for micro-interactions — scoped to interactive elements */
@@ -246,9 +335,21 @@ a,
 button,
 input,
 select,
+textarea,
 .btn,
 .nav-link {
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Remove default bslib sidebar layout border */
+.bslib-sidebar-layout {
+    border: none !important;
+}
+
+/* Remove outer container padding so content spans full width */
+body > .container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 /* Navbar styling */
@@ -269,7 +370,7 @@ select,
     color: var(--primary);
 }
 
-/* Page 2 Vertical group styling*/
+/* Vertical section labels */
 .section-label {
     writing-mode: vertical-rl;
     text-orientation: upright;
@@ -278,14 +379,14 @@ select,
     border-radius: 6px;
     text-align: center;
     letter-spacing: 1px;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
     white-space: nowrap;
     flex-shrink: 0;
-    height: 100%;
     overflow: hidden;
+    padding: 0.5rem 0;
 }
 
 .section-label-blue {
@@ -298,11 +399,18 @@ select,
 
 /* Footer styling */
 .footer-container {
-    padding: 2rem 0;
-    margin-top: 3rem;
+    padding: 0.4rem 0;
+    margin-top: 0;
     color: var(--slate-600);
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     border-top: 1px solid var(--slate-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-container p {
+    margin: 0;
 }
 
 .footer-container a {
@@ -318,17 +426,181 @@ select,
     color: var(--slate-900);
 }
 
-/* The Grid Container */
+/* Grid sections — flex to fill viewport */
 .grid-section {
-    display: grid;
-    grid-template-columns: 40px 1fr; /* Fixed label width, flexible card width */
-    gap: 1.5rem;
-    width: 100%;
-    margin-bottom: 2rem;
+    display: flex;
     align-items: stretch;
+    gap: 0.75rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 0.6rem;
+    border-radius: 0.75rem;
 }
 
-/* Ensure the cards inside the grid take full width */
+/* Section label fixed width in flex row */
+.grid-section > .section-label {
+    width: 40px;
+    flex-shrink: 0;
+}
+
+/* Layout_columns wrapper fills remaining space */
+.grid-section > :not(.section-label) {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-bottom: 0 !important;
+}
+
+/* Blue group (Profitability) */
+.grid-section-blue {
+    background-color: rgba(41, 128, 185, 0.08);
+    box-shadow: 0 0 0 1px rgba(41, 128, 185, 0.2),
+                0 2px 10px rgba(41, 128, 185, 0.16);
+}
+
+/* Red group (Financial Health) */
+.grid-section-red {
+    background-color: rgba(192, 57, 43, 0.08);
+    box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.2),
+                0 2px 10px rgba(192, 57, 43, 0.16);
+}
+
+/* Compact grid section (KPI rows — don't grow) */
+.grid-section-compact {
+    flex: 0 0 auto;
+}
+
+/* Cards inside the grid take full width and height */
 .grid-section .shiny-layout-column {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Shiny layout_columns rows should fill height */
+.grid-section .row {
+    flex: 1 1 0;
+    min-height: 0;
+    margin-bottom: 0 !important;
+    --bs-gutter-y: 0;
+}
+
+/* Column children inside layout_columns fill their cell */
+.grid-section .row > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Chart/widget containers fill available space */
+.card .jupyter-widgets,
+.card .widget-subarea,
+.card .shiny-report-size {
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* Altair vega-embed fills its container */
+.card .vega-embed {
+    width: 100%;
+    height: 100%;
+}
+
+/* Kill bslib default vertical spacing inside page content areas;
+   let our gap property handle uniform spacing instead */
+.page-fillable,
+.bslib-sidebar-layout > .main {
+    --bslib-mb-spacer: 0;
+}
+
+.page-fillable .bslib-mb-spacing,
+.bslib-sidebar-layout > .main .bslib-mb-spacing {
+    margin-bottom: 0 !important;
+}
+
+.page-fillable > *,
+.bslib-sidebar-layout > .main > * {
+    margin-bottom: 0 !important;
+}
+
+/* layout_columns at page level — fill remaining space equally */
+.page-fillable > bslib-layout-columns,
+.bslib-sidebar-layout > .main > bslib-layout-columns {
+    flex: 1 1 0;
+    min-height: 0;
+}
+
+/* KPI row wrapper should NOT grow */
+.page-fillable > .kpi-card-row,
+.bslib-sidebar-layout > .main > .kpi-card-row {
+    flex: 0 0 auto;
+}
+
+/* Column children inside layout_columns fill their cell */
+.page-fillable bslib-layout-columns > .bslib-grid-item,
+.bslib-sidebar-layout > .main bslib-layout-columns > .bslib-grid-item {
+    display: flex;
+    flex-direction: column;
+}
+
+/* fin-chat: data card — compact, no grow */
+.page-fillable > .card[style*="auto"] ,
+.page-fillable > .card:has(.shiny-data-grid) {
+    flex: 0 0 auto;
+    max-height: 45vh;
+    overflow: hidden;
+}
+
+/* fin-chat: Download CSV button */
+.btn-csv-download.shiny-download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    width: auto;
+    padding: 0.3rem 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--slate-600);
+    background-color: white;
+    border: 1px solid var(--slate-200);
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-csv-download.shiny-download-link:hover {
+    color: var(--slate-900);
+    border-color: var(--slate-400);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.btn-csv-download.shiny-download-link:active,
+.btn-csv-download.shiny-download-link:focus {
+    color: var(--slate-900);
+    border-color: var(--slate-400);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+    outline: none;
+    background-color: white;
+}
+
+/* fin-chat: undo aggressive card styles inside sidebar/chat */
+.sidebar .card {
+    flex: 0 0 auto;
+    min-height: auto;
+}
+
+.sidebar .card-body {
+    flex: 0 0 auto;
+    min-height: auto;
+    overflow: visible;
+    justify-content: flex-start;
+}
+
+.sidebar .card-header {
+    white-space: normal;
+    word-wrap: break-word;
+    padding: 0.5rem 1rem;
 }

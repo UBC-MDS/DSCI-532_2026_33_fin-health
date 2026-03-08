@@ -1,23 +1,79 @@
 """Page 3: fin-chat — natural-language data filtering with querychat."""
 
+import html
 import os
 from functools import cache
 
-from charts.altair_charts import build_sector_bar
 import querychat
-from chatlas import ChatGithub
+import querychat.tools as _qc_tools
+from chatlas import ChatGithub, ContentToolResult
+from shinychat.types import ToolResultDisplay
 from shiny import render, ui
 from shinywidgets import output_widget, render_altair
-from data import METRIC_CHOICES, df
+
 from charts.altair_charts import (
     build_cash_flows,
     build_company_comparison_bar,
     build_company_trend,
     build_metric_trend,
     build_peer_scatter,
+    build_sector_bar,
     build_single_company_summary,
 )
 from components.empty_chart import empty_chart
+from data import METRIC_CHOICES, df
+
+# ---------------------------------------------------------------------------
+# Monkey-patch querychat's _update_dashboard_impl to HTML-escape the query and
+# title inside the <button> data-attributes.  Without this, SQL containing
+# double-quoted identifiers (e.g. "Current Ratio") breaks the HTML attribute
+# parsing and the Apply Filter button renders as raw text.
+# ---------------------------------------------------------------------------
+_orig_update_dashboard_impl = _qc_tools._update_dashboard_impl
+
+
+def _patched_update_dashboard_impl(data_source, update_fn):
+    _orig_fn = _orig_update_dashboard_impl(data_source, update_fn)
+
+    def _wrapper(query: str, title: str) -> ContentToolResult:
+        result = _orig_fn(query, title)
+        # Fix unescaped double quotes in the button HTML within the display
+        display = result.extra.get("display") if result.extra else None
+        if display and hasattr(display, "markdown"):
+            md = display.markdown
+            # Replace the broken button HTML with properly escaped attributes
+            if "querychat-update-dashboard-btn" in md:
+                safe_query = html.escape(query, quote=True)
+                safe_title = html.escape(title, quote=True)
+                fixed_button = (
+                    '<button class="btn btn-outline-primary btn-sm float-end '
+                    'mt-3 querychat-update-dashboard-btn" '
+                    f'data-query="{safe_query}" '
+                    f'data-title="{safe_title}">'
+                    "Apply Filter</button>"
+                )
+                # Replace everything from <button to </button>
+                import re
+
+                md = re.sub(
+                    r"<button\s[^>]*querychat-update-dashboard-btn[^>]*>.*?</button>",
+                    fixed_button,
+                    md,
+                    flags=re.DOTALL,
+                )
+                result.extra["display"] = ToolResultDisplay(
+                    markdown=md,
+                    title=display.title,
+                    show_request=display.show_request,
+                    open=display.open,
+                    icon=display.icon,
+                )
+        return result
+
+    return _wrapper
+
+
+_qc_tools._update_dashboard_impl = _patched_update_dashboard_impl
 
 DEFAULT_METRIC = "Net Profit Margin"
 
@@ -108,20 +164,40 @@ Hi! I can help you explore the financial dataset. Try one of these:
 EXTRA_INSTRUCTIONS = """
 You are a financial data analyst assistant. Follow these rules strictly:
 
-1. **Always use `querychat_query` before reporting any statistics.** Never guess,
-   estimate, or hallucinate numbers. If you cannot answer from the data, say so.
+1. **Tool selection rules — read carefully:**
+   - Use `querychat_query` for any question needing aggregation (GROUP BY, AVG,
+     SUM, COUNT, ranking, TOP N, etc.) or when reporting statistics.
+   - Use `querychat_update_dashboard` ONLY for filtering the dashboard.
+   - **CRITICAL: `querychat_update_dashboard` queries MUST always start with
+     `SELECT * FROM financial_data WHERE …`.**  Never select specific columns.
+     Never use GROUP BY, CTEs, JOINs, or subqueries. The query must return
+     every column in the table or it will fail.
+   - Never guess or hallucinate numbers. If you cannot answer from the data,
+     say so.
 
-2. Structure every response in this format:
+2. **Always quote column names** that contain spaces, slashes, or parentheses
+   with double quotes in SQL. For example: "Current Ratio", "Debt/Equity Ratio",
+   "Market Cap(in B USD)", "Cash Flow from Operating", "Earning Per Share",
+   "Cash Flow from Investing", "Cash Flow from Financial Activities",
+   "Inflation Rate(in US)", "Share Holder Equity", "Net Profit Margin",
+   "Free Cash Flow per Share", "Return on Tangible Equity",
+   "Number of Employees", "Gross Profit", "Net Income".
+
+3. Structure every response in this format:
    - **Filters applied:** list the filters used (or "None" if showing all data)
    - **Key stats:** 2-3 notable numbers from the query result
    - **Insight:** one sentence interpreting the result
    - **Try next:** one clickable follow-up suggestion as
      `<span class="suggestion">suggestion text</span>`
 
-3. When the user asks about a sector, use the Category column (e.g., IT, BANK).
+4. When the user asks about a sector, use the Category column (e.g., IT, BANK).
    When they mention a company name, map it to the ticker in the Company column.
 
-4. Keep responses concise — no more than 5 sentences outside the structured format.
+5. Keep responses concise — no more than 5 sentences outside the structured format.
+
+6. **Never include raw HTML, SQL code blocks, or `<button>` markup in your
+   response text.** Do not echo the SQL query or the button element back to the
+   user. Just call the appropriate tool and provide the structured summary.
 """
 
 
@@ -159,19 +235,38 @@ def ai_explorer_ui():
         qc.ui(),
         open="desktop",
         width=400,
-        class_="fin-chat-sidebar",
     )
 
     data_card = ui.card(
         ui.card_header(
             ui.div(
-                ui.output_text("ai_title"),
-                ui.span(" | "),
-                ui.output_text("ai_row_count", inline=True),
+                ui.div(
+                    ui.output_text("ai_title"),
+                    ui.span(" | "),
+                    ui.output_text("ai_row_count", inline=True),
+                ),
+                ui.download_button(
+                    "ai_download",
+                    ui.span(
+                        ui.HTML(
+                            '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" '
+                            'viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                            'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+                            'style="vertical-align: -1px; margin-right: 4px;">'
+                            '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11'
+                            'a2 2 0 0 1-2 2z"/>'
+                            '<polyline points="17 21 17 13 7 13 7 21"/>'
+                            '<polyline points="7 3 7 8 15 8"/>'
+                            '</svg>'
+                        ),
+                        "Download CSV",
+                    ),
+                    class_="btn-sm btn-csv-download",
+                ),
+                class_="d-flex justify-content-between align-items-center w-100",
             )
         ),
         ui.output_data_frame("ai_data_table"),
-        ui.download_button("ai_download", "Download CSV"),
         full_screen=True,
         height="auto",
         fill=False,
@@ -182,13 +277,11 @@ def ai_explorer_ui():
             ui.card_header("Sector Profitability"),
             output_widget("ai_chart_a"),
             full_screen=True,
-            height="400px",
         ),
         ui.card(
             ui.card_header("Metric Trend"),
             output_widget("ai_chart_b"),
             full_screen=True,
-            height="400px",
         ),
         col_widths=[6, 6],
     )
@@ -232,11 +325,6 @@ def ai_explorer_server(input, output, session):
         filtered = qc_vals.df()
         return f"{len(filtered)} rows"
 
-    @render.download(filename="filtered_financial_data.csv")
-    def ai_download():
-        filtered = qc_vals.df()
-        yield filtered.to_csv(index=False)
-
     def _data_shape(filtered):
         """Return (n_companies, n_sectors, n_years) for adaptive chart selection."""
         return (
@@ -279,3 +367,8 @@ def ai_explorer_server(input, output, session):
         if n_companies <= 5:
             return build_company_trend(filtered, metric, unit)
         return build_metric_trend(filtered, metric, unit)
+
+    @render.download(filename="filtered_financial_data.csv")
+    def ai_download():
+        filtered = qc_vals.df()
+        yield filtered.to_csv(index=False)
