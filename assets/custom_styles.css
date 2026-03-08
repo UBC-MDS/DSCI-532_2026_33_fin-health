@@ -399,11 +399,18 @@ body > .container-fluid {
 
 /* Footer styling */
 .footer-container {
-    padding: 0.25rem 0;
+    padding: 0.4rem 0;
     margin-top: 0;
     color: var(--slate-600);
     font-size: 0.8rem;
     border-top: 1px solid var(--slate-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-container p {
+    margin: 0;
 }
 
 .footer-container a {
