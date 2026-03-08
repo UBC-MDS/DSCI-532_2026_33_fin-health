@@ -85,7 +85,7 @@ def company_ui():
             card_rev_income,
             col_widths=[4, 4, 4],
         ),
-        class_="grid-section",
+        class_="grid-section grid-section-blue",
     )
 
     # Financial Health cards (reactive outputs)
@@ -131,7 +131,7 @@ def company_ui():
             card_cash_flows,
             col_widths=[4, 4, 4],
         ),
-        class_="grid-section",
+        class_="grid-section grid-section-red",
     )
 
     return ui.layout_sidebar(

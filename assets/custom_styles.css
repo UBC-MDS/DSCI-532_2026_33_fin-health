@@ -352,8 +352,8 @@ textarea,
     justify-content: center;
     white-space: nowrap;
     flex-shrink: 0;
-    height: 100%;
     overflow: hidden;
+    padding: 0.5rem 0;
 }
 
 .section-label-blue {
@@ -388,14 +388,42 @@ textarea,
 
 /* Grid sections — flex to fill viewport */
 .grid-section {
-    display: grid;
-    grid-template-columns: 40px 1fr;
+    display: flex;
+    align-items: stretch;
     gap: 0.75rem;
     width: 100%;
     margin-bottom: 0.5rem;
-    align-items: stretch;
     flex: 1 1 0;
     min-height: 0;
+    padding: 0.6rem;
+    border-radius: 0.75rem;
+}
+
+/* Section label fixed width in flex row */
+.grid-section > .section-label {
+    width: 40px;
+    flex-shrink: 0;
+}
+
+/* Layout_columns wrapper fills remaining space */
+.grid-section > :not(.section-label) {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-bottom: 0 !important;
+}
+
+/* Blue group (Profitability) */
+.grid-section-blue {
+    background-color: rgba(41, 128, 185, 0.04);
+    box-shadow: 0 0 0 1px rgba(41, 128, 185, 0.12),
+                0 2px 8px rgba(41, 128, 185, 0.08);
+}
+
+/* Red group (Financial Health) */
+.grid-section-red {
+    background-color: rgba(192, 57, 43, 0.04);
+    box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.12),
+                0 2px 8px rgba(192, 57, 43, 0.08);
 }
 
 /* Compact grid section (KPI rows — don't grow) */
@@ -414,6 +442,8 @@ textarea,
 .grid-section .row {
     flex: 1 1 0;
     min-height: 0;
+    margin-bottom: 0 !important;
+    --bs-gutter-y: 0;
 }
 
 /* Column children inside layout_columns fill their cell */
