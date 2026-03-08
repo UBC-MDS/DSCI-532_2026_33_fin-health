@@ -3,12 +3,21 @@
 import os
 from functools import cache
 
+from charts.altair_charts import build_sector_bar
 import querychat
 from chatlas import ChatGithub
 from shiny import render, ui
-from shinywidgets import output_widget
-
-from data import df
+from shinywidgets import output_widget, render_altair
+from data import METRIC_CHOICES, df
+from charts.altair_charts import (
+    build_cash_flows,
+    build_company_comparison_bar,
+    build_company_trend,
+    build_metric_trend,
+    build_peer_scatter,
+    build_single_company_summary,
+)
+from components.empty_chart import empty_chart
 
 DEFAULT_METRIC = "Net Profit Margin"
 
@@ -150,6 +159,7 @@ def ai_explorer_ui():
         qc.ui(),
         open="desktop",
         width=400,
+        class_="fin-chat-sidebar",
     )
 
     data_card = ui.card(
@@ -172,11 +182,13 @@ def ai_explorer_ui():
             ui.card_header("Sector Profitability"),
             output_widget("ai_chart_a"),
             full_screen=True,
+            height="400px",
         ),
         ui.card(
             ui.card_header("Metric Trend"),
             output_widget("ai_chart_b"),
             full_screen=True,
+            height="400px",
         ),
         col_widths=[6, 6],
     )
@@ -224,3 +236,46 @@ def ai_explorer_server(input, output, session):
     def ai_download():
         filtered = qc_vals.df()
         yield filtered.to_csv(index=False)
+
+    def _data_shape(filtered):
+        """Return (n_companies, n_sectors, n_years) for adaptive chart selection."""
+        return (
+            filtered["Company"].nunique(),
+            filtered["Category"].nunique(),
+            filtered["Year"].nunique(),
+        )
+
+    @render_altair
+    def ai_chart_a():
+        filtered = qc_vals.df()
+        metric = _infer_metric(qc_vals.title())
+        unit = METRIC_CHOICES.get(metric, "")
+        if filtered.empty:
+            return empty_chart()
+        n_companies, n_sectors, n_years = _data_shape(filtered)
+        if n_companies == 1:
+            return build_single_company_summary(filtered, metric, unit)
+        if n_sectors == 1 or n_years == 1:
+            return build_company_comparison_bar(filtered, metric, unit)
+        return build_sector_bar(filtered, metric, unit)
+
+    @render_altair
+    def ai_chart_b():
+        filtered = qc_vals.df()
+        metric = _infer_metric(qc_vals.title())
+        unit = METRIC_CHOICES.get(metric, "")
+        if filtered.empty:
+            return empty_chart()
+        n_companies, n_sectors, n_years = _data_shape(filtered)
+        if n_companies == 1:
+            company = filtered["Company"].iloc[0]
+            return (
+                build_company_trend(filtered, metric, unit)
+                if n_years > 1
+                else build_cash_flows(filtered, company)
+            )
+        if n_years == 1:
+            return build_peer_scatter(filtered, metric, unit)
+        if n_companies <= 5:
+            return build_company_trend(filtered, metric, unit)
+        return build_metric_trend(filtered, metric, unit)

@@ -42,6 +42,22 @@ h3, h4 {
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
 }
 
+/* Scoped fin-chat sidebar scroll */
+.fin-chat-sidebar {
+    height: calc(100vh - 60px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.fin-chat-sidebar > .sidebar-content {
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--slate-400) transparent;
+}
+
 .sidebar h4 {
     font-size: 0.875rem;
     font-weight: 700;
@@ -316,4 +332,3 @@ select,
 .grid-section .shiny-layout-column {
     width: 100%;
 }
-
