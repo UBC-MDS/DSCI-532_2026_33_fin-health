@@ -1,10 +1,13 @@
 """Page 3: fin-chat — natural-language data filtering with querychat."""
 
+import html
 import os
 from functools import cache
 
 import querychat
-from chatlas import ChatGithub
+import querychat.tools as _qc_tools
+from chatlas import ChatGithub, ContentToolResult
+from shinychat.types import ToolResultDisplay
 from shiny import render, ui
 from shinywidgets import output_widget, render_altair
 
@@ -19,6 +22,58 @@ from charts.altair_charts import (
 )
 from components.empty_chart import empty_chart
 from data import METRIC_CHOICES, df
+
+# ---------------------------------------------------------------------------
+# Monkey-patch querychat's _update_dashboard_impl to HTML-escape the query and
+# title inside the <button> data-attributes.  Without this, SQL containing
+# double-quoted identifiers (e.g. "Current Ratio") breaks the HTML attribute
+# parsing and the Apply Filter button renders as raw text.
+# ---------------------------------------------------------------------------
+_orig_update_dashboard_impl = _qc_tools._update_dashboard_impl
+
+
+def _patched_update_dashboard_impl(data_source, update_fn):
+    _orig_fn = _orig_update_dashboard_impl(data_source, update_fn)
+
+    def _wrapper(query: str, title: str) -> ContentToolResult:
+        result = _orig_fn(query, title)
+        # Fix unescaped double quotes in the button HTML within the display
+        display = result.extra.get("display") if result.extra else None
+        if display and hasattr(display, "markdown"):
+            md = display.markdown
+            # Replace the broken button HTML with properly escaped attributes
+            if "querychat-update-dashboard-btn" in md:
+                safe_query = html.escape(query, quote=True)
+                safe_title = html.escape(title, quote=True)
+                fixed_button = (
+                    '<button class="btn btn-outline-primary btn-sm float-end '
+                    'mt-3 querychat-update-dashboard-btn" '
+                    f'data-query="{safe_query}" '
+                    f'data-title="{safe_title}">'
+                    "Apply Filter</button>"
+                )
+                # Replace everything from <button to </button>
+                import re
+
+                md = re.sub(
+                    r"<button\s[^>]*querychat-update-dashboard-btn[^>]*>.*?</button>",
+                    fixed_button,
+                    md,
+                    flags=re.DOTALL,
+                )
+                result.extra["display"] = ToolResultDisplay(
+                    markdown=md,
+                    title=display.title,
+                    show_request=display.show_request,
+                    open=display.open,
+                    icon=display.icon,
+                )
+        return result
+
+    return _wrapper
+
+
+_qc_tools._update_dashboard_impl = _patched_update_dashboard_impl
 
 DEFAULT_METRIC = "Net Profit Margin"
 
@@ -109,12 +164,16 @@ Hi! I can help you explore the financial dataset. Try one of these:
 EXTRA_INSTRUCTIONS = """
 You are a financial data analyst assistant. Follow these rules strictly:
 
-1. **Always use `querychat_query` before reporting any statistics.** Never guess,
-   estimate, or hallucinate numbers. If you cannot answer from the data, say so.
-   Use `querychat_query` (not `querychat_update_dashboard`) for any question
-   that requires aggregation (GROUP BY, AVG, SUM, COUNT, ranking, TOP N, etc.).
-   `querychat_update_dashboard` only supports simple WHERE-clause filters on the
-   raw table — never send it CTEs, JOINs, subqueries, or GROUP BY.
+1. **Tool selection rules — read carefully:**
+   - Use `querychat_query` for any question needing aggregation (GROUP BY, AVG,
+     SUM, COUNT, ranking, TOP N, etc.) or when reporting statistics.
+   - Use `querychat_update_dashboard` ONLY for filtering the dashboard.
+   - **CRITICAL: `querychat_update_dashboard` queries MUST always start with
+     `SELECT * FROM financial_data WHERE …`.**  Never select specific columns.
+     Never use GROUP BY, CTEs, JOINs, or subqueries. The query must return
+     every column in the table or it will fail.
+   - Never guess or hallucinate numbers. If you cannot answer from the data,
+     say so.
 
 2. **Always quote column names** that contain spaces, slashes, or parentheses
    with double quotes in SQL. For example: "Current Ratio", "Debt/Equity Ratio",
@@ -135,6 +194,10 @@ You are a financial data analyst assistant. Follow these rules strictly:
    When they mention a company name, map it to the ticker in the Company column.
 
 5. Keep responses concise — no more than 5 sentences outside the structured format.
+
+6. **Never include raw HTML, SQL code blocks, or `<button>` markup in your
+   response text.** Do not echo the SQL query or the button element back to the
+   user. Just call the appropriate tool and provide the structured summary.
 """
 
 
