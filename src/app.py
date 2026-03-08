@@ -16,11 +16,12 @@ from pages.company import company_server, company_ui  # noqa: E402
 from pages.sector import sector_server, sector_ui  # noqa: E402
 from pages.ai_explorer import ai_explorer_server, ai_explorer_ui  # noqa: E402
 
+# Custon CSS
 CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
 with open(CSS_PATH, "r") as css_file:
     CUSTOM_CSS = ui.tags.style(css_file.read())
 
-
+# Navbar with page tabs
 nav_sector = ui.nav_panel("Sector Analysis", sector_ui())
 nav_company = ui.nav_panel("Company Health", company_ui())
 nav_ai = ui.nav_panel("fin-chat", ai_explorer_ui())
@@ -33,6 +34,7 @@ navbar = ui.page_navbar(
     fillable=True,
 )
 
+# Footer
 footer = ui.tags.footer(
     ui.tags.div(
         ui.p(
