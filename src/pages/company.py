@@ -254,7 +254,7 @@ def company_server(input, output, session):
             ui.span(f"Revenue: ${rev:,.0f}M", class_="kpi-label"),
             ui.span(" | ", style="color: var(--slate-400);"),
             ui.span(f"Net Income: ${ni:,.0f}M", class_="kpi-label"),
-            style="padding: 0.25rem 0;",
+            style="padding: 0.25rem 0; text-align: center;",
         )
 
     @render_altair

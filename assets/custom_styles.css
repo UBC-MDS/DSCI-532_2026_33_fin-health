@@ -341,6 +341,17 @@ textarea,
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Remove default bslib sidebar layout border */
+.bslib-sidebar-layout {
+    border: none !important;
+}
+
+/* Remove outer container padding so content spans full width */
+body > .container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 /* Navbar styling */
 .navbar {
     background-color: white;
@@ -368,7 +379,7 @@ textarea,
     border-radius: 6px;
     text-align: center;
     letter-spacing: 1px;
-    font-size: 0.65rem;
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -436,16 +447,16 @@ textarea,
 
 /* Blue group (Profitability) */
 .grid-section-blue {
-    background-color: rgba(41, 128, 185, 0.04);
-    box-shadow: 0 0 0 1px rgba(41, 128, 185, 0.12),
-                0 2px 8px rgba(41, 128, 185, 0.08);
+    background-color: rgba(41, 128, 185, 0.08);
+    box-shadow: 0 0 0 1px rgba(41, 128, 185, 0.2),
+                0 2px 10px rgba(41, 128, 185, 0.16);
 }
 
 /* Red group (Financial Health) */
 .grid-section-red {
-    background-color: rgba(192, 57, 43, 0.04);
-    box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.12),
-                0 2px 8px rgba(192, 57, 43, 0.08);
+    background-color: rgba(192, 57, 43, 0.08);
+    box-shadow: 0 0 0 1px rgba(192, 57, 43, 0.2),
+                0 2px 10px rgba(192, 57, 43, 0.16);
 }
 
 /* Compact grid section (KPI rows — don't grow) */
@@ -534,25 +545,38 @@ textarea,
 }
 
 /* fin-chat: Download CSV button */
-.btn-default.shiny-download-link {
-    display: block;
-    width: 100%;
-    padding: 0.4rem 1rem;
-    font-size: 0.75rem;
+.btn-csv-download.shiny-download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    width: auto;
+    padding: 0.3rem 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--primary);
-    background-color: var(--slate-50);
+    letter-spacing: 0.04em;
+    color: var(--slate-600);
+    background-color: white;
     border: 1px solid var(--slate-200);
-    border-radius: 0 0 0.75rem 0.75rem;
-    text-align: center;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    text-decoration: none;
+    transition: color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.btn-default.shiny-download-link:hover {
-    background-color: var(--slate-100);
+.btn-csv-download.shiny-download-link:hover {
+    color: var(--slate-900);
+    border-color: var(--slate-400);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.btn-csv-download.shiny-download-link:active,
+.btn-csv-download.shiny-download-link:focus {
+    color: var(--slate-900);
+    border-color: var(--slate-400);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+    outline: none;
+    background-color: white;
 }
 
 /* fin-chat: undo aggressive card styles inside sidebar/chat */
