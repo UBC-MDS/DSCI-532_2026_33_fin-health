@@ -30,11 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - **CSS Optimization**: Resolved duplicate `.kpi-label` and `.section-label` rules and cleaned up unused classes.
-- Wildcard * transition scoped to interactive elements only
-- **Page 2(Company Health) Logic**: Replaced all Milestone 2 placeholders with fully functional, reactive data outputs.
+- Wildcard `*` transition scoped to interactive elements only.
+- **Page 2 (Company Health) Logic**: Replaced all Milestone 2 placeholders with fully functional, reactive data outputs.
 
 ### Reflection
-The primary focus of this milestone was technical debt reduction and extensibility. By refactoring the codebase into a modular architecture, the project has moved away from a monolithic script toward a professional software engineering pattern. This separation of concerns - where charts, data processing, and UI components live in independent modules - makes the dashboard significantly easier to debug and scale. Additionally, the integration of natural language filtering via the `fin-chat` page represents a shift toward more accessible, user-centric data science tools.
+The primary focus of this milestone was technical debt reduction and extensibility. By refactoring the codebase into a modular architecture, the project has moved away from a monolithic script toward a professional software engineering pattern. This separation of concerns - where charts, data processing, and UI components live in independent modules - makes the dashboard significantly easier to debug and scale. Additionally, the integration of natural language filtering via the `fin-chat` page represents a shift toward more accessible, user-centric finance tools.
 
 ## [v0.2.0] - (2026-02-28)
 
