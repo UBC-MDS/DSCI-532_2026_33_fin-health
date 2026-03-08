@@ -24,7 +24,7 @@ src/
 │   ├── __init__.py
 │   ├── sector.py           # Page 1 UI + server logic (Sector Analysis)
 │   ├── company.py          # Page 2 UI + server logic (Company Health)
-│   └── ai_explorer.py      # Page 3 UI + server logic (AI Explorer — NEW)
+│   └── ai_explorer.py      # Page 3 UI + server logic (fin-chat — NEW)
 └── charts/
     ├── __init__.py
     └── altair_charts.py    # Pure functions that build Altair chart specs
@@ -634,7 +634,7 @@ The refactor should be done in order to minimize breakage:
 - [x] Create `src/pages/sector.py` — extract Page 1 UI + server
 - [x] Create `src/pages/company.py` — extract Page 2 UI + server
 - [x] Implement Page 2 reactive KPIs and charts (replace all hardcoded placeholders)
-- [x] Create `src/pages/ai_explorer.py` — implement new AI Explorer page
+- [x] Create `src/pages/ai_explorer.py` — implement new fin-chat page
 - [x] Refactor `src/app.py` — reduce to entry-point composition only
 - [x] Update `tests/` — migrate and expand tests for new module structure
 - [x] Apply CSS fixes from §7
