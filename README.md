@@ -15,6 +15,19 @@ Investment analysts and portfolio managers often need to compare financial perfo
 
 `fin-health` addresses this challenge by providing a centralized, interactive dashboard that enables users to explore financial performance efficiently. By allowing users to filter data by time period, sector, and financial metrics, the dashboard facilitates rapid analysis of profitability trends, peer benchmarking, and key financial indicators.
 
+## Features and User Interface
+- **Sector Analysis (Strategic Overview)**
+    - **Peer Benchmarking**: Visualize sector profitability and revenue growth using reactive Altair scatter plots and bar charts.
+    - **Trend Indicators**: Real-time KPI cards showing margin trends with visual directional cues (▲/▼).
+
+- **Company Health (Operational Deep-Dive)**
+    - **Reactive Financial Ratios**: Instant calculation of Liquidity (Current Ratio), Solvency (Debt/Equity), and Profitability (ROE) metrics.
+    - **Automated Status Auditing**: Visual health icons (Healthy/Warning/Danger) based on industry-standard financial thresholds.
+
+- **Fin-Chat: Natural Language Querying**
+    - **Conversational Filtering**: Instead of manual sliders, use the fin-chat interface to ask questions like "Which companies in the Tech sector had a net profit margin above 15%?".
+    - **LLM-Powered Insights**: Integrated querychat logic translates natural language into precise data filters, lowering the barrier for non-technical users.
+
 ## Demo
 
 Below is a short preview of the dashboard interface.
