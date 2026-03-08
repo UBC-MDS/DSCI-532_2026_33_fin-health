@@ -14,7 +14,7 @@ from shiny import App, ui  # noqa: E402
 
 from pages.company import company_server, company_ui  # noqa: E402
 from pages.sector import sector_server, sector_ui  # noqa: E402
-from pages.ai_explorer import ai_explorer_server, ai_explorer_ui # noqa: E402
+from pages.ai_explorer import ai_explorer_server, ai_explorer_ui  # noqa: E402
 
 CSS_PATH = Path(__file__).parent.parent / "assets" / "custom_styles.css"
 with open(CSS_PATH, "r") as css_file:
