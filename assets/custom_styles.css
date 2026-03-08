@@ -57,9 +57,9 @@ h2 {
     font-family: 'DM Sans', sans-serif;
     font-weight: 700;
     color: var(--slate-900);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     letter-spacing: -0.02em;
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 1.8vw, 1.5rem);
     flex-shrink: 0;
 }
 
@@ -107,13 +107,13 @@ h3, h4 {
 .card-header {
     background-color: transparent;
     border-bottom: none;
-    padding: 0.5rem 1rem 0 1rem;
+    padding: clamp(0.25rem, 0.5vh, 0.5rem) clamp(0.5rem, 1vw, 1rem) 0;
     flex-shrink: 0;
 }
 
 .card-header .card-title,
 .card-header h5 {
-    font-size: 0.7rem;
+    font-size: clamp(0.55rem, 0.8vw, 0.7rem);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.15em;
@@ -122,7 +122,7 @@ h3, h4 {
 }
 
 .card-body {
-    padding: 0.25rem 1rem 0.5rem 1rem;
+    padding: clamp(0.15rem, 0.3vh, 0.25rem) clamp(0.5rem, 1vw, 1rem) clamp(0.25rem, 0.5vh, 0.5rem);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -131,10 +131,10 @@ h3, h4 {
     overflow: hidden;
 }
 
-/* KPI Value Styling — large and prominent */
+/* KPI Value Styling — large and prominent, scales with viewport */
 .kpi-value {
     font-family: 'DM Sans', sans-serif;
-    font-size: 2rem;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
     font-weight: 700;
     line-height: 1.1;
     color: var(--slate-900);
@@ -143,7 +143,7 @@ h3, h4 {
 }
 
 .kpi-label {
-    font-size: 0.7rem;
+    font-size: clamp(0.5rem, 0.75vw, 0.7rem);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -165,9 +165,9 @@ h3, h4 {
     text-align: center;
 }
 
-/* KPI cards — compact, centered, don't grow */
+/* KPI cards — compact, centered, stretch to match tallest */
 .kpi-card-row .card {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     text-align: center;
 }
 
@@ -176,21 +176,32 @@ h3, h4 {
 }
 
 .kpi-card-row .card .card-body {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     align-items: center;
+    justify-content: center;
     padding: 0.25rem 1rem 0.5rem;
 }
 
 /* KPI row itself should not grow */
 .kpi-card-row {
     flex: 0 0 auto;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
+}
+
+/* Ensure KPI row columns stretch cards to equal height */
+.kpi-card-row bslib-layout-columns {
+    align-items: stretch;
+}
+
+.kpi-card-row bslib-layout-columns > .bslib-grid-item {
+    display: flex;
+    flex-direction: column;
 }
 
 /* Trend Indicator - Triangle Style */
 .trend-indicator {
     font-weight: 700;
-    font-size: 1.25rem;
+    font-size: clamp(0.85rem, 1.5vw, 1.25rem);
     margin-left: 0.5rem;
     display: inline-block;
     line-height: 1;
@@ -236,7 +247,7 @@ h3, h4 {
 
 /* Table Styling */
 .table {
-    font-size: 0.875rem;
+    font-size: clamp(0.65rem, 0.9vw, 0.875rem);
     color: var(--slate-700);
 }
 
@@ -250,8 +261,8 @@ h3, h4 {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--slate-900);
-    padding: 0.875rem 1rem;
-    font-size: 0.75rem;
+    padding: clamp(0.4rem, 0.8vh, 0.875rem) clamp(0.5rem, 1vw, 1rem);
+    font-size: clamp(0.55rem, 0.8vw, 0.75rem);
 }
 
 .table tbody tr {
@@ -268,7 +279,7 @@ h3, h4 {
 }
 
 .table tbody td {
-    padding: 0.875rem 1rem;
+    padding: clamp(0.3rem, 0.7vh, 0.875rem) clamp(0.5rem, 1vw, 1rem);
     vertical-align: middle;
 }
 
@@ -302,6 +313,17 @@ select:focus {
 /* Layout — viewport-fit, no scroll */
 .page-fillable {
     padding: 0.75rem 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 0.85rem;
+}
+
+/* Page 1: sidebar layout main panel — override bslib's 1.5rem gap */
+.bslib-sidebar-layout > .main.bslib-gap-spacing {
+    gap: clamp(0.4rem, 1vh, 0.85rem) !important;
+    padding: clamp(0.4rem, 0.8vh, 0.75rem) clamp(0.5rem, 1vw, 1rem);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -466,15 +488,39 @@ textarea,
     height: 100%;
 }
 
-/* layout_columns at page level (not in grid-section) should also flex */
-.page-fillable > .row,
-.page-fillable > div > .row {
+/* Kill bslib default vertical spacing inside page content areas;
+   let our gap property handle uniform spacing instead */
+.page-fillable,
+.bslib-sidebar-layout > .main {
+    --bslib-mb-spacer: 0;
+}
+
+.page-fillable .bslib-mb-spacing,
+.bslib-sidebar-layout > .main .bslib-mb-spacing {
+    margin-bottom: 0 !important;
+}
+
+.page-fillable > *,
+.bslib-sidebar-layout > .main > * {
+    margin-bottom: 0 !important;
+}
+
+/* layout_columns at page level — fill remaining space equally */
+.page-fillable > bslib-layout-columns,
+.bslib-sidebar-layout > .main > bslib-layout-columns {
     flex: 1 1 0;
     min-height: 0;
 }
 
-.page-fillable > .row > [class*="col-"],
-.page-fillable > div > .row > [class*="col-"] {
+/* KPI row wrapper should NOT grow */
+.page-fillable > .kpi-card-row,
+.bslib-sidebar-layout > .main > .kpi-card-row {
+    flex: 0 0 auto;
+}
+
+/* Column children inside layout_columns fill their cell */
+.page-fillable bslib-layout-columns > .bslib-grid-item,
+.bslib-sidebar-layout > .main bslib-layout-columns > .bslib-grid-item {
     display: flex;
     flex-direction: column;
 }
