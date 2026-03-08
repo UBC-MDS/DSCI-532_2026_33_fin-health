@@ -26,11 +26,13 @@ def company_ui():
         label="Company",
         choices=[],
     )
-    year_select = ui.input_select(
+    year_select = ui.input_slider(
         id="year",
         label="Year",
-        choices=[str(y) for y in range(2023, 2008, -1)],
-        selected="2022",
+        min=int(df["Year"].min()),
+        max=int(df["Year"].max()),
+        value=int(df["Year"].max()),
+        sep="",
     )
     sidebar = ui.sidebar(
         ui.h4("Analytics Filters"),
@@ -156,7 +158,7 @@ def company_server(input, output, session):
     def p2_filtered_data():
         category = input.category()
         company = input.company()
-        year = int(input.year())
+        year = input.year()
         return df[
             (df["Category"] == category)
             & (df["Company"] == company)

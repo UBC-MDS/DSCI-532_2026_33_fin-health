@@ -81,7 +81,7 @@ def sector_ui():
         full_screen=True,
     )
     card_trend = ui.card(
-        ui.card_header(ui.output_ui("p1_trend_header")),
+        ui.card_header(ui.output_ui("trend_header")),
         output_widget("p1_chart_b"),
         full_screen=True,
     )

@@ -1,3 +1,5 @@
+"""Reusable KPI card factory for consistent card layouts."""
+
 from shiny import ui
 
 
