@@ -13,33 +13,30 @@ from data import ALL_SECTORS, CATEGORY_COMPANIES, df
 
 
 def company_ui():
-    """Return the full Page 2 layout (sidebar + Profitability row + Financial Health row)."""
+    """Return the full Page 2 layout."""
     # Sidebar inputs
     category_select = ui.input_select(
-        id="p2_category",
+        id="category",
         label="Industry",
         choices=ALL_SECTORS,
         selected=ALL_SECTORS[0],
     )
     company_select = ui.input_select(
-        id="p2_company",
+        id="company",
         label="Company",
         choices=[],
     )
-    year_slider = ui.input_slider(
-        id="p2_year",
-        label="Period",
-        min=int(df["Year"].min()),
-        max=int(df["Year"].max()),
-        value=int(df["Year"].max()),
-        step=1,
-        sep="",
+    year_select = ui.input_select(
+        id="year",
+        label="Year",
+        choices=[str(y) for y in range(2023, 2008, -1)],
+        selected="2022",
     )
     sidebar = ui.sidebar(
         ui.h4("Analytics Filters"),
         category_select,
         company_select,
-        year_slider,
+        year_select,
         open="desktop",
     )
 
@@ -149,17 +146,17 @@ def company_server(input, output, session):
     """Page 2 reactive logic."""
 
     @reactive.effect
-    @reactive.event(input.p2_category)
+    @reactive.event(input.category)
     def _update_company_choices():
-        companies = CATEGORY_COMPANIES.get(input.p2_category(), [])
+        companies = CATEGORY_COMPANIES.get(input.category(), [])
         selected = companies[0] if companies else None
-        ui.update_select("p2_company", choices=companies, selected=selected)
+        ui.update_select("company", choices=companies, selected=selected)
 
     @reactive.calc
     def p2_filtered_data():
-        category = input.p2_category()
-        company = input.p2_company()
-        year = int(input.p2_year())
+        category = input.category()
+        company = input.company()
+        year = int(input.year())
         return df[
             (df["Category"] == category)
             & (df["Company"] == company)
@@ -199,7 +196,7 @@ def company_server(input, output, session):
 
     @render_altair
     def p2_npm_chart():
-        company = input.p2_company()
+        company = input.company()
         company_data = df[df["Company"] == company]
         if company_data.empty:
             return empty_chart()
@@ -220,7 +217,7 @@ def company_server(input, output, session):
 
     @render_altair
     def p2_roe_chart():
-        company = input.p2_company()
+        company = input.company()
         company_data = df[df["Company"] == company]
         if company_data.empty:
             return empty_chart()
@@ -242,7 +239,7 @@ def company_server(input, output, session):
 
     @render_altair
     def p2_revenue_chart():
-        company = input.p2_company()
+        company = input.company()
         company_data = df[df["Company"] == company]
         if company_data.empty:
             return empty_chart()
@@ -260,7 +257,7 @@ def company_server(input, output, session):
 
     @render_altair
     def p2_current_ratio_chart():
-        company = input.p2_company()
+        company = input.company()
         company_data = df[df["Company"] == company]
         if company_data.empty:
             return empty_chart()
@@ -276,7 +273,7 @@ def company_server(input, output, session):
 
     @render_altair
     def p2_debt_equity_chart():
-        company = input.p2_company()
+        company = input.company()
         company_data = df[df["Company"] == company]
         if company_data.empty:
             return empty_chart()
@@ -327,7 +324,7 @@ def company_server(input, output, session):
 
     @render_altair
     def p2_cash_flow_chart():
-        company = input.p2_company()
+        company = input.company()
         company_data = df[df["Company"] == company]
         if company_data.empty:
             return empty_chart()
