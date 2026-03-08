@@ -15,7 +15,6 @@ from charts.altair_charts import (
     build_company_trend,
     build_metric_trend,
     build_peer_scatter,
-    build_sector_bar,
     build_single_company_summary,
 )
 from components.empty_chart import empty_chart
@@ -200,7 +199,7 @@ def ai_explorer_ui():
             ui.h2("fin-chat"),
             data_card,
             chart_row,
-        ),        
+        ),
     )
 
 
@@ -245,7 +244,7 @@ def ai_explorer_server(input, output, session):
             filtered["Category"].nunique(),
             filtered["Year"].nunique(),
         )
-    
+
     @render_altair
     def ai_chart_a():
         filtered = qc_vals.df()
@@ -259,7 +258,7 @@ def ai_explorer_server(input, output, session):
         if n_sectors == 1 or n_years == 1:
             return build_company_comparison_bar(filtered, metric, unit)
         return build_sector_bar(filtered, metric, unit)
-    
+
     @render_altair
     def ai_chart_b():
         filtered = qc_vals.df()
