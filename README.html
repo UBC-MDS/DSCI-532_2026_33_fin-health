@@ -152,6 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#project-synopsis" id="toc-project-synopsis" class="nav-link" data-scroll-target="#project-synopsis">Project Synopsis</a></li>
   <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
+  <li><a href="#features-and-user-interface" id="toc-features-and-user-interface" class="nav-link" data-scroll-target="#features-and-user-interface">Features and User Interface</a></li>
   <li><a href="#demo" id="toc-demo" class="nav-link" data-scroll-target="#demo">Demo</a></li>
   <li><a href="#deployment" id="toc-deployment" class="nav-link" data-scroll-target="#deployment">Deployment</a></li>
   <li><a href="#developer-setup" id="toc-developer-setup" class="nav-link" data-scroll-target="#developer-setup">Developer Setup</a>
@@ -198,6 +199,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Investment analysts and portfolio managers often need to compare financial performance across sectors and individual companies to support data-driven investment decisions. However, extracting insights from financial statements typically requires manually compiling data and creating ad-hoc visualizations, a process that can be both time-consuming and prone to errors.</p>
 <p><code>fin-health</code> addresses this challenge by providing a centralized, interactive dashboard that enables users to explore financial performance efficiently. By allowing users to filter data by time period, sector, and financial metrics, the dashboard facilitates rapid analysis of profitability trends, peer benchmarking, and key financial indicators.</p>
 </section>
+<section id="features-and-user-interface" class="level2">
+<h2 class="anchored" data-anchor-id="features-and-user-interface">Features and User Interface</h2>
+<ul>
+<li><strong>Sector Analysis (Strategic Overview)</strong>
+<ul>
+<li><strong>Peer Benchmarking</strong>: Visualize sector profitability and revenue growth using reactive Altair scatter plots and bar charts.</li>
+<li><strong>Trend Indicators</strong>: Real-time KPI cards showing margin trends with visual directional cues (▲/▼).</li>
+</ul></li>
+<li><strong>Company Health (Operational Deep-Dive)</strong>
+<ul>
+<li><strong>Reactive Financial Ratios</strong>: Instant calculation of Liquidity (Current Ratio), Solvency (Debt/Equity), and Profitability (ROE) metrics.</li>
+<li><strong>Automated Status Auditing</strong>: Visual health icons (Healthy/Warning/Danger) based on industry-standard financial thresholds.</li>
+</ul></li>
+<li><strong>Fin-Chat: Natural Language Querying</strong>
+<ul>
+<li><strong>Conversational Filtering</strong>: Instead of manual sliders, use the fin-chat interface to ask questions like “Which companies in the Tech sector had a net profit margin above 15%?”.</li>
+<li><strong>LLM-Powered Insights</strong>: Integrated querychat logic translates natural language into precise data filters, lowering the barrier for non-technical users.</li>
+</ul></li>
+</ul>
+</section>
 <section id="demo" class="level2">
 <h2 class="anchored" data-anchor-id="demo">Demo</h2>
 <p>Below is a short preview of the dashboard interface. <img src="img/demo.gif" class="img-fluid" alt="Dashboard demo"></p>
@@ -229,7 +250,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="dependencies">Dependencies</h3>
 <ul>
 <li><code>conda</code> (version 26.1.0 or higher)</li>
-<li><code>conda-lock</code> (version 3.0.4 or higher - <strong>optional</strong>)</li>
 <li>Python and packages listed in <a href="requirements.txt"><code>requirements.txt</code></a></li>
 </ul>
 <p>For a more comprehensive guide on development guidelines for this project, check out our contributing page <a href="./CONTRIBUTING.html">here</a>.</p>
@@ -245,13 +265,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate fin-health</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Or install environment via <a href="https://conda.github.io/conda-lock/basic_usage/"><code>conda-lock</code></a></p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda-lock</span> install <span class="at">-n</span> fin-health conda-lock.yml</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate fin-health</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ol start="5" type="1">
 <li>Run fin-health Shiny dashboard locally:</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shiny</span> run <span class="at">--reload</span> src/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shiny</span> run <span class="at">--reload</span> src/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="contributors" class="level2">

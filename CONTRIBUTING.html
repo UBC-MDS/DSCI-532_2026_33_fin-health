@@ -261,32 +261,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="developer-setup">Developer Setup</h2>
 <p>Ready to contribute? Here’s how to set up fin-health for local development.</p>
 <ol type="1">
-<li><p>Install <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html"><code>conda</code></a> as a prerequisite.</p>
-<p>Optionally, you can also install <a href="https://github.com/conda/conda-lock"><code>conda-lock</code></a> by using <strong>one</strong> of the following commands:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipx</span> install conda-lock</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">condax</span> install conda-lock</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install conda-lock</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">--channel</span><span class="op">=</span>conda-forge <span class="at">--name</span><span class="op">=</span>base conda-lock</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> install <span class="at">--channel</span><span class="op">=</span>conda-forge <span class="at">--name</span><span class="op">=</span>base conda-lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Install <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html"><code>conda</code></a> as a prerequisite.</p></li>
 <li><p>Fork the <a href="https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health" class="uri">https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health</a> repository on GitHub.</p></li>
 <li><p>Clone your fork locally (<em>if you want to work locally</em>)</p>
 <pre class="shell"><code>git clone git@github.com:your_name_here/DSCI-532_2026_33_fin-health.git</code></pre></li>
 <li><p>Create and activate the conda environment using one of two ways:</p>
 <p>Install via <code>conda</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate fin-health</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Or install via <code>conda-lock</code> (faster installation):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda-lock</span> install <span class="at">-n</span> fin-health conda-lock.yml</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate fin-health</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate fin-health</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Create a branch for local development using the default branch (typically <code>develop</code>) as a starting point. Use <code>fix</code> or <code>feature</code> as a prefix for your branch name.</p>
 <pre class="shell"><code>git checkout develop
 git checkout -b fix-name-of-your-bugfix</code></pre>
 <p>Now you can make your changes locally.</p></li>
 <li><p>When you’re done making changes, lint and format your code with <a href="https://docs.astral.sh/ruff/">Ruff</a>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ruff</span> check src/ <span class="at">--fix</span> .</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ruff</span> format src/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ruff</span> check src/ <span class="at">--fix</span> .</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ruff</span> format src/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Check that your changes pass our test suite.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> <span class="at">-v</span> <span class="at">--cov</span> <span class="at">--cov-branch</span> <span class="at">--cov-report</span><span class="op">=</span>term-missing <span class="at">--cov-report</span><span class="op">=</span>xml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pytest</span> <span class="at">-v</span> <span class="at">--cov</span> <span class="at">--cov-branch</span> <span class="at">--cov-report</span><span class="op">=</span>term-missing <span class="at">--cov-report</span><span class="op">=</span>xml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Commit your changes and push your branch to GitHub. Please use <a href="https://www.conventionalcommits.org/">semantic commit messages</a>.</p>
 <pre class="shell"><code>git add .
 git commit -m "fix: summarize your changes"
