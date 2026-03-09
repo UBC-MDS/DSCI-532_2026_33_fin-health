@@ -1,6 +1,9 @@
-# Only runtime packages
+# only runtime packages
+chatlas==0.15.2
+pandas==3.0.0
+python-dotenv==1.2.2
+querychat==0.5.1
 shiny==1.5.1
 shinywidgets==0.7.1
-pandas==3.0.0
 altair==6.0.0
 vegafusion==2.0.3

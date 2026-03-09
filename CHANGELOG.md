@@ -5,10 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - (2026-03-08)
+## [v0.3.0] - (2026-03-08)
 
 ### Added
-- Implementation of Page 2
+- **Natural Language Querying**: Integrated a new `fin-chat` page featuring `querychat` for intuitive, natural-language data filtering and exploration.
+- **Interactive Data Grid**: Added a dedicated Dataframe output component to display granular filtered data.
+- **Intelligent Visualization**: Implemented two adaptive charts that automatically adjust their visualization type based on the dimensions and shape of the data.
+- **Data Portability**: Included a CSV download button to allow users to export their filtered datasets for external analysis.
+- **Company Health Deep Dive (Page 2)**:
+    - Realized full reactivity for key performance indicators including Net Profit Margin, ROE, Current Ratio, and Debt/Equity.
+    - Added time-series visualizations for Revenue, Financial Ratios, and Cash Flows.
+    - Visual health status indicators (Healthy/Warning/Danger) for immediate KPI assessment.
+- **Quality Assurance**: Added an LLM behavior testing suite and an evaluation dataset to ensure chat reliability.
+
+### Changed
+- **Modular Refactor**: Reconstructed the application into a scalable directory structure, separating logic into `data.py`, `components/`, `charts/`, and `pages/`.
+- **Streamlined Entry Point**: Reduced `app.py` to a clean, 60-line routing file to improve maintainability.
+- **Data Schema Optimization**:
+    - Transitioned `METRIC_CHOICES` from a list to a dictionary to map metrics to their respective units.
+    - Standardized `CATEGORY_COMPANIES` keys to uppercase to ensure strict alignment with the source dataset.
+- **UI/UX Refinement**:
+    - Migrated all styles to an external CSS file utilizing 17 custom design tokens (CSS properties).
+    - Updated typography to DM Sans and implemented a modern, flat-card aesthetic.
+
+### Fixed
+- **CSS Optimization**: Resolved duplicate `.kpi-label` and `.section-label` rules and cleaned up unused classes.
+- Wildcard `*` transition scoped to interactive elements only.
+- **Page 2 (Company Health) Logic**: Replaced all Milestone 2 placeholders with fully functional, reactive data outputs.
+
+### Reflection
+The primary focus of this milestone was technical debt reduction and extensibility. By refactoring the codebase into a modular architecture, the project has moved away from a monolithic script toward a professional software engineering pattern. This separation of concerns - where charts, data processing, and UI components live in independent modules - makes the dashboard significantly easier to debug and scale. Additionally, the integration of natural language filtering via the `fin-chat` page represents a shift toward more accessible, user-centric finance tools.
 
 ## [v0.2.0] - (2026-02-28)
 
