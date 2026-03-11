@@ -9,6 +9,7 @@ from charts.altair_charts import (
     build_revenue_over_time,
 )
 from components.empty_chart import empty_chart
+from components.health_status import classify_health, format_currency
 from data import ALL_SECTORS, CATEGORY_COMPANIES, df
 
 
