@@ -1,9 +1,18 @@
-# only runtime packages
-chatlas==0.15.2
+# Data Logic & Backend
+ibis-framework==12.0.0
+duckdb==1.4.4
+pyarrow==23.0.1
+pyarrow-hotfix==0.7
+parsy==2.2
 pandas==3.0.0
-python-dotenv==1.2.2
-querychat==0.5.1
+
+# UI & Visualization
 shiny==1.5.1
 shinywidgets==0.7.1
 altair==6.0.0
 vegafusion==2.0.3
+
+# AI & Utilities
+chatlas==0.15.2
+querychat==0.5.1
+python-dotenv==1.2.2
