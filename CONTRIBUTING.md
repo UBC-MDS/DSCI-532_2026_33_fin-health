@@ -125,7 +125,14 @@ local development.
    conda activate fin-health
    ```
 
-5. Create a branch for local development using the default branch (typically `develop`) as a starting point. Use `fix` or `feature` as a prefix for your branch name.
+
+5. Install `chromium` via `playwright` for browser testing:
+
+   ```bash
+   playwright install chromium
+   ```
+
+6. Create a branch for local development using the default branch (typically `develop`) as a starting point. Use `fix` or `feature` as a prefix for your branch name.
 
     ```shell
     git checkout develop
@@ -134,20 +141,20 @@ local development.
 
     Now you can make your changes locally.
 
-6. When you're done making changes, lint and format your code with [Ruff](https://docs.astral.sh/ruff/):
+7. When you're done making changes, lint and format your code with [Ruff](https://docs.astral.sh/ruff/):
 
     ```bash
     ruff check src/ --fix .
     ruff format src/
     ```
 
-7. Check that your changes pass our test suite.
+8. Check that your changes pass our test suite.
 
     ```bash
     pytest -v --cov --cov-branch --cov-report=term-missing --cov-report=xml
     ```
 
-8. Commit your changes and push your branch to GitHub. Please use [semantic
+9. Commit your changes and push your branch to GitHub. Please use [semantic
    commit messages](https://www.conventionalcommits.org/).
 
     ```shell
@@ -156,7 +163,7 @@ local development.
     git push -u origin fix-name-of-your-bugfix
     ```
 
-9. Open the link displayed in the message when pushing your new branch in order to submit a pull request.
+10. Open the link displayed in the message when pushing your new branch in order to submit a pull request.
 
 ### Pull Request Guidelines
 

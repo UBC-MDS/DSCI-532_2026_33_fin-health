@@ -45,6 +45,7 @@ Below is a short preview of the dashboard interface.
 ### Dependencies
 
 -   `conda` (version 26.1.0 or higher)
+-   `playwright` (for browser testing)
 -   Python and packages listed in [`requirements.txt`](requirements.txt)
 
 For a more comprehensive guide on development guidelines for this project, check out our contributing page [here](./CONTRIBUTING.md).
@@ -67,7 +68,13 @@ conda env create -f environment.yml
 conda activate fin-health
 ```
 
-5. Run fin-health Shiny dashboard locally:
+5. Install `chromium` via `playwright`:
+
+```bash
+playwright install chromium
+```
+
+6. Run fin-health Shiny dashboard locally:
 
 ```bash
 shiny run --reload src/app.py
