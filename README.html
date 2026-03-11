@@ -250,6 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="dependencies">Dependencies</h3>
 <ul>
 <li><code>conda</code> (version 26.1.0 or higher)</li>
+<li><code>playwright</code> (for browser testing)</li>
 <li>Python and packages listed in <a href="requirements.txt"><code>requirements.txt</code></a></li>
 </ul>
 <p>For a more comprehensive guide on development guidelines for this project, check out our contributing page <a href="./CONTRIBUTING.html">here</a>.</p>
@@ -266,9 +267,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate fin-health</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ol start="5" type="1">
+<li>Install <code>chromium</code> via <code>playwright</code>:</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">playwright</span> install chromium</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ol start="6" type="1">
 <li>Run fin-health Shiny dashboard locally:</li>
 </ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shiny</span> run <span class="at">--reload</span> src/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shiny</span> run <span class="at">--reload</span> src/app.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="contributors" class="level2">
