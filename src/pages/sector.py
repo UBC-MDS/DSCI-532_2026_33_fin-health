@@ -3,7 +3,7 @@
 import pandas as pd
 from shiny import reactive, render, ui
 from shinywidgets import output_widget, render_altair
-from data import ALL_SECTORS, METRIC_CHOICES, df
+from data import ALL_SECTORS, METRIC_CHOICES, YEAR_MIN, YEAR_MAX, tbl
 from components.kpi_card import kpi_card
 from charts.altair_charts import (
     build_metric_trend,
