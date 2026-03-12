@@ -2,22 +2,22 @@
 
 from pathlib import Path
 
-import pandas as pd
+import ibis
 
-DATA_PATH = Path(__file__).parent.parent / "data" / "raw" / "financial_statement.csv"
+PARQUET_PATH = (
+    Path(__file__).parent.parent / "data" / "processed" / "financial_statement.parquet"
+)
 
+# --- ibis / DuckDB connection ---
+con = ibis.duckdb.connect()
+tbl = con.read_parquet(str(PARQUET_PATH))
 
-def load_data(path: Path = DATA_PATH) -> pd.DataFrame:
-    """Load and clean the financial dataset."""
-    if not path.exists():
-        raise FileNotFoundError(f"Dataset not found: {path}")
-    data = pd.read_csv(path, encoding="utf-8-sig")
-    data.columns = data.columns.str.strip()
-    data["Category"] = data["Category"].str.upper()
-    return data
+# Full pandas DataFrame (used by querychat and chart builders)
+df = tbl.to_pandas()
 
-
-df = load_data()
+# Year range (computed once from ibis, avoids scanning pandas)
+YEAR_MIN = int(tbl["Year"].min().execute())
+YEAR_MAX = int(tbl["Year"].max().execute())
 
 CATEGORY_COMPANIES = {
     "BANK": ["AIG", "BCS"],
