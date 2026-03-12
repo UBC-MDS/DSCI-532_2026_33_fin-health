@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4.0] - (2026-03-18)
+
+### Added
+- **Parquet + DuckDB Backend**: Migrated data loading to `ibis.duckdb.connect()` + `con.read_parquet()` for lazy query execution and improved performance.
+- **RAG Finance Glossary**: Integrated a knowledge base (`knowledge/glossary.md`) into querychat for retrieval-augmented financial term definitions.
+- **Playwright Behavior Tests**: Added 3 browser-based behavior tests covering distinct dashboard interactions.
+- **Unit Tests**: Added pytest unit tests for refactored `classify_health()` and `format_currency()` helper functions.
+
+### Changed
+- **Data Pipeline**: Replaced CSV-based `pandas.read_csv()` with parquet-based `ibis` expressions; all filtering now happens at the database level before materializing to pandas.
+- **Health Status Refactor**: Extracted repeated threshold-based health classification logic from `company.py` into a reusable, testable `classify_health()` pure function in `components/health_status.py`.
+- **Currency Formatting**: Extracted inline `fmt()` closure into a standalone `format_currency()` helper for consistency and testability.
+- **Dependencies**: Added `ibis-framework[duckdb]` and `playwright` to `requirements.txt` and `environment.yml`.
+
+### Fixed
+- (Items from feedback prioritization will go here — TBD based on M4 Feedback Issue)
+
+### Known Issues
+- **fin-chat requires API token**: The fin-chat page requires a `GITHUB_TOKEN` environment variable; without it, a fallback message is displayed.
+- **Querychat latency**: LLM-powered queries may take 2-5 seconds depending on API response time.
+
+
 ## [v0.3.0] - (2026-03-08)
 
 ### Added
