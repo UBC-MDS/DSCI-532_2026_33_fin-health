@@ -133,9 +133,7 @@ def sector_server(input, output, session):
     @reactive.event(input.p1_reset)
     def _():
         # Update the year range slider to full range
-        ui.update_slider(
-            "p1_year_range", value=[YEAR_MIN, YEAR_MAX]
-        )
+        ui.update_slider("p1_year_range", value=[YEAR_MIN, YEAR_MAX])
         # Update the sector select to "All"
         ui.update_selectize("p1_sector", selected="All")
         # Update the metric select to default
