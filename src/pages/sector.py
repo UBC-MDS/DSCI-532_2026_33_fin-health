@@ -3,7 +3,7 @@
 import pandas as pd
 from shiny import reactive, render, ui
 from shinywidgets import output_widget, render_altair
-from data import ALL_SECTORS, METRIC_CHOICES, df
+from data import ALL_SECTORS, METRIC_CHOICES, YEAR_MIN, YEAR_MAX, tbl
 from components.kpi_card import kpi_card
 from charts.altair_charts import (
     build_metric_trend,
@@ -18,9 +18,9 @@ def sector_ui():
     year_slider = ui.input_slider(
         id="p1_year_range",
         label="Period",
-        min=int(df["Year"].min()),
-        max=int(df["Year"].max()),
-        value=[int(df["Year"].min()), int(df["Year"].max())],
+        min=YEAR_MIN,
+        max=YEAR_MAX,
+        value=[YEAR_MIN, YEAR_MAX],
         sep="",
     )
     sector_select = ui.input_selectize(
@@ -133,9 +133,7 @@ def sector_server(input, output, session):
     @reactive.event(input.p1_reset)
     def _():
         # Update the year range slider to full range
-        ui.update_slider(
-            "p1_year_range", value=[int(df["Year"].min()), int(df["Year"].max())]
-        )
+        ui.update_slider("p1_year_range", value=[YEAR_MIN, YEAR_MAX])
         # Update the sector select to "All"
         ui.update_selectize("p1_sector", selected="All")
         # Update the metric select to default
@@ -143,13 +141,13 @@ def sector_server(input, output, session):
 
     @reactive.calc
     def p1_filtered_data():
-        """Filter dataset by selected year range and sector."""
+        """Filter dataset via ibis expressions, then materialize to pandas."""
         year_min, year_max = input.p1_year_range()
         sector = input.p1_sector()
-        filtered = df[(df["Year"] >= year_min) & (df["Year"] <= year_max)]
+        expr = tbl.filter(tbl["Year"] >= year_min, tbl["Year"] <= year_max)
         if sector and "All" not in sector:
-            filtered = filtered[filtered["Category"].isin(sector)]
-        return filtered
+            expr = expr.filter(tbl["Category"].isin(sector))
+        return expr.to_pandas()
 
     # KPI outputs
     # ---------------Avg Profit Margin---------------
