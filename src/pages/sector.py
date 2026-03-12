@@ -134,7 +134,7 @@ def sector_server(input, output, session):
     def _():
         # Update the year range slider to full range
         ui.update_slider(
-            "p1_year_range", value=[int(df["Year"].min()), int(df["Year"].max())]
+            "p1_year_range", value=[YEAR_MIN, YEAR_MAX]
         )
         # Update the sector select to "All"
         ui.update_selectize("p1_sector", selected="All")
@@ -143,13 +143,13 @@ def sector_server(input, output, session):
 
     @reactive.calc
     def p1_filtered_data():
-        """Filter dataset by selected year range and sector."""
+        """Filter dataset via ibis expressions, then materialize to pandas."""
         year_min, year_max = input.p1_year_range()
         sector = input.p1_sector()
-        filtered = df[(df["Year"] >= year_min) & (df["Year"] <= year_max)]
+        expr = tbl.filter(tbl["Year"] >= year_min, tbl["Year"] <= year_max)
         if sector and "All" not in sector:
-            filtered = filtered[filtered["Category"].isin(sector)]
-        return filtered
+            expr = expr.filter(tbl["Category"].isin(sector))
+        return expr.to_pandas()
 
     # KPI outputs
     # ---------------Avg Profit Margin---------------
