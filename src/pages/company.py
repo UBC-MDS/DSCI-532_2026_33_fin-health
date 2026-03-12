@@ -163,14 +163,24 @@ def company_server(input, output, session):
                 ui.tags.label("Year", class_="control-label"),
                 ui.tags.p(str(year_max), style="font-weight: 600; font-size: 1.1rem;"),
                 ui.input_slider(
-                    id="year", label="", min=year_min, max=year_max,
-                    value=year_max, sep="",
+                    id="year",
+                    label="",
+                    min=year_min,
+                    max=year_max,
+                    value=year_max,
+                    sep="",
                 ),
-                ui.tags.style("#year-label { display: none; } #year .irs { display: none; }"),
+                ui.tags.style(
+                    "#year-label { display: none; } #year .irs { display: none; }"
+                ),
             )
         return ui.input_slider(
-            id="year", label="Year", min=year_min, max=year_max,
-            value=year_max, sep="",
+            id="year",
+            label="Year",
+            min=year_min,
+            max=year_max,
+            value=year_max,
+            sep="",
         )
 
     @reactive.calc
@@ -201,14 +211,14 @@ def company_server(input, output, session):
             return "N/A"
         value = filtered["ROE"].iloc[0]
         return f"{value:.2f}%"
-    
+
     # Status icon mapping for health classification
     _STATUS_ICONS = {"healthy": "\u2713", "warning": "!", "danger": "\u2717"}
 
     def _status_badge(status: str):
         icon = _STATUS_ICONS[status]
         return ui.tags.span(icon, class_=f"kpi-status {status}")
-    
+
     @render.ui
     def p2_npm_status():
         filtered = p2_filtered_data()

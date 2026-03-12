@@ -1,7 +1,9 @@
 """Pure helper functions for financial health classification and formatting."""
 
 
-def classify_health(value: float, healthy: float, warning: float, higher_is_better: bool = True) -> str:
+def classify_health(
+    value: float, healthy: float, warning: float, higher_is_better: bool = True
+) -> str:
     """Classify a financial metric value into a health status.
 
     Parameters

@@ -257,7 +257,7 @@ def ai_explorer_ui():
                             'a2 2 0 0 1-2 2z"/>'
                             '<polyline points="17 21 17 13 7 13 7 21"/>'
                             '<polyline points="7 3 7 8 15 8"/>'
-                            '</svg>'
+                            "</svg>"
                         ),
                         "Download CSV",
                     ),

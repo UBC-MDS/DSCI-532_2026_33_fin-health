@@ -1,10 +1,10 @@
 """Unit tests for health status classification and formatting helpers."""
 
-import pytest
 from components.health_status import classify_health, format_currency
 
 
 # --- classify_health tests (higher_is_better=True) ---
+
 
 class TestClassifyHealthHigherIsBetter:
     """Tests for classify_health with higher_is_better=True (default)."""
@@ -55,34 +55,57 @@ class TestClassifyHealthHigherIsBetter:
 
 # --- classify_health tests (higher_is_better=False) ---
 
+
 class TestClassifyHealthLowerIsBetter:
     """Tests for classify_health with higher_is_better=False (e.g., Debt/Equity)."""
 
     def test_healthy_below_threshold(self):
-        assert classify_health(0.5, healthy=1.0, warning=2.0, higher_is_better=False) == "healthy"
+        assert (
+            classify_health(0.5, healthy=1.0, warning=2.0, higher_is_better=False)
+            == "healthy"
+        )
 
     def test_healthy_at_threshold(self):
-        assert classify_health(1.0, healthy=1.0, warning=2.0, higher_is_better=False) == "healthy"
+        assert (
+            classify_health(1.0, healthy=1.0, warning=2.0, higher_is_better=False)
+            == "healthy"
+        )
 
     def test_warning_between_thresholds(self):
-        assert classify_health(1.5, healthy=1.0, warning=2.0, higher_is_better=False) == "warning"
+        assert (
+            classify_health(1.5, healthy=1.0, warning=2.0, higher_is_better=False)
+            == "warning"
+        )
 
     def test_warning_at_threshold(self):
-        assert classify_health(2.0, healthy=1.0, warning=2.0, higher_is_better=False) == "warning"
+        assert (
+            classify_health(2.0, healthy=1.0, warning=2.0, higher_is_better=False)
+            == "warning"
+        )
 
     def test_danger_above_warning(self):
-        assert classify_health(3.0, healthy=1.0, warning=2.0, higher_is_better=False) == "danger"
+        assert (
+            classify_health(3.0, healthy=1.0, warning=2.0, higher_is_better=False)
+            == "danger"
+        )
 
     def test_debt_equity_healthy(self):
         """Debt/Equity <= 1.0 is healthy."""
-        assert classify_health(0.8, healthy=1.0, warning=2.0, higher_is_better=False) == "healthy"
+        assert (
+            classify_health(0.8, healthy=1.0, warning=2.0, higher_is_better=False)
+            == "healthy"
+        )
 
     def test_debt_equity_danger(self):
         """Debt/Equity > 2.0 is danger."""
-        assert classify_health(5.0, healthy=1.0, warning=2.0, higher_is_better=False) == "danger"
+        assert (
+            classify_health(5.0, healthy=1.0, warning=2.0, higher_is_better=False)
+            == "danger"
+        )
 
 
 # --- format_currency tests ---
+
 
 class TestFormatCurrency:
     """Tests for format_currency."""
