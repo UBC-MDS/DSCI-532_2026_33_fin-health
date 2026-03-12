@@ -9,7 +9,6 @@ from charts.altair_charts import (
     build_revenue_over_time,
 )
 from components.empty_chart import empty_chart
-from components.health_status import classify_health, format_currency
 from data import ALL_SECTORS, CATEGORY_COMPANIES, YEAR_MIN, YEAR_MAX, tbl
 
 
@@ -151,8 +150,7 @@ def company_server(input, output, session):
     @render.ui
     def p2_year_slider():
         company = input.company()
-        # Use ibis to get year range for the selected company
-        company_expr = tbl.filter(tbl["Company"] == company)
+        company_expr = tbl.filter[tbl["Company"] == company]
         company_data = company_expr.to_pandas()
         if company_data.empty:
             year_min = YEAR_MIN
@@ -192,9 +190,7 @@ def company_server(input, output, session):
         company = input.company()
         year = input.year()
         expr = tbl.filter(
-            tbl["Category"] == category,
-            tbl["Company"] == company,
-            tbl["Year"] == year,
+            tbl["Category"] == category, tbl["Company"] == company, tbl["Year"] == year
         )
         return expr.to_pandas()
 
@@ -222,20 +218,18 @@ def company_server(input, output, session):
         value = filtered["ROE"].iloc[0]
         return f"{value:.2f}%"
 
-    # Status icon mapping for health classification
-    _STATUS_ICONS = {"healthy": "\u2713", "warning": "!", "danger": "\u2717"}
-
-    def _status_badge(status: str):
-        icon = _STATUS_ICONS[status]
-        return ui.tags.span(icon, class_=f"kpi-status {status}")
-
     @render.ui
     def p2_npm_status():
         filtered = p2_filtered_data()
         if filtered.empty:
             return ui.tags.span()
         value = filtered["Net Profit Margin"].iloc[0]
-        return _status_badge(classify_health(value, healthy=10.0, warning=0.0))
+        if value >= 10:
+            return ui.tags.span("\u2713", class_="kpi-status healthy")
+        elif value >= 0:
+            return ui.tags.span("!", class_="kpi-status warning")
+        else:
+            return ui.tags.span("\u2717", class_="kpi-status danger")
 
     @render_altair
     def p2_npm_chart():
@@ -251,7 +245,12 @@ def company_server(input, output, session):
         if filtered.empty:
             return ui.tags.span()
         value = filtered["ROE"].iloc[0]
-        return _status_badge(classify_health(value, healthy=15.0, warning=0.0))
+        if value >= 15:
+            return ui.tags.span("\u2713", class_="kpi-status healthy")
+        elif value >= 0:
+            return ui.tags.span("!", class_="kpi-status warning")
+        else:
+            return ui.tags.span("\u2717", class_="kpi-status danger")
 
     @render_altair
     def p2_roe_chart():
@@ -278,7 +277,7 @@ def company_server(input, output, session):
     @render_altair
     def p2_revenue_chart():
         company_data = p2_company_data()
-        company = input.company()
+        company = input.company
         if company_data.empty:
             return empty_chart()
         return build_revenue_over_time(company_data, company)
@@ -326,12 +325,16 @@ def company_server(input, output, session):
         op = row["Cash Flow from Operating"]
         inv = row["Cash Flow from Investing"]
         fin = row["Cash Flow from Financial Activities"]
+
+        def fmt(v):
+            return f"-${abs(v):,.0f}M" if v < 0 else f"${v:,.0f}M"
+
         return ui.div(
-            ui.span(f"Operating: {format_currency(op)}", class_="kpi-label"),
+            ui.span(f"Operating: {fmt(op)}", class_="kpi-label"),
             ui.br(),
-            ui.span(f"Investing: {format_currency(inv)}", class_="kpi-label"),
+            ui.span(f"Investing: {fmt(inv)}", class_="kpi-label"),
             ui.br(),
-            ui.span(f"Financing: {format_currency(fin)}", class_="kpi-label"),
+            ui.span(f"Financing: {fmt(fin)}", class_="kpi-label"),
             style="text-align: center;",
         )
 
@@ -341,7 +344,12 @@ def company_server(input, output, session):
         if filtered.empty:
             return ui.tags.span()
         value = filtered["Current Ratio"].iloc[0]
-        return _status_badge(classify_health(value, healthy=1.5, warning=1.0))
+        if value >= 1.5:
+            return ui.tags.span("\u2713", class_="kpi-status healthy")
+        elif value >= 1.0:
+            return ui.tags.span("!", class_="kpi-status warning")
+        else:
+            return ui.tags.span("\u2717", class_="kpi-status danger")
 
     @render.ui
     def p2_debt_equity_status():
@@ -349,9 +357,12 @@ def company_server(input, output, session):
         if filtered.empty:
             return ui.tags.span()
         value = filtered["Debt/Equity Ratio"].iloc[0]
-        return _status_badge(
-            classify_health(value, healthy=1.0, warning=2.0, higher_is_better=False)
-        )
+        if value <= 1.0:
+            return ui.tags.span("\u2713", class_="kpi-status healthy")
+        elif value <= 2.0:
+            return ui.tags.span("!", class_="kpi-status warning")
+        else:
+            return ui.tags.span("\u2717", class_="kpi-status danger")
 
     @render_altair
     def p2_cash_flow_chart():
