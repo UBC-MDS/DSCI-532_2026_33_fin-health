@@ -18,9 +18,9 @@ def sector_ui():
     year_slider = ui.input_slider(
         id="p1_year_range",
         label="Period",
-        min=int(df["Year"].min()),
-        max=int(df["Year"].max()),
-        value=[int(df["Year"].min()), int(df["Year"].max())],
+        min=YEAR_MIN,
+        max=YEAR_MAX,
+        value=[YEAR_MIN, YEAR_MAX],
         sep="",
     )
     sector_select = ui.input_selectize(
