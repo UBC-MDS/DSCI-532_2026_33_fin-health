@@ -22,6 +22,14 @@ from charts.altair_charts import (
 )
 from components.empty_chart import empty_chart
 from data import METRIC_CHOICES, df
+from pathlib import Path
+
+GLOSSARY_PATH = (  # <-- ADD THIS BLOCK
+    Path(__file__).parent.parent.parent
+    / "data"
+    / "knowledge_base"
+    / "finance_glossary.txt"
+)
 
 # ---------------------------------------------------------------------------
 # Monkey-patch querychat's _update_dashboard_impl to HTML-escape the query and
@@ -201,6 +209,26 @@ You are a financial data analyst assistant. Follow these rules strictly:
 """
 
 
+def _load_glossary() -> str:
+    """Load the finance glossary knowledge base for RAG context."""
+    if GLOSSARY_PATH.exists():
+        return GLOSSARY_PATH.read_text(encoding="utf-8")
+    return ""
+
+
+def _build_extra_instructions() -> str:
+    """Combine base instructions with the finance glossary knowledge base."""
+    glossary = _load_glossary()
+    if glossary:
+        return (
+            EXTRA_INSTRUCTIONS
+            + "\n<finance_glossary>\n"
+            + glossary
+            + "\n</finance_glossary>\n"
+        )
+    return EXTRA_INSTRUCTIONS
+
+
 @cache
 def _get_qc():
     """Lazily create the QueryChat instance (deferred until first use)."""
@@ -208,7 +236,7 @@ def _get_qc():
         df,
         "financial_data",
         data_description=DATA_DESCRIPTION,
-        extra_instructions=EXTRA_INSTRUCTIONS,
+        extra_instructions=_build_extra_instructions(),
         greeting=GREETING,
         client=ChatGithub(model="gpt-4.1-mini"),
     )

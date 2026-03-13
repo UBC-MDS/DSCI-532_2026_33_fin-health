@@ -1,0 +1,256 @@
+# Finance Glossary — fin-health Dashboard Knowledge Base
+
+This glossary defines the financial terms and metrics present in the
+fin-health dataset.  Use these definitions when users ask about the
+meaning, calculation, or interpretation of any metric.
+
+---
+
+## Profitability Metrics
+
+### Net Profit Margin
+- **Definition:** The percentage of revenue remaining after all expenses,
+  taxes, and costs have been deducted.
+- **Formula:** Net Income / Revenue × 100
+- **Interpretation:** Higher margins indicate better cost control and
+  pricing power.  A negative margin means the company is losing money.
+- **Healthy range:** 10 %–20 % for most industries; tech companies often
+  exceed 20 %.
+- **Dataset range:** approximately −50 % to +35 %.
+
+### Return on Equity (ROE)
+- **Definition:** Measures how effectively a company uses shareholder
+  equity to generate profit.
+- **Formula:** Net Income / Shareholder Equity × 100
+- **Interpretation:** Higher ROE signals efficient use of equity capital.
+  Very high ROE (> 50 %) may indicate high leverage rather than
+  operational excellence.
+- **Healthy range:** 15 %–25 %.
+- **Dataset range:** approximately −80 % to +160 %.
+
+### Return on Assets (ROA)
+- **Definition:** Indicates how efficiently a company uses its total
+  assets to generate profit.
+- **Formula:** Net Income / Total Assets × 100
+- **Interpretation:** Higher ROA means better asset utilisation.
+  Capital-intensive industries typically have lower ROA.
+- **Healthy range:** 5 %–15 %.
+- **Dataset range:** approximately −15 % to +30 %.
+
+### Return on Investment (ROI)
+- **Definition:** Measures the gain or loss generated on an investment
+  relative to the amount invested.
+- **Formula:** (Gain from Investment − Cost of Investment) / Cost of
+  Investment × 100
+- **Interpretation:** Positive ROI means the investment is profitable.
+  Compare across companies to assess relative investment efficiency.
+- **Healthy range:** 10 %–25 %.
+- **Dataset range:** approximately −20 % to +50 %.
+
+---
+
+## Income Statement Metrics
+
+### Revenue
+- **Definition:** Total income generated from the sale of goods or
+  services before any expenses are deducted.  Also called "top line".
+- **Interpretation:** Revenue growth signals expanding business, but must
+  be evaluated alongside profitability metrics to confirm sustainability.
+- **Dataset unit:** millions USD.
+- **Dataset range:** approximately $500 M–$400,000 M.
+
+### Net Income
+- **Definition:** The company's total profit after all expenses, taxes,
+  interest, and depreciation have been subtracted from revenue.  Also
+  called "bottom line".
+- **Formula:** Revenue − All Expenses
+- **Interpretation:** A positive net income means the company is
+  profitable.  Negative net income indicates a loss.
+- **Dataset unit:** millions USD.
+- **Dataset range:** approximately −$25,000 M to +$100,000 M.
+
+### Gross Profit
+- **Definition:** Revenue minus the direct costs of producing goods or
+  services (cost of goods sold / COGS).
+- **Formula:** Revenue − COGS
+- **Interpretation:** High gross profit relative to revenue indicates
+  strong pricing power or low production costs.
+- **Dataset unit:** millions USD.
+- **Dataset range:** approximately $100 M–$170,000 M.
+
+### EBITDA
+- **Definition:** Earnings Before Interest, Taxes, Depreciation, and
+  Amortization.  A proxy for operating cash-flow profitability that
+  strips out financing and accounting decisions.
+- **Formula:** Net Income + Interest + Taxes + Depreciation + Amortization
+- **Interpretation:** Useful for comparing operational performance across
+  companies with different capital structures.  Does not reflect actual
+  cash generated because it excludes capital expenditures.
+- **Healthy sign:** Positive and growing EBITDA.
+- **Dataset unit:** millions USD.
+- **Dataset range:** approximately −$5,000 M to +$130,000 M.
+
+### Earnings Per Share (EPS)
+- **Definition:** Net income allocated to each outstanding share of
+  common stock.
+- **Formula:** Net Income / Shares Outstanding
+- **Interpretation:** Higher EPS signals greater profitability per share
+  and is a key driver of stock price.
+- **Dataset unit:** USD per share.
+- **Dataset range:** approximately −$30 to +$6.
+
+---
+
+## Balance Sheet & Liquidity Metrics
+
+### Current Ratio
+- **Definition:** Measures a company's ability to pay short-term
+  obligations (due within one year) with short-term assets.
+- **Formula:** Current Assets / Current Liabilities
+- **Interpretation:**
+  - **> 1.0** — the company can cover its short-term debts (healthy).
+  - **< 1.0** — potential liquidity risk; may struggle to meet
+    obligations.
+  - **> 3.0** — possibly holding too much idle cash or inventory.
+- **Dataset range:** approximately 0.5–4.0.
+
+### Debt/Equity Ratio
+- **Definition:** Compares a company's total debt to its shareholder
+  equity, indicating how much leverage the company uses.
+- **Formula:** Total Debt / Shareholder Equity
+- **Interpretation:**
+  - **< 1.0** — more equity than debt; conservative financing.
+  - **1.0–2.0** — moderate leverage; common in capital-intensive sectors.
+  - **> 2.0** — high leverage; potentially risky if earnings decline.
+  - **Negative** — shareholder equity is negative (accumulated losses
+    exceed invested capital), a serious warning sign.
+- **Dataset range:** approximately −10 to +30.
+
+### Shareholder Equity
+- **Definition:** The residual interest in a company's assets after
+  deducting liabilities.  Represents the net worth attributable to
+  shareholders.
+- **Formula:** Total Assets − Total Liabilities
+- **Interpretation:** Positive and growing equity indicates the company
+  is building value.  Negative equity is a red flag.
+- **Dataset unit:** millions USD.
+- **Dataset range:** approximately −$15,000 M to +$270,000 M.
+
+---
+
+## Cash Flow Metrics
+
+### Cash Flow from Operating Activities
+- **Definition:** Cash generated or consumed by the company's core
+  business operations.
+- **Interpretation:** Positive operating cash flow means the business
+  generates cash from its day-to-day activities, which is essential for
+  sustainability.
+- **Dataset unit:** millions USD.
+- **Dataset range:** approximately −$5,000 M to +$120,000 M.
+
+### Cash Flow from Investing Activities
+- **Definition:** Cash spent on or received from long-term investments
+  such as property, equipment, or acquisitions.
+- **Interpretation:** Typically negative (companies invest to grow).
+  Large negative values may signal heavy capital expenditure; positive
+  values may indicate asset sales.
+- **Dataset unit:** millions USD.
+- **Dataset range:** approximately −$50,000 M to +$30,000 M.
+
+### Cash Flow from Financial Activities
+- **Definition:** Cash received from or paid to investors and creditors,
+  including issuing stock, borrowing, repaying debt, and paying
+  dividends.
+- **Interpretation:** Positive values indicate the company raised
+  capital; negative values indicate the company returned capital to
+  shareholders (dividends, buybacks) or paid down debt.
+- **Dataset unit:** millions USD.
+- **Dataset range:** approximately −$120,000 M to +$30,000 M.
+
+### Free Cash Flow per Share
+- **Definition:** The cash remaining after capital expenditures,
+  divided by shares outstanding.
+- **Formula:** (Operating Cash Flow − Capital Expenditures) / Shares
+  Outstanding
+- **Interpretation:** Positive free cash flow per share means the
+  company generates surplus cash that can fund dividends, buybacks, or
+  reinvestment.
+- **Dataset unit:** USD per share.
+- **Dataset range:** approximately −$5 to +$7.
+
+---
+
+## Market & Valuation Metrics
+
+### Market Capitalisation (Market Cap)
+- **Definition:** The total market value of a company's outstanding
+  shares.
+- **Formula:** Share Price × Shares Outstanding
+- **Interpretation:**
+  - **Large-cap (> $10 B)** — established, stable companies.
+  - **Mid-cap ($2 B–$10 B)** — moderate growth potential.
+  - **Small-cap (< $2 B)** — higher growth potential but higher risk.
+- **Dataset unit:** billions USD.
+- **Dataset range:** approximately $1 B–$3,000 B.
+
+---
+
+## Other Metrics
+
+### Return on Tangible Equity
+- **Definition:** Similar to ROE but excludes intangible assets
+  (goodwill, patents) from equity, giving a stricter view of returns.
+- **Formula:** Net Income / (Shareholder Equity − Intangible Assets)× 100
+- **Interpretation:** More conservative than ROE.  Useful for comparing
+  companies with significant intangible assets.
+- **Dataset range:** approximately −200 % to +200 %.
+
+### Number of Employees
+- **Definition:** Total headcount of the company for the given fiscal
+  year.
+- **Interpretation:** Used alongside revenue or profit to calculate
+  productivity ratios (e.g., revenue per employee).
+- **Dataset range:** approximately 10,000–1,600,000.
+
+### Inflation Rate (US)
+- **Definition:** The annual percentage change in the US consumer price
+  index (CPI), measuring how quickly prices are rising.
+- **Interpretation:** High inflation erodes purchasing power and can
+  squeeze profit margins.  Companies with pricing power can pass
+  inflation costs to customers.
+- **Dataset range:** approximately 0.1 %–8 %.
+
+---
+
+## Sector Definitions
+
+The dataset groups companies into eight sectors:
+
+| Sector | Tickers | Description |
+|--------|---------|-------------|
+| BANK | AIG, BCS | Banking and insurance |
+| ELEC | INTC, NVDA | Semiconductors and electronics |
+| FINANCE | SHLDQ | Diversified financial services |
+| FINTECH | PYPL | Financial technology and digital payments |
+| FOOD | MCD | Food service and restaurants |
+| IT | AAPL, GOOG, MSFT | Information technology and software |
+| LOGI | AMZN | Logistics and e-commerce |
+| MANUFACTURING | PCG | Utilities and manufacturing |
+
+---
+
+## How to Interpret Financial Health
+
+A financially healthy company typically exhibits:
+
+1. **Positive and growing revenue** — the business is expanding.
+2. **Positive net profit margin** — the company keeps profit after costs.
+3. **ROE between 15 %–25 %** — efficient use of shareholder capital.
+4. **Current ratio > 1.0** — can meet short-term obligations.
+5. **Debt/Equity ratio < 2.0** — not over-leveraged.
+6. **Positive operating cash flow** — core operations generate cash.
+7. **Positive free cash flow** — surplus cash after capital investments.
+
+Warning signs include negative net income, current ratio below 1,
+negative shareholder equity, and debt/equity ratio above 3.
