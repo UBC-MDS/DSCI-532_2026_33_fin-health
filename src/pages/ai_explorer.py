@@ -2,13 +2,16 @@
 
 import html
 import os
+import re
 from functools import cache
+from pathlib import Path
 
+import numpy as np
 import querychat
 import querychat.tools as _qc_tools
-from chatlas import ChatGithub, ContentToolResult
+from chatlas import Chat, ChatGithub, ContentToolResult
 from shinychat.types import ToolResultDisplay
-from shiny import render, ui
+from shiny import reactive, render, ui
 from shinywidgets import output_widget, render_altair
 
 from charts.altair_charts import (
@@ -20,11 +23,13 @@ from charts.altair_charts import (
     build_sector_bar,
     build_single_company_summary,
 )
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 from components.empty_chart import empty_chart
 from data import METRIC_CHOICES, df
-from pathlib import Path
 
-GLOSSARY_PATH = (  # <-- ADD THIS BLOCK
+GLOSSARY_PATH = (
     Path(__file__).parent.parent.parent
     / "data"
     / "knowledge_base"
