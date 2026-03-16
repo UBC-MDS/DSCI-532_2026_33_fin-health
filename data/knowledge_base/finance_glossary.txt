@@ -17,6 +17,35 @@ meaning, calculation, or interpretation of any metric.
 - **Healthy range:** 10 %–20 % for most industries; tech companies often
   exceed 20 %.
 - **Dataset range:** approximately −50 % to +35 %.
+- **Industry context — why "good" margins vary dramatically by sector:**
+  - **IT / SaaS (AAPL, GOOG, MSFT):** Industry average ~20–30 %. Software
+    has near-zero marginal cost, so mature tech firms enjoy very high
+    margins. A margin below 10 % for a large IT company would be
+    concerning.
+  - **LOGI / E-commerce (AMZN):** Industry average ~2–5 %. Logistics is
+    a high-volume, low-margin business — Amazon historically reinvested
+    nearly all profit into growth. A 3 % margin here is healthy; expecting
+    20 % would be unrealistic for this business model.
+  - **FOOD / Restaurants (MCD):** Industry average ~15–25 % for franchise-
+    heavy models. McDonald's earns high margins because franchisees bear
+    most operating costs; the company collects royalties. Non-franchise
+    restaurants typically see 5–10 %.
+  - **BANK / Insurance (AIG, BCS):** Industry average ~15–25 %. Banks
+    earn spread income (interest received minus interest paid), and
+    margins depend on the interest-rate environment. Low rates compress
+    bank margins.
+  - **ELEC / Semiconductors (INTC, NVDA):** Industry average ~15–30 %.
+    High R&D costs but strong pricing power for leading-edge chips.
+    NVDA has had margins above 30 % due to GPU dominance; INTC has
+    compressed margins from competitive pressure.
+  - **MANUFACTURING / Utilities (PCG):** Industry average ~5–10 %.
+    Regulated utilities have capped returns, so thin margins are
+    structural, not a sign of poor management.
+  - **FINTECH (PYPL):** Industry average ~10–20 %. Transaction fees
+    provide good margins but payment processing is competitive.
+  - **FINANCE (SHLDQ):** Sears had persistently negative margins in its
+    later years due to declining retail sales — a sign of terminal
+    business decline, not sector norms.
 
 ### Return on Equity (ROE)
 - **Definition:** Measures how effectively a company uses shareholder
@@ -27,6 +56,30 @@ meaning, calculation, or interpretation of any metric.
   operational excellence.
 - **Healthy range:** 15 %–25 %.
 - **Dataset range:** approximately −80 % to +160 %.
+- **Industry context:**
+  - **IT / SaaS (AAPL, GOOG, MSFT):** Industry average ~25–40 %.
+    High margins and asset-light models drive strong ROE. AAPL's ROE
+    can exceed 100 % because aggressive buybacks have shrunk equity,
+    inflating the ratio — this is leverage-driven, not purely
+    operational.
+  - **BANK / Insurance (AIG, BCS):** Industry average ~8–15 %.
+    Banks have massive balance sheets, so even solid profits produce
+    modest ROE. Post-2008 regulations also require banks to hold more
+    equity, further compressing ROE.
+  - **ELEC / Semiconductors (INTC, NVDA):** Industry average ~15–30 %.
+    NVDA has had exceptionally high ROE during GPU/AI booms. INTC's
+    ROE has declined with market-share losses.
+  - **FOOD / Restaurants (MCD):** ROE can be extremely high or negative
+    when equity is near zero or negative from buybacks. Interpret with
+    caution — check if equity is negative before reading ROE.
+  - **LOGI / E-commerce (AMZN):** Industry average ~10–20 %. Heavy
+    reinvestment keeps equity high, moderating ROE.
+  - **MANUFACTURING / Utilities (PCG):** Industry average ~8–12 %.
+    Regulated returns cap profitability.
+  - **Key insight:** When ROE is very high (> 50 %), always check the
+    Debt/Equity ratio. High ROE + High D/E = returns driven by
+    leverage, which is riskier than high ROE + low D/E (genuine
+    operational excellence).
 
 ### Return on Assets (ROA)
 - **Definition:** Indicates how efficiently a company uses its total
@@ -36,6 +89,26 @@ meaning, calculation, or interpretation of any metric.
   Capital-intensive industries typically have lower ROA.
 - **Healthy range:** 5 %–15 %.
 - **Dataset range:** approximately −15 % to +30 %.
+- **Industry context — why ROA varies so widely:**
+  - **IT / SaaS (AAPL, GOOG, MSFT):** Industry average ~15–25 %.
+    Asset-light models (software, cloud) generate high returns per
+    dollar of assets.
+  - **BANK / Insurance (AIG, BCS):** Industry average ~0.5–1.5 %.
+    Banks hold enormous asset bases (loans, securities), so even
+    profitable banks show very low ROA. An ROA of 1 % is considered
+    good for a bank — do not compare to tech benchmarks.
+  - **ELEC / Semiconductors (INTC, NVDA):** Industry average ~8–15 %.
+    Fab plants are capital-intensive, pulling ROA down relative to
+    pure software companies.
+  - **MANUFACTURING / Utilities (PCG):** Industry average ~2–5 %.
+    Heavy infrastructure assets (power plants, grid) depress ROA.
+  - **LOGI / E-commerce (AMZN):** Industry average ~3–8 %. Warehouses,
+    fulfillment centers, and delivery fleets are asset-heavy.
+  - **FOOD / Restaurants (MCD):** Industry average ~10–15 % for
+    franchise models (MCD owns real estate but earns royalties).
+  - **Bottom line:** ROA is most useful when comparing companies
+    within the same sector. A bank's 1 % ROA and a tech firm's 20 %
+    ROA can both be excellent.
 
 ### Return on Investment (ROI)
 - **Definition:** Measures the gain or loss generated on an investment
@@ -89,6 +162,23 @@ meaning, calculation, or interpretation of any metric.
 - **Healthy sign:** Positive and growing EBITDA.
 - **Dataset unit:** millions USD.
 - **Dataset range:** approximately −$5,000 M to +$130,000 M.
+- **Industry context — EBITDA margins (EBITDA/Revenue) by sector:**
+  - **IT / SaaS (AAPL, GOOG, MSFT):** EBITDA margins of ~30–45 %.
+    Software has minimal COGS, so most revenue flows to EBITDA.
+  - **ELEC / Semiconductors (INTC, NVDA):** Margins of ~25–45 %.
+    High during upcycles (NVDA AI boom), compressed during downturns
+    (INTC competitive losses).
+  - **LOGI / E-commerce (AMZN):** Margins of ~5–15 %. Thin-margin
+    business by design — high volume, heavy logistics costs. AMZN's
+    EBITDA has grown mainly through AWS (cloud), which has much higher
+    margins than retail.
+  - **FOOD / Restaurants (MCD):** Margins of ~40–50 % for franchise
+    models. Franchisees absorb operating costs; MCD collects royalties.
+  - **BANK / Insurance (AIG, BCS):** EBITDA is less meaningful for
+    banks — interest income/expense is their core business, and EBITDA
+    strips it out. Use net interest margin or net income instead.
+  - **MANUFACTURING / Utilities (PCG):** Margins of ~15–25 %.
+    Regulated pricing limits upside.
 
 ### Earnings Per Share (EPS)
 - **Definition:** Net income allocated to each outstanding share of
@@ -113,6 +203,46 @@ meaning, calculation, or interpretation of any metric.
     obligations.
   - **> 3.0** — possibly holding too much idle cash or inventory.
 - **Dataset range:** approximately 0.5–4.0.
+- **Industry context — why a current ratio below 1.0 is not always bad:**
+  - **IT / SaaS (AAPL, GOOG, MSFT):** Often run current ratios near or
+    below 1.0 (industry average ~1.0–1.3). These companies have
+    subscription-based or highly predictable revenue streams with short
+    receivable cycles, so they don't need large current-asset buffers.
+    They also aggressively return cash via buybacks, which reduces
+    current assets. A CR of 0.7 for a large IT firm is common and not
+    necessarily alarming.
+  - **LOGI / E-commerce (AMZN):** Typically runs a current ratio below
+    1.0 (industry average ~0.9–1.1). Logistics and e-commerce companies
+    collect from customers quickly (often at point of sale) but negotiate
+    extended payment terms with suppliers, creating a negative working
+    capital cycle that actually funds growth. A CR of 0.7 here is a
+    feature of the business model, not a flaw.
+  - **FOOD / Restaurants (MCD):** Often below 1.0 (industry average
+    ~0.8–1.2). Fast-food chains have minimal receivables (cash/card
+    sales), low inventory, and use franchise fees as predictable income.
+    Heavy use of debt for buybacks also suppresses current assets.
+  - **BANK / Insurance (AIG, BCS):** Current ratio is less meaningful
+    for banks because their balance sheets are structured differently —
+    deposits are liabilities but are stable funding. Typical ratios are
+    very low (< 0.5) but this reflects the nature of banking, not
+    distress.
+  - **ELEC / Semiconductors (INTC, NVDA):** Tend to maintain higher
+    current ratios (industry average ~1.5–2.5) because of long
+    production cycles and large inventory buffers needed for chip
+    fabrication. A CR of 0.7 in this sector would be genuinely
+    concerning.
+  - **MANUFACTURING / Utilities (PCG):** Moderate ratios (industry
+    average ~1.0–1.5). Capital-intensive with regulated revenue, so they
+    manage liquidity tightly. Below 1.0 may signal trouble here.
+  - **FINTECH (PYPL):** Typically ~1.2–1.5. Digital payments companies
+    hold customer funds as both assets and liabilities, inflating both
+    sides. A low ratio could indicate regulatory reserve concerns.
+  - **FINANCE (SHLDQ):** Similar to banks — low ratios are structural.
+    However, SHLDQ's persistently low ratio alongside negative equity
+    signals genuine distress, not just sector norms.
+- **Bottom line:** Always compare a company's current ratio to its own
+  sector average before judging it. A CR of 0.7 is normal in IT/LOGI/FOOD
+  but would be a red flag in ELEC or MANUFACTURING.
 
 ### Debt/Equity Ratio
 - **Definition:** Compares a company's total debt to its shareholder
@@ -125,6 +255,48 @@ meaning, calculation, or interpretation of any metric.
   - **Negative** — shareholder equity is negative (accumulated losses
     exceed invested capital), a serious warning sign.
 - **Dataset range:** approximately −10 to +30.
+- **Industry context — why a D/E of 5 means different things by sector:**
+  - **BANK / Insurance (AIG, BCS):** Banks routinely operate with D/E
+    ratios of 5–10+ (industry average ~6–8). Their core business IS
+    leverage — they take deposits (debt) and lend them out. A D/E of 5
+    for a bank is normal and expected by regulators. What matters more
+    for banks is the Tier 1 capital ratio, not D/E.
+  - **MANUFACTURING / Utilities (PCG):** Capital-intensive businesses
+    often carry D/E of 1.5–3.0 because they finance large
+    infrastructure (power plants, pipelines) with long-term debt. A D/E
+    of 5 would be high even for utilities and could signal over-leverage,
+    especially if cash flows are regulated and predictable but thin.
+  - **IT / SaaS (AAPL, GOOG, MSFT):** Industry average ~0.5–1.5.
+    Tech companies tend to be asset-light with high margins, so they
+    don't need much debt. Some (like AAPL) have taken on debt for tax-
+    efficient buybacks despite having massive cash reserves, which can
+    inflate D/E. A D/E of 5 for an IT company would be very unusual and
+    concerning unless driven by buyback-related leverage with offsetting
+    cash.
+  - **LOGI / E-commerce (AMZN):** Moderate leverage (industry average
+    ~1.0–2.5). E-commerce firms invest heavily in warehouses and
+    logistics networks. A D/E of 5 would be elevated but context
+    matters — Amazon's lease obligations inflate debt.
+  - **FOOD / Restaurants (MCD):** Often have high D/E (industry average
+    ~2–5+). McDonald's, for example, has had negative equity due to
+    massive share buybacks funded by debt, resulting in extreme or
+    negative D/E. For franchise-heavy models with predictable cash
+    flows, high leverage is a deliberate financial strategy, not
+    distress.
+  - **ELEC / Semiconductors (INTC, NVDA):** Industry average ~0.3–1.0.
+    Chip companies prefer equity financing due to cyclical revenues.
+    A D/E of 5 would be a major red flag in this sector.
+  - **FINTECH (PYPL):** Typically ~0.5–1.5. Light balance sheets. A D/E
+    of 5 would be very concerning and could indicate aggressive
+    acquisition debt or operational problems.
+  - **FINANCE (SHLDQ):** Like banks, financial services firms use more
+    leverage, but SHLDQ's negative equity makes D/E ratios misleading —
+    focus on whether the company is solvent at all.
+- **Bottom line:** A D/E of 5 is perfectly normal for a bank, elevated
+  but explainable for food/restaurant franchises, and a serious warning
+  sign for tech, semiconductor, or fintech companies. Always compare
+  to the sector average and consider whether the leverage is structural
+  (part of the business model) or a sign of financial strain.
 
 ### Shareholder Equity
 - **Definition:** The residual interest in a company's assets after
@@ -254,3 +426,143 @@ A financially healthy company typically exhibits:
 
 Warning signs include negative net income, current ratio below 1,
 negative shareholder equity, and debt/equity ratio above 3.
+
+**Important:** These thresholds are general guidelines. Always compare a
+company's metrics to its own sector average before drawing conclusions.
+Different industries have structurally different norms:
+- Banks and financial firms carry high leverage by design (D/E of 5–10
+  is normal) because their business model is built on borrowing and
+  lending.
+- SaaS/IT companies and e-commerce/logistics firms often run current
+  ratios below 1.0 because they have predictable, recurring revenue
+  streams and collect cash faster than they pay suppliers (negative
+  working capital). This is a sign of business model efficiency, not
+  distress.
+- Fast-food franchises (like MCD) deliberately take on high debt for
+  share buybacks because their franchise fee income is extremely
+  predictable, making high leverage a calculated strategy.
+- Capital-intensive sectors (utilities, semiconductors) need more
+  liquidity buffers because their revenue can be cyclical and their
+  assets are illiquid.
+A metric that looks alarming in isolation may be perfectly healthy when
+viewed in the context of the company's sector and business model.
+
+---
+
+## Cross-Metric Relationships
+
+When interpreting financial metrics, reading them in combination is more
+informative than looking at any single number:
+
+- **High ROE + High D/E ratio:** The strong returns are being driven by
+  leverage (debt), not operational excellence. This is riskier because a
+  downturn could wipe out equity. Compare: AAPL may show ROE > 100 %
+  because buybacks shrunk equity, while GOOG shows ~25 % ROE with low
+  debt — GOOG's returns are more sustainable.
+- **High ROE + Low D/E ratio:** Genuinely strong operational performance.
+  The company earns high returns without relying on borrowed money.
+- **Negative Net Income + Positive Operating Cash Flow:** The company is
+  generating cash from operations but has non-cash charges (depreciation,
+  write-downs) dragging down reported profit. Not necessarily alarming —
+  check if cash flow is consistently positive.
+- **Positive Net Income + Negative Operating Cash Flow:** The company
+  reports profit on paper but isn't collecting cash — a red flag for
+  earnings quality. Could indicate aggressive revenue recognition or
+  growing uncollected receivables.
+- **Low Current Ratio + Strong Free Cash Flow:** The company doesn't
+  need a large current-asset buffer because it generates plenty of cash.
+  Common for IT and LOGI companies.
+- **High D/E + Strong Cash Flow Coverage:** Debt is manageable because
+  the company generates enough cash to service it. Common for FOOD
+  (franchise models) and BANK sectors.
+- **Declining Revenue + Declining Margins + Rising D/E:** A dangerous
+  combination indicating a shrinking business taking on more debt. This
+  pattern appears in SHLDQ (Sears) in its final years.
+
+---
+
+## Company Context & Notable Outliers
+
+Understanding why certain companies show extreme values in the dataset:
+
+### SHLDQ (Sears Holdings)
+- **Sector:** FINANCE (historically retail/department stores)
+- **Key story:** Sears filed for Chapter 11 bankruptcy in October 2018.
+  The dataset captures its decline: revenue falling year-over-year,
+  persistently negative net income, negative shareholder equity, and a
+  meaningless (negative) D/E ratio. SHLDQ is the clearest example of
+  financial distress in this dataset.
+- **Why outlier values:** Negative equity means accumulated losses exceed
+  all invested capital. Negative ROE with negative equity can produce a
+  misleadingly positive ROE number — always check if equity is negative
+  before interpreting ROE.
+
+### AAPL (Apple)
+- **Sector:** IT
+- **Key story:** Apple has had periods of negative or very low
+  shareholder equity despite being one of the most profitable companies
+  in the world. This is because Apple aggressively repurchased shares
+  using debt (taking advantage of low interest rates and tax-efficient
+  offshore cash repatriation). The result is extremely high ROE/ROTE
+  and elevated D/E that do NOT indicate distress — they reflect a
+  deliberate capital return strategy backed by ~$60–100 B in cash
+  reserves.
+
+### MCD (McDonald's)
+- **Sector:** FOOD
+- **Key story:** Similar to Apple, McDonald's has had negative
+  shareholder equity due to massive debt-funded share buybacks. Its
+  franchise-heavy model generates extremely predictable cash flows
+  (~$8–10 B/year operating cash flow), making high leverage a deliberate
+  and manageable strategy. A negative D/E for MCD is not comparable to
+  a negative D/E for SHLDQ.
+
+### PCG (PG&E Corporation)
+- **Sector:** MANUFACTURING (utilities)
+- **Key story:** PG&E filed for Chapter 11 bankruptcy in January 2019
+  due to wildfire liabilities in California. The dataset may show
+  anomalous values around 2019–2020. PG&E emerged from bankruptcy in
+  2020 but with a transformed balance sheet.
+
+### NVDA (NVIDIA)
+- **Sector:** ELEC
+- **Key story:** NVIDIA's financial metrics show dramatic improvement
+  from ~2016 onward, driven by the GPU computing and AI boom. Revenue,
+  margins, and ROE all inflected sharply upward. This makes historical
+  comparisons within NVDA less meaningful — the company's business
+  fundamentally changed in scale.
+
+---
+
+## Macroeconomic Events in the Dataset (2009–2023)
+
+The dataset spans several major economic events that affect all companies:
+
+### 2009–2010: Post-Global Financial Crisis Recovery
+- The 2008 financial crisis devastated banks and financial firms. AIG
+  required a government bailout. Data from 2009 shows depressed earnings,
+  low market caps, and weak profitability across most sectors. Recovery
+  was uneven — tech recovered fastest, banks took years.
+
+### 2020: COVID-19 Pandemic
+- Sharp revenue and earnings drops for many companies in 2020, especially
+  in food service (MCD), travel-adjacent, and physical retail. However,
+  tech companies (AAPL, MSFT, GOOG, AMZN) saw accelerated growth due to
+  remote work, e-commerce, and cloud computing demand. AMZN and NVDA
+  particularly benefited.
+- If a company shows a dip in 2020, it is likely pandemic-related and
+  does not necessarily indicate a structural problem.
+
+### 2021–2022: Post-COVID Boom and Inflation Surge
+- 2021 saw a strong recovery and stimulus-driven growth. 2022 brought
+  the highest US inflation in 40 years (~8 %), which squeezed margins
+  for companies without pricing power. The Federal Reserve raised
+  interest rates aggressively, increasing debt costs and depressing
+  market caps, particularly for growth stocks.
+- Companies with strong pricing power (AAPL, MSFT, MCD) weathered
+  inflation better than those in competitive or regulated markets.
+
+### 2023: Normalization and AI Boom
+- Inflation moderated, markets recovered, and NVDA's revenue exploded
+  due to AI chip demand. Tech sector market caps reached new highs.
+  Banks remained cautious after the 2023 regional banking stress.
