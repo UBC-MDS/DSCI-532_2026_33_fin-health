@@ -26,6 +26,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **fin-chat requires API token**: The fin-chat page requires a `GITHUB_TOKEN` environment variable; without it, a fallback message is displayed.
 - **Querychat latency**: LLM-powered queries may take 2-5 seconds depending on API response time.
 
+### Release Highlight
+
+**RAG Finance Glossary (Option C)** — We chose Option C (RAG-based contextual help)
+to make the fin-chat page more useful for users unfamiliar with financial terminology.
+A ~568-line glossary knowledge base (`data/knowledge_base/finance_glossary.txt`) was
+created covering all metrics in the dataset with definitions, formulas, healthy ranges,
+and interpretation guidance. At startup the glossary is chunked by `###` headings
+(one chunk per financial term, plus broader sections like Sector Definitions and
+How to Interpret Financial Health) and indexed with **scikit-learn's TF-IDF vectorizer**.
+On every user message, the query is vectorized and the top-3 most relevant chunks are
+retrieved via cosine similarity (within a 2 500-character budget) and prepended to the
+user message before it reaches the LLM — true per-query retrieval that requires no
+external API or model download. For example, asking *"Is a current ratio of 0.7
+concerning?"* retrieves the Current Ratio definition (with the formula, < 1.0 risk
+threshold, and sector-specific norms) so the LLM can give a grounded, nuanced answer
+instead of relying on generic training knowledge.
+
+- **Option choice:** C — RAG-based contextual help
+- **Motivation:** Users without finance backgrounds need clear, accurate metric
+  explanations when exploring the dashboard. TF-IDF retrieval over a structured
+  domain glossary ensures consistent, citation-backed answers with zero extra cost.
+- **PR:** #87
+- **Issue:** #91
 
 ## [v0.3.0] - (2026-03-08)
 
