@@ -44,7 +44,7 @@ generic training-data knowledge.
   consistent metric explanations when exploring the dashboard; a domain glossary with
   per-query TF-IDF retrieval ensures citation-backed answers without requiring an
   external embedding API or model download.
-- **Feature prioritization issue link:** #91
+- **Feature prioritization issue link:** #86
 
 ### Collaboration
 
