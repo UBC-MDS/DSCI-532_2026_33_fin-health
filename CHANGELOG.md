@@ -26,43 +26,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **fin-chat requires API token**: The fin-chat page requires a `GITHUB_TOKEN` environment variable; without it, a fallback message is displayed.
 - **Querychat latency**: LLM-powered queries may take 2-5 seconds depending on API response time.
 
-### Release Highlight
+### Release Highlight: TF-IDF RAG Finance Glossary
 
-**RAG Finance Glossary (Option C)** — We chose Option C (RAG-based contextual help)
-to make the fin-chat page more useful for users unfamiliar with financial terminology.
-A ~568-line glossary knowledge base (`data/knowledge_base/finance_glossary.txt`) was
-created covering all metrics in the dataset with definitions, formulas, healthy ranges,
-and interpretation guidance. At startup the glossary is chunked by `###` headings
-(one chunk per financial term, plus broader sections like Sector Definitions and
-How to Interpret Financial Health) and indexed with **scikit-learn's TF-IDF vectorizer**.
-On every user message, the query is vectorized and the top-3 most relevant chunks are
-retrieved via cosine similarity (within a 2 500-character budget) and prepended to the
-user message before it reaches the LLM — true per-query retrieval that requires no
-external API or model download. For example, asking *"Is a current ratio of 0.7
-concerning?"* retrieves the Current Ratio definition (with the formula, < 1.0 risk
-threshold, and sector-specific norms) so the LLM can give a grounded, nuanced answer
-instead of relying on generic training knowledge.
+We added per-query retrieval-augmented generation (RAG) to the fin-chat page so users
+unfamiliar with financial terminology get accurate, domain-grounded answers. A ~560-line
+glossary (`data/knowledge_base/finance_glossary.txt`) covering all 20+ metrics in the
+dataset—definitions, formulas, healthy ranges, and sector-specific benchmarks—is chunked
+by heading and indexed with a TF-IDF vectorizer. On every user question, the top-3 most
+relevant chunks are retrieved via cosine similarity and injected into the user message
+before it reaches the LLM. For example, asking "Is a current ratio of 0.7 concerning?"
+now returns a nuanced, sector-aware answer citing the glossary's thresholds instead of
+generic training-data knowledge.
 
-- **Option choice:** C — RAG-based contextual help
-- **Motivation:** Users without finance backgrounds need clear, accurate metric
-  explanations when exploring the dashboard. TF-IDF retrieval over a structured
-  domain glossary ensures consistent, citation-backed answers with zero extra cost.
+- **Option chosen:** C — RAG-based contextual help
 - **PR:** #87
-- **Issue:** #91
+- **Why this option over the others:** Users without finance backgrounds need clear,
+  consistent metric explanations when exploring the dashboard; a domain glossary with
+  per-query TF-IDF retrieval ensures citation-backed answers without requiring an
+  external embedding API or model download.
+- **Feature prioritization issue link:** #91
 
 ### Collaboration
 
-| Team Member | Primary Contributions |
-|-------------|----------------------|
-| @jiroamato  | Spec updates, environment setup, parquet + DuckDB migration, deployment |
-| @eddeness   | RAG finance glossary (Option C), CHANGELOG (highlight/collaboration/reflection) |
-| @ShrutiSasi | Spec + CONTRIBUTING updates, playwright behavior tests |
-| @lukeni777  | Unit tests + function refactor, CHANGELOG (added/changed/fixed/known issues) |
+After M3 feedback highlighted blocking dependencies and slow PR reviews, we adopted
+a spec-first, scoped-PR workflow for M4. Specs and CONTRIBUTING.md were updated and
+merged before any feature branch was created, giving every team member written context
+on intent and scope. Work was split across separate files so all four members could
+code in parallel without merge conflicts: Jiro on `data.py` and page filtering, Seungmyun
+on `ai_explorer.py` and the knowledge base, Shruti on playwright tests, Luke on
+function refactoring and unit tests. Each team member resolved at least one feedback
+item, and PRs were kept atomic (one feature or fix per PR, with conventional-commit
+messages and documentation updated alongside the code).
 
-All team members addressed at least one feedback item. Work was parallelised across
-separate files to minimise merge conflicts: Jiro touched `data.py` and page filtering;
-Eden touched `ai_explorer.py` and the knowledge base; Shruti wrote playwright tests;
-Luke refactored functions and wrote unit tests.
+- **CONTRIBUTING.md:** #79
+- **M3 retrospective:** Blocking PRs (env setup) delayed downstream work; review
+  turnaround was too slow; PRs lacked tests. We committed to merging blockers within
+  2 days, a 24-hour review SLA, and requiring at least one test per feature PR.
+- **M4:** Specs merged before code; environment and data-migration PRs landed first
+  to unblock the team; contributions were spread across the milestone rather than
+  concentrated at the deadline. Daily async Slack stand-ups tracked progress and
+  surfaced blockers early.
+
+### Reflection
+
+The dashboard now handles data loading, domain-aware chat, and testing end-to-end.
+Parquet + DuckDB via ibis pushes all filtering to the database layer so only the
+rows and columns needed for each view are materialized into pandas which is an 
+improvement for scalability. The TF-IDF RAG glossary gives fin-chat accurate,
+sector-aware answers grounded in a curated knowledge base rather than relying on the
+LLM's general training data. Playwright and pytest suites cover page navigation,
+filter behaviour, and refactored pure functions, catching regressions before deploy.
+A current limitation is that TF-IDF retrieval relies on exact term overlap; queries
+with synonyms or paraphrases may miss relevant chunks. Upgrading to semantic
+embeddings would address this but adds an external dependency we chose to avoid.
+
+We prioritised all critical feedback items and deferred only cosmetic suggestions —
+full rationale is in #<feedback-issue-number> and the Changed section of the CHANGELOG.
+
+The lecture material on RAG and prompting shaped this milestone most directly. 
+It informed the chunk-and-retrieve architecture for the glossary and the decision to inject
+context into the user message rather than the system prompt. We would have benefited from
+earlier coverage of end-to-end testing with playwright as we mostly adopted a test-driven
+development from the start.
 
 ## [v0.3.0] - (2026-03-08)
 
