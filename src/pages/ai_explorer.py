@@ -36,12 +36,6 @@ GLOSSARY_PATH = (
     / "finance_glossary.txt"
 )
 
-# ---------------------------------------------------------------------------
-# Monkey-patch querychat's _update_dashboard_impl to HTML-escape the query and
-# title inside the <button> data-attributes.  Without this, SQL containing
-# double-quoted identifiers (e.g. "Current Ratio") breaks the HTML attribute
-# parsing and the Apply Filter button renders as raw text.
-# ---------------------------------------------------------------------------
 _orig_update_dashboard_impl = _qc_tools._update_dashboard_impl
 
 
@@ -66,8 +60,6 @@ def _patched_update_dashboard_impl(data_source, update_fn):
                     "Apply Filter</button>"
                 )
                 # Replace everything from <button to </button>
-                import re
-
                 md = re.sub(
                     r"<button\s[^>]*querychat-update-dashboard-btn[^>]*>.*?</button>",
                     fixed_button,
