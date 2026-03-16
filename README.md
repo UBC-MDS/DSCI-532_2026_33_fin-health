@@ -80,6 +80,24 @@ playwright install chromium
 shiny run --reload src/app.py
 ```
 
+7. Run the test suite:
+
+To install playwright:
+```bash
+playwright install
+```
+
+```bash
+# Unit tests only (fast)
+pytest -v --ignore=tests/test_app_playwright.py
+
+# Playwright end-to-end tests (requires playwright installed)
+pytest tests/test_app_playwright.py -v
+
+# All tests
+pytest -v
+```
+
 ## Contributors
 
 - Seungmyun Park
