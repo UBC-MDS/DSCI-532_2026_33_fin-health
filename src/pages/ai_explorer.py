@@ -38,7 +38,6 @@ GLOSSARY_PATH = (
 
 _orig_update_dashboard_impl = _qc_tools._update_dashboard_impl
 
-
 def _patched_update_dashboard_impl(data_source, update_fn):
     _orig_fn = _orig_update_dashboard_impl(data_source, update_fn)
 
@@ -76,7 +75,6 @@ def _patched_update_dashboard_impl(data_source, update_fn):
         return result
 
     return _wrapper
-
 
 _qc_tools._update_dashboard_impl = _patched_update_dashboard_impl
 
@@ -188,17 +186,33 @@ You are a financial data analyst assistant. Follow these rules strictly:
    "Free Cash Flow per Share", "Return on Tangible Equity",
    "Number of Employees", "Gross Profit", "Net Income".
 
-3. Structure every response in this format:
-   - **Filters applied:** list the filters used (or "None" if showing all data)
-   - **Key stats:** 2-3 notable numbers from the query result
-   - **Insight:** one sentence interpreting the result
-   - **Try next:** one clickable follow-up suggestion as
-     `<span class="suggestion">suggestion text</span>`
+3. **Response format — choose ONE based on the question type:**
+
+   **TYPE A — Data queries** (user says "show", "filter", "rank", "list",
+   "compare", "top N", "which companies have…"):
+   Use the four-bullet markdown format, each on its own line:
+   - **Filters applied:** …
+   - **Key stats:** …
+   - **Insight:** …
+   - **Try next:** `<span class="suggestion">…</span>`
+
+   **TYPE B — Explanation / interpretation questions** (user asks "what does X
+   mean?", "is Y concerning?", "explain", "what is a healthy range?",
+   "why does Z have…"):
+   Do NOT use the bullet format. Write natural prose paragraphs instead.
+   Cite definitions, formulas, healthy ranges, and industry-specific benchmarks
+   from the domain context. Compare values against the relevant sector average
+   and explain *why* different industries have different norms. End with one
+   clickable suggestion: `<span class="suggestion">…</span>`
+
+   **TYPE C — Mixed** (data + explanation in one question):
+   Answer ALL parts. Use bullets for the data part and separate prose
+   paragraphs for the explanation part.
 
 4. When the user asks about a sector, use the Category column (e.g., IT, BANK).
    When they mention a company name, map it to the ticker in the Company column.
 
-5. Keep responses concise — no more than 5 sentences outside the structured format.
+5. Keep responses concise — no more than 5 sentences per section.
 
 6. **Never include raw HTML, SQL code blocks, or `<button>` markup in your
    response text.** Do not echo the SQL query or the button element back to the
