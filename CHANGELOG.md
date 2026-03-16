@@ -50,6 +50,20 @@ instead of relying on generic training knowledge.
 - **PR:** #87
 - **Issue:** #91
 
+### Collaboration
+
+| Team Member | Primary Contributions |
+|-------------|----------------------|
+| @jiroamato  | Spec updates, environment setup, parquet + DuckDB migration, deployment |
+| @eddeness   | RAG finance glossary (Option C), CHANGELOG (highlight/collaboration/reflection) |
+| @ShrutiSasi | Spec + CONTRIBUTING updates, playwright behavior tests |
+| @lukeni777  | Unit tests + function refactor, CHANGELOG (added/changed/fixed/known issues) |
+
+All team members addressed at least one feedback item. Work was parallelised across
+separate files to minimise merge conflicts: Jiro touched `data.py` and page filtering;
+Eden touched `ai_explorer.py` and the knowledge base; Shruti wrote playwright tests;
+Luke refactored functions and wrote unit tests.
+
 ## [v0.3.0] - (2026-03-08)
 
 ### Added
