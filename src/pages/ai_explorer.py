@@ -219,26 +219,75 @@ You are a financial data analyst assistant. Follow these rules strictly:
    user. Just call the appropriate tool and provide the structured summary.
 """
 
+# TF-IDF RAG knowledge base — per-query retrieval from the finance glossary
+_kb_chunks: list[str] | None = None
+_kb_vectorizer: TfidfVectorizer | None = None
+_kb_vectors = None
 
-def _load_glossary() -> str:
-    """Load the finance glossary knowledge base for RAG context."""
-    if GLOSSARY_PATH.exists():
-        return GLOSSARY_PATH.read_text(encoding="utf-8")
-    return ""
+def _ensure_kb():
+    """Build the TF-IDF knowledge-base index (lazy, once)."""
+    global _kb_chunks, _kb_vectorizer, _kb_vectors
+    if _kb_chunks is not None:
+        return
+    if not GLOSSARY_PATH.exists():
+        _kb_chunks = []
+        return
+
+    kb_text = GLOSSARY_PATH.read_text(encoding="utf-8")
+
+    # Split by ### headings — each metric becomes its own chunk
+    raw_sections = re.split(r"\n(?=###\s)", kb_text)
+
+    # Also grab ## section headers as separate chunks
+    extra_chunks = []
+    for marker in [
+        "## Sector Definitions",
+        "## How to Interpret Financial Health",
+        "## Cross-Metric Relationships",
+        "## Company Context",
+        "## Macroeconomic Events",
+    ]:
+        idx = kb_text.find(marker)
+        if idx != -1:
+            end = kb_text.find("\n## ", idx + len(marker))
+            section = kb_text[idx : end if end != -1 else len(kb_text)].strip()
+            extra_chunks.append(section)
+
+    _kb_chunks = [c.strip() for c in raw_sections if c.strip().startswith("###")]
+    _kb_chunks.extend(extra_chunks)
+
+    _kb_vectorizer = TfidfVectorizer()
+    _kb_vectors = _kb_vectorizer.fit_transform(_kb_chunks)
 
 
-def _build_extra_instructions() -> str:
-    """Combine base instructions with the finance glossary knowledge base."""
-    glossary = _load_glossary()
-    if glossary:
-        return (
-            EXTRA_INSTRUCTIONS
-            + "\n<finance_glossary>\n"
-            + glossary
-            + "\n</finance_glossary>\n"
-        )
-    return EXTRA_INSTRUCTIONS
+_RAG_MAX_CHARS = 2500 # ~625 tokens (per query) — leaves room for system prompt + chat history
 
+def _retrieve(query: str, top_k: int = 3) -> list[str]:
+    """Return relevant glossary chunks within a character budget."""
+    _ensure_kb()
+    if not _kb_chunks or _kb_vectorizer is None:
+        return []
+    q_vec = _kb_vectorizer.transform([query])
+    scores = cosine_similarity(q_vec, _kb_vectors).flatten()
+    top_idx = np.argsort(scores)[::-1][:top_k]
+
+    selected: list[str] = []
+    budget = _RAG_MAX_CHARS
+    for i in top_idx:
+        if scores[i] <= 0:
+            break
+        chunk = _kb_chunks[i]
+        if len(chunk) <= budget:
+            selected.append(chunk)
+            budget -= len(chunk)
+        elif budget > 200:
+            # Truncate at the last complete line within budget
+            truncated = chunk[:budget].rsplit("\n", 1)[0]
+            selected.append(truncated + "\n  ...")
+            break
+        else:
+            break
+    return selected
 
 @cache
 def _get_qc():
