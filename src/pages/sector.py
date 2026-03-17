@@ -26,9 +26,10 @@ def sector_ui():
     sector_select = ui.input_selectize(
         id="p1_sector",
         label="Sector",
-        choices=["All"] + ALL_SECTORS,
-        selected="All",
+        choices=ALL_SECTORS,
+        selected=[],
         multiple=True,
+        options={"placeholder": "All sectors (select to filter)"},
     )
     metric_select = ui.input_selectize(
         id="p1_metric",
@@ -135,7 +136,7 @@ def sector_server(input, output, session):
         # Update the year range slider to full range
         ui.update_slider("p1_year_range", value=[YEAR_MIN, YEAR_MAX])
         # Update the sector select to "All"
-        ui.update_selectize("p1_sector", selected="All")
+        ui.update_selectize("p1_sector", selected=[])
         # Update the metric select to default
         ui.update_select("p1_metric", selected="Net Profit Margin")
 
@@ -145,7 +146,7 @@ def sector_server(input, output, session):
         year_min, year_max = input.p1_year_range()
         sector = input.p1_sector()
         expr = tbl.filter(tbl["Year"] >= year_min, tbl["Year"] <= year_max)
-        if sector and "All" not in sector:
+        if sector:
             expr = expr.filter(tbl["Category"].isin(sector))
         return expr.to_pandas()
 
