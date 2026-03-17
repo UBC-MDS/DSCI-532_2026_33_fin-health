@@ -361,6 +361,11 @@ def ai_explorer_ui():
     qc = _get_qc()
     sidebar = ui.sidebar(
         qc.ui(),
+        ui.input_action_button(
+            "reset_chat",
+            "Reset Chat",
+            class_="btn btn-outline-secondary btn-sm mt-2 w-100",
+        ),
         open="desktop",
         width=400,
     )
@@ -431,6 +436,21 @@ def ai_explorer_server(input, output, session):
 
     qc = _get_qc()
     qc_vals = qc.server()
+
+    @reactive.effect
+    @reactive.event(input.reset_chat)
+    async def _reset_chat():
+        await session.send_custom_message("reload", {})
+
+    ui.insert_ui(
+        ui.tags.script(
+            "Shiny.addCustomMessageHandler('reload', function(msg) {"
+            "  window.location.reload();"
+            "});"
+        ),
+        selector="body",
+        where="beforeEnd",
+    )
 
     @render.text
     def ai_title():
