@@ -12,6 +12,67 @@ from charts.altair_charts import (
 )
 
 
+_METRIC_DEFINITIONS = {
+    "Avg Profit Margin": (
+        "Average net profit margin across all filtered companies. Shows what"
+        " percentage of revenue is retained as profit. A declining margin may"
+        " signal rising costs or pricing pressure."
+    ),
+    "Top Sector": (
+        "The sector with the highest average net profit margin for the selected"
+        " period. Identifies which industry is most efficient at converting"
+        " revenue into profit, useful for spotting sector-level opportunities."
+    ),
+    "Index Margin": (
+        "Revenue-weighted profit margin across all filtered companies"
+        " (Total Net Income \u00f7 Total Revenue). Unlike the simple average,"
+        " larger companies carry more weight \u2014 reflecting the true economic"
+        " margin of the market."
+    ),
+    "Revenue Growth": (
+        "Year-over-year change in total aggregate revenue across all filtered"
+        " companies. Positive growth indicates expanding market activity;"
+        " negative growth may signal economic contraction or sector headwinds."
+    ),
+    "Peer Benchmarking": (
+        "Scatter plot comparing each company\u2019s selected metric against revenue."
+        " Revenue is used as a size baseline, making it easy to spot outliers"
+        " \u2014 companies that outperform or underperform relative to their scale."
+    ),
+    "Company Details": (
+        "Detailed financial data for all companies matching the current filters."
+        " Drill down into individual metrics to compare performance across"
+        " sectors and years."
+    ),
+    "Sector Comparison": (
+        "Bar chart ranking sectors by the selected metric. Quickly compare"
+        " which industries lead or lag, and how far apart they are."
+    ),
+    "Historical Trend": (
+        "Line chart showing how the selected metric evolves over the chosen"
+        " time period. Reveals long-term patterns, cyclical behavior, and"
+        " inflection points across sectors."
+    ),
+}
+
+
+def _card_header_with_tooltip(header: str):
+    """Card header with an info icon that shows a metric definition on hover."""
+    definition = _METRIC_DEFINITIONS.get(header, "")
+    if not definition:
+        return ui.card_header(header)
+    return ui.card_header(
+        ui.tags.span(
+            header,
+            ui.tags.span(
+                " \u24d8",
+                title=definition,
+                style="cursor: help; opacity: 0.5; font-size: 0.85em;",
+            ),
+        )
+    )
+
+
 def sector_ui():
     """Return the full Page 1 layout (sidebar + KPI row + chart row + peer row)."""
     # Sidebar inputs
@@ -53,22 +114,27 @@ def sector_ui():
         value_id="p1_avg_margin",
         trend_id="p1_margin_trend",
         label_id="p1_margin_badge",
+        tooltip=_METRIC_DEFINITIONS["Avg Profit Margin"],
     )
     card_top_sector = kpi_card(
         header="Top Sector",
         value_id="p1_top_sector",
         label_id="p1_top_sector_label",
+        tooltip=_METRIC_DEFINITIONS["Top Sector"],
     )
     card_index_margin = kpi_card(
         header="Index Margin",
         value_id="p1_index_margin_value",
+        trend_id="p1_index_margin_trend",
         label_id="p1_index_margin_label",
+        tooltip=_METRIC_DEFINITIONS["Index Margin"],
     )
     card_revenue_growth = kpi_card(
         header="Revenue Growth",
         value_id="p1_revenue_growth_value",
         trend_id="p1_revenue_trend",
         label_id="p1_revenue_growth_label",
+        tooltip=_METRIC_DEFINITIONS["Revenue Growth"],
     )
     kpi_row = ui.div(
         ui.layout_columns(
@@ -83,12 +149,12 @@ def sector_ui():
 
     # Chart cards
     card_sector_profitability = ui.card(
-        ui.card_header("Sector Comparison"),
+        _card_header_with_tooltip("Sector Comparison"),
         output_widget("p1_chart_a"),
         full_screen=True,
     )
     card_trend = ui.card(
-        ui.card_header("Historical Trend"),
+        _card_header_with_tooltip("Historical Trend"),
         output_widget("p1_chart_b"),
         full_screen=True,
     )
@@ -100,12 +166,12 @@ def sector_ui():
 
     # Peer + Table cards
     card_peer = ui.card(
-        ui.card_header("Peer Benchmarking"),
+        _card_header_with_tooltip("Peer Benchmarking"),
         output_widget("p1_chart_c"),
         full_screen=True,
     )
     card_details = ui.card(
-        ui.card_header("Company Details"),
+        _card_header_with_tooltip("Company Details"),
         ui.output_data_frame("p1_table_d"),
     )
     peer_row = ui.layout_columns(
@@ -264,6 +330,28 @@ def sector_server(input, output, session):
             class_="kpi-label",
             style="margin-top: 0.5rem;",
         )
+
+    @render.ui
+    def p1_index_margin_trend():
+        """Render trend indicator for index margin based on YoY change."""
+        filtered_df = p1_filtered_data()
+        if filtered_df.empty:
+            return ui.tags.span()
+        years = sorted(filtered_df["Year"].unique())
+        if len(years) < 2:
+            return ui.tags.span()
+        curr = filtered_df[filtered_df["Year"] == years[-1]]
+        prev = filtered_df[filtered_df["Year"] == years[-2]]
+        curr_rev = curr["Revenue"].sum()
+        prev_rev = prev["Revenue"].sum()
+        if curr_rev == 0 or prev_rev == 0:
+            return ui.tags.span()
+        curr_margin = curr["Net Income"].sum() / curr_rev * 100
+        prev_margin = prev["Net Income"].sum() / prev_rev * 100
+        is_positive = curr_margin >= prev_margin
+        trend_char = "\u25b2" if is_positive else "\u25bc"
+        trend_class = "up" if is_positive else "down"
+        return ui.tags.span(trend_char, class_=f"trend-indicator {trend_class}")
 
     # ---------------Revenue Growth---------------
     @reactive.calc

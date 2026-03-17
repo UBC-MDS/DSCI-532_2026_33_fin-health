@@ -9,6 +9,7 @@ def kpi_card(
     trend_id: str = None,
     label_id: str = None,
     status_id: str = None,
+    tooltip: str = None,
 ):
     """Build a KPI card with consistent structure.
 
@@ -24,6 +25,8 @@ def kpi_card(
         Output ID for the label row below the value (used with @render.ui).
     status_id : str, optional
         Output ID for a health status icon (used with @render.ui).
+    tooltip : str, optional
+        Hover text for an info icon beside the header.
     """
     value_children = [
         ui.tags.h3(
@@ -42,8 +45,22 @@ def kpi_card(
         class_="kpi-label-row",
     )
 
+    if tooltip:
+        card_hdr = ui.card_header(
+            ui.tags.span(
+                header,
+                ui.tags.span(
+                    " \u24d8",
+                    title=tooltip,
+                    style="cursor: help; opacity: 0.5; font-size: 0.85em;",
+                ),
+            )
+        )
+    else:
+        card_hdr = ui.card_header(header)
+
     return ui.card(
-        ui.card_header(header),
+        card_hdr,
         ui.tags.div(*value_children, class_="kpi-value-row"),
         label_row,
     )
