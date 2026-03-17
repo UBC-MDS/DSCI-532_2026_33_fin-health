@@ -2,13 +2,16 @@
 
 import html
 import os
+import re
 from functools import cache
+from pathlib import Path
 
+import numpy as np
 import querychat
 import querychat.tools as _qc_tools
-from chatlas import ChatGithub, ContentToolResult
+from chatlas import Chat, ChatGithub, ContentToolResult
 from shinychat.types import ToolResultDisplay
-from shiny import render, ui
+from shiny import reactive, render, ui
 from shinywidgets import output_widget, render_altair
 
 from charts.altair_charts import (
@@ -20,25 +23,20 @@ from charts.altair_charts import (
     build_sector_bar,
     build_single_company_summary,
 )
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 from components.empty_chart import empty_chart
 from data import METRIC_CHOICES, df
-from pathlib import Path
 
-GLOSSARY_PATH = (  # <-- ADD THIS BLOCK
+GLOSSARY_PATH = (
     Path(__file__).parent.parent.parent
     / "data"
     / "knowledge_base"
     / "finance_glossary.txt"
 )
 
-# ---------------------------------------------------------------------------
-# Monkey-patch querychat's _update_dashboard_impl to HTML-escape the query and
-# title inside the <button> data-attributes.  Without this, SQL containing
-# double-quoted identifiers (e.g. "Current Ratio") breaks the HTML attribute
-# parsing and the Apply Filter button renders as raw text.
-# ---------------------------------------------------------------------------
 _orig_update_dashboard_impl = _qc_tools._update_dashboard_impl
-
 
 def _patched_update_dashboard_impl(data_source, update_fn):
     _orig_fn = _orig_update_dashboard_impl(data_source, update_fn)
@@ -61,8 +59,6 @@ def _patched_update_dashboard_impl(data_source, update_fn):
                     "Apply Filter</button>"
                 )
                 # Replace everything from <button to </button>
-                import re
-
                 md = re.sub(
                     r"<button\s[^>]*querychat-update-dashboard-btn[^>]*>.*?</button>",
                     fixed_button,
@@ -79,7 +75,6 @@ def _patched_update_dashboard_impl(data_source, update_fn):
         return result
 
     return _wrapper
-
 
 _qc_tools._update_dashboard_impl = _patched_update_dashboard_impl
 
@@ -191,56 +186,161 @@ You are a financial data analyst assistant. Follow these rules strictly:
    "Free Cash Flow per Share", "Return on Tangible Equity",
    "Number of Employees", "Gross Profit", "Net Income".
 
-3. Structure every response in this format:
-   - **Filters applied:** list the filters used (or "None" if showing all data)
-   - **Key stats:** 2-3 notable numbers from the query result
-   - **Insight:** one sentence interpreting the result
-   - **Try next:** one clickable follow-up suggestion as
-     `<span class="suggestion">suggestion text</span>`
+3. **Response format — choose ONE based on the question type:**
+
+   **TYPE A — Data queries** (user says "show", "filter", "rank", "list",
+   "compare", "top N", "which companies have…"):
+   Use the four-bullet markdown format, each on its own line:
+   - **Filters applied:** …
+   - **Key stats:** …
+   - **Insight:** …
+   - **Try next:** `<span class="suggestion">…</span>`
+
+   **TYPE B — Explanation / interpretation questions** (user asks "what does X
+   mean?", "is Y concerning?", "explain", "what is a healthy range?",
+   "why does Z have…"):
+   Do NOT use the bullet format. Write natural prose paragraphs instead.
+   Cite definitions, formulas, healthy ranges, and industry-specific benchmarks
+   from the domain context. Compare values against the relevant sector average
+   and explain *why* different industries have different norms. End with one
+   clickable suggestion: `<span class="suggestion">…</span>`
+
+   **TYPE C — Mixed** (data + explanation in one question):
+   Answer ALL parts. Use bullets for the data part and separate prose
+   paragraphs for the explanation part.
 
 4. When the user asks about a sector, use the Category column (e.g., IT, BANK).
    When they mention a company name, map it to the ticker in the Company column.
 
-5. Keep responses concise — no more than 5 sentences outside the structured format.
+5. Keep responses concise — no more than 5 sentences per section.
 
 6. **Never include raw HTML, SQL code blocks, or `<button>` markup in your
    response text.** Do not echo the SQL query or the button element back to the
    user. Just call the appropriate tool and provide the structured summary.
 """
 
+# TF-IDF RAG knowledge base — per-query retrieval from the finance glossary
+_kb_chunks: list[str] | None = None
+_kb_vectorizer: TfidfVectorizer | None = None
+_kb_vectors = None
 
-def _load_glossary() -> str:
-    """Load the finance glossary knowledge base for RAG context."""
-    if GLOSSARY_PATH.exists():
-        return GLOSSARY_PATH.read_text(encoding="utf-8")
-    return ""
+def _ensure_kb():
+    """Build the TF-IDF knowledge-base index (lazy, once)."""
+    global _kb_chunks, _kb_vectorizer, _kb_vectors
+    if _kb_chunks is not None:
+        return
+    if not GLOSSARY_PATH.exists():
+        _kb_chunks = []
+        return
 
+    kb_text = GLOSSARY_PATH.read_text(encoding="utf-8")
 
-def _build_extra_instructions() -> str:
-    """Combine base instructions with the finance glossary knowledge base."""
-    glossary = _load_glossary()
-    if glossary:
-        return (
-            EXTRA_INSTRUCTIONS
-            + "\n<finance_glossary>\n"
-            + glossary
-            + "\n</finance_glossary>\n"
-        )
-    return EXTRA_INSTRUCTIONS
+    # Split by ### headings — each metric becomes its own chunk
+    raw_sections = re.split(r"\n(?=###\s)", kb_text)
 
+    # Also grab ## section headers as separate chunks
+    extra_chunks = []
+    for marker in [
+        "## Sector Definitions",
+        "## How to Interpret Financial Health",
+        "## Cross-Metric Relationships",
+        "## Company Context",
+        "## Macroeconomic Events",
+    ]:
+        idx = kb_text.find(marker)
+        if idx != -1:
+            end = kb_text.find("\n## ", idx + len(marker))
+            section = kb_text[idx : end if end != -1 else len(kb_text)].strip()
+            extra_chunks.append(section)
+
+    _kb_chunks = [c.strip() for c in raw_sections if c.strip().startswith("###")]
+    _kb_chunks.extend(extra_chunks)
+
+    _kb_vectorizer = TfidfVectorizer()
+    _kb_vectors = _kb_vectorizer.fit_transform(_kb_chunks)
+
+_RAG_MAX_CHARS = 2500 # ~625 tokens (per query) — leaves room for system prompt + chat history
+
+def _retrieve(query: str, top_k: int = 3) -> list[str]:
+    """Return relevant glossary chunks within a character budget."""
+    _ensure_kb()
+    if not _kb_chunks or _kb_vectorizer is None:
+        return []
+    q_vec = _kb_vectorizer.transform([query])
+    scores = cosine_similarity(q_vec, _kb_vectors).flatten()
+    top_idx = np.argsort(scores)[::-1][:top_k]
+
+    selected: list[str] = []
+    budget = _RAG_MAX_CHARS
+    for i in top_idx:
+        if scores[i] <= 0:
+            break
+        chunk = _kb_chunks[i]
+        if len(chunk) <= budget:
+            selected.append(chunk)
+            budget -= len(chunk)
+        elif budget > 200:
+            # Truncate at the last complete line within budget
+            truncated = chunk[:budget].rsplit("\n", 1)[0]
+            selected.append(truncated + "\n  ...")
+            break
+        else:
+            break
+    return selected
+
+class _RAGChat(Chat):
+    """Chat subclass that injects per-query RAG context.
+
+    ChatGithub is a factory function (not a class), so we subclass Chat
+    directly and swap __class__ after creation. querychat internally
+    deep-copies the client per session — deepcopy preserves __class__,
+    so the override survives.
+    """
+
+    async def stream_async(self, *args, **kwargs):
+        if args:
+            user_input = args[0]
+            chunks = _retrieve(user_input, top_k=3)
+            if chunks:
+                context = "\n\n".join(chunks)
+                user_input = (
+                    f"Relevant domain context:\n{context}\n\nQuestion: {user_input}"
+                )
+            args = (user_input,) + args[1:]
+
+        stream = await super().stream_async(*args, **kwargs)
+        return self._safe_stream(stream)
+
+    @staticmethod
+    async def _safe_stream(stream):
+        """Wrap the chat stream to catch token-limit errors gracefully."""
+        try:
+            async for chunk in stream:
+                yield chunk
+        except Exception as e:
+            if "413" in str(e) or "tokens_limit" in str(e):
+                yield (
+                    "\n\n**Chat history is too long for this model's token limit.** "
+                    "Please click the **Reset Chat** button in the sidebar to "
+                    "start a new conversation."
+                )
+            else:
+                raise
 
 @cache
 def _get_qc():
     """Lazily create the QueryChat instance (deferred until first use)."""
+    _ensure_kb()
+    client = ChatGithub(model="gpt-4.1-mini")
+    client.__class__ = _RAGChat
     return querychat.QueryChat(
         df,
         "financial_data",
         data_description=DATA_DESCRIPTION,
-        extra_instructions=_build_extra_instructions(),
+        extra_instructions=EXTRA_INSTRUCTIONS,
         greeting=GREETING,
-        client=ChatGithub(model="gpt-4.1-mini"),
+        client=client,
     )
-
 
 def _has_token():
     """Check whether GITHUB_TOKEN is available."""
@@ -261,6 +361,11 @@ def ai_explorer_ui():
     qc = _get_qc()
     sidebar = ui.sidebar(
         qc.ui(),
+        ui.input_action_button(
+            "reset_chat",
+            "Reset Chat",
+            class_="btn btn-outline-secondary btn-sm mt-2 w-100",
+        ),
         open="desktop",
         width=400,
     )
@@ -331,6 +436,21 @@ def ai_explorer_server(input, output, session):
 
     qc = _get_qc()
     qc_vals = qc.server()
+
+    @reactive.effect
+    @reactive.event(input.reset_chat)
+    async def _reset_chat():
+        await session.send_custom_message("reload", {})
+
+    ui.insert_ui(
+        ui.tags.script(
+            "Shiny.addCustomMessageHandler('reload', function(msg) {"
+            "  window.location.reload();"
+            "});"
+        ),
+        selector="body",
+        where="beforeEnd",
+    )
 
     @render.text
     def ai_title():
