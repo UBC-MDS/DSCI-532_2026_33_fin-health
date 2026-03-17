@@ -330,15 +330,17 @@ class _RAGChat(Chat):
 @cache
 def _get_qc():
     """Lazily create the QueryChat instance (deferred until first use)."""
+    _ensure_kb()
+    client = ChatGithub(model="gpt-4.1-mini")
+    client.__class__ = _RAGChat
     return querychat.QueryChat(
         df,
         "financial_data",
         data_description=DATA_DESCRIPTION,
-        extra_instructions=_build_extra_instructions(),
+        extra_instructions=EXTRA_INSTRUCTIONS,
         greeting=GREETING,
-        client=ChatGithub(model="gpt-4.1-mini"),
+        client=client,
     )
-
 
 def _has_token():
     """Check whether GITHUB_TOKEN is available."""
