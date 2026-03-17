@@ -174,42 +174,51 @@ Users viewing the fin-health dashboard encounter financial metrics (ROE, EBITDA,
 
 ### 3.2 Knowledge Base
 
-A plain-text glossary file at `data/knowledge_base/finance_glossary.txt` containing definitions for financial terms and metrics present in the dataset:
+A plain-text glossary file at `data/knowledge_base/finance_glossary.txt` (~570 lines) containing:
 
+**Metric definitions** (with formulas, healthy ranges, dataset ranges, and per-sector industry benchmarks):
 - Net Profit Margin, ROE, ROA, ROI
-- Revenue, Net Income, EBITDA, Gross Profit
-- Current Ratio, Debt/Equity Ratio
-- Cash Flow from Operating, Investing, Financing
-- Market Cap, Earnings Per Share, Free Cash Flow per Share
-- Shareholder Equity, Return on Tangible Equity
+- Revenue, Net Income, EBITDA, Gross Profit, EPS
+- Current Ratio, Debt/Equity Ratio, Shareholder Equity
+- Cash Flow from Operating, Investing, Financing; Free Cash Flow per Share
+- Market Cap, Return on Tangible Equity, Number of Employees, Inflation Rate
 
-Each entry includes: the term, a plain-language definition, how it is calculated, what it indicates about a company's health, and the approximate value range in the dataset.
+**Contextual sections:**
+- Sector Definitions (8 sectors mapped to 12 tickers)
+- How to Interpret Financial Health (7-point checklist with sector-aware caveats)
+- Cross-Metric Relationships (e.g., high ROE + high D/E = leverage-driven returns)
+- Company Context & Notable Outliers (SHLDQ bankruptcy, AAPL buyback strategy, etc.)
+- Macroeconomic Events in the Dataset (2009 GFC recovery, 2020 COVID, 2022 inflation)
 
-### 3.3 Integration with querychat
+Each metric entry includes industry-specific context explaining *why* different sectors have different norms (e.g., SaaS companies run lower current ratios because of predictable receivables; banks carry high D/E because leverage IS their business model).
 
-The glossary is loaded at startup by `_load_glossary()` in `src/pages/ai_explorer.py`
-and injected into the LLM's system prompt inside `<finance_glossary>` XML tags via
-`_build_extra_instructions()`. This approach appends the full glossary text to the
-`EXTRA_INSTRUCTIONS` string, which is passed to `querychat.QueryChat()` as the
-`extra_instructions` parameter.
+### 3.3 Integration with querychat — TF-IDF per-query retrieval
 
-When a user asks about a financial term (e.g., "What does ROE mean?"), the LLM
-retrieves the definition from the glossary context rather than generating one from
-memory, ensuring accurate and consistent explanations grounded in the knowledge base.
+Rather than injecting the full glossary into the system prompt (context-stuffing), we use **TF-IDF retrieval** to inject only the most relevant chunks per query:
 
-Rule 7 in `EXTRA_INSTRUCTIONS` explicitly directs the LLM to consult the
-`<finance_glossary>` for term definitions:
+```
+User question → TF-IDF cosine similarity → top-3 chunks → prepend to user message → LLM
+```
 
-> "When the user asks what a metric means or how to interpret a value, consult the
-> <finance_glossary> below and cite the definition, formula, and healthy range.
-> Always ground your explanation in the glossary rather than generating definitions
-> from memory."
+**Architecture in `src/pages/ai_explorer.py`:**
+
+1. **`_ensure_kb()`** — Lazily loads the glossary file and splits it into chunks by `###` headings (one chunk per metric) plus `##` sections (sector definitions, health interpretation, cross-metric relationships, company context, macro events). Builds a TF-IDF vocabulary index over all chunks.
+
+2. **`_retrieve(query, top_k=3)`** — Transforms the user's question into a TF-IDF vector, computes cosine similarity against all chunks, and returns the top-k most relevant chunks.
+
+3. **`_RAGChat(Chat)`** — A subclass of `chatlas.Chat` that overrides `stream_async`. For each user message, it retrieves relevant chunks and prepends them as "Relevant domain context:" before delegating to `super().stream_async()`. Since `ChatGithub` is a factory function (not a class), we subclass `Chat` directly and swap `__class__` on the factory-created instance. This survives querychat's internal `deepcopy` because deepcopy preserves `__class__`, unlike instance-level monkey-patches which would be lost.
+
+4. **Rule 7 in `EXTRA_INSTRUCTIONS`** directs the LLM to use the domain context provided alongside each question, cite industry benchmarks, and compare values against sector averages.
+
+**Why TF-IDF over embeddings:** The glossary uses exact financial terms (e.g., "current ratio", "debt equity") that match user queries well on term overlap alone. TF-IDF requires no API key, no model download, and adds minimal latency. For a structured domain glossary, this is sufficient; semantic embeddings would be warranted for free-form natural language with synonyms and paraphrases.
+
+**Dependencies:** `scikit-learn` (TfidfVectorizer, cosine_similarity), `numpy` — both already in `requirements.txt`.
 
 ### 3.4 Documentation Requirements
 
-- **GitHub Issue:** Document option choice (Option C) and motivation for choosing a finance glossary
+- **GitHub Issue:** Document option choice (Option C) and motivation for choosing a finance glossary with per-query retrieval
 - **Specification:** This section (reflected before code is written)
-- **Demonstration:** At least one query where RAG context visibly improves the response compared to without it
+- **Demonstration:** At least one query where RAG context visibly improves the response compared to without it (see `notebooks/rag.ipynb` for side-by-side comparisons)
 
 ---
 
@@ -227,20 +236,20 @@ Rule 7 in `EXTRA_INSTRUCTIONS` explicitly directs the LLM to consult the
 
 Each test includes a one-sentence docstring describing what behavior is verified and why it matters.
 
-### 4.2 Pytest Unit Test
+### 4.2 Pytest Unit Tests (`tests/test_health_status.py`)
 
-Refactor at least 1 function from the app logic and write a pytest unit test for it. Candidates:
+Refactored health-status classification logic from `company.py` into two pure functions in `src/components/health_status.py`:
 
-- A data transformation or aggregation function extracted from a reactive calc
-- The `_infer_metric()` function in `ai_explorer.py` (already extracted)
+- **`classify_health(value, healthy, warning, higher_is_better)`** — returns `"healthy"`, `"warning"`, or `"danger"` based on threshold comparison. Replaces 4 repeated if/elif/else blocks in `company.py`.
+- **`format_currency(value)`** — formats dollar values as `"$1,234M"` or `"-$567M"`. Replaces inline `fmt()` closure in `p2_cash_flows`.
 
-### 4.3 Running Tests
+24 unit tests across 3 test classes:
 
-Single command documented in README:
-
-```bash
-pytest tests/ -v
-```
+| Class | Tests | Coverage |
+|-------|-------|----------|
+| `TestClassifyHealthHigherIsBetter` | 12 | Boundary values for NPM (healthy=10, warning=0), ROE (healthy=15, warning=0), Current Ratio (healthy=1.5, warning=1.0) |
+| `TestClassifyHealthLowerIsBetter` | 7 | Boundary values for Debt/Equity (healthy=1.0, warning=2.0, `higher_is_better=False`) |
+| `TestFormatCurrency` | 5 | Positive, negative, zero, large, and small-negative values |
 
 ---
 
