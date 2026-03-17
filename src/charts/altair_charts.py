@@ -134,22 +134,29 @@ def build_peer_scatter(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
     """Scatter plot of Revenue vs selected metric."""
     if data.empty:
         return empty_chart()
+
+    # When metric is Revenue, Y-axis would duplicate X-axis — show Net Income instead
+    y_metric = "Net Income" if metric == "Revenue" else metric
+    y_unit = "USD" if metric == "Revenue" else unit
+
     return (
         alt.Chart(data)
-        .mark_circle(size=60)
+        .mark_circle(size=60, opacity=0.6)
         .encode(
             x=alt.X("Revenue:Q", title="Revenue ($)"),
-            y=alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
+            y=alt.Y(f"{y_metric}:Q", title=f"{y_metric} {y_unit}"),
             color=alt.Color("Category:N", scale=alt.Scale(range=PALETTE)),
             tooltip=[
                 "Company",
                 "Category",
                 "Year:O",
                 alt.Tooltip("Revenue:Q", format=",.0f"),
-                alt.Tooltip(f"{metric}:Q", format=",.2f"),
+                alt.Tooltip(f"{y_metric}:Q", format=",.2f"),
             ],
         )
-        .properties(title=f"Revenue vs {metric}", width="container", height="container")
+        .properties(
+            title=f"Revenue vs {y_metric}", width="container", height="container"
+        )
     )
 
 

@@ -38,6 +38,7 @@ GLOSSARY_PATH = (
 
 _orig_update_dashboard_impl = _qc_tools._update_dashboard_impl
 
+
 def _patched_update_dashboard_impl(data_source, update_fn):
     _orig_fn = _orig_update_dashboard_impl(data_source, update_fn)
 
@@ -75,6 +76,7 @@ def _patched_update_dashboard_impl(data_source, update_fn):
         return result
 
     return _wrapper
+
 
 _qc_tools._update_dashboard_impl = _patched_update_dashboard_impl
 
@@ -224,6 +226,7 @@ _kb_chunks: list[str] | None = None
 _kb_vectorizer: TfidfVectorizer | None = None
 _kb_vectors = None
 
+
 def _ensure_kb():
     """Build the TF-IDF knowledge-base index (lazy, once)."""
     global _kb_chunks, _kb_vectorizer, _kb_vectors
@@ -259,7 +262,11 @@ def _ensure_kb():
     _kb_vectorizer = TfidfVectorizer()
     _kb_vectors = _kb_vectorizer.fit_transform(_kb_chunks)
 
-_RAG_MAX_CHARS = 2500 # ~625 tokens (per query) — leaves room for system prompt + chat history
+
+_RAG_MAX_CHARS = (
+    2500  # ~625 tokens (per query) — leaves room for system prompt + chat history
+)
+
 
 def _retrieve(query: str, top_k: int = 3) -> list[str]:
     """Return relevant glossary chunks within a character budget."""
@@ -287,6 +294,7 @@ def _retrieve(query: str, top_k: int = 3) -> list[str]:
         else:
             break
     return selected
+
 
 class _RAGChat(Chat):
     """Chat subclass that injects per-query RAG context.
@@ -327,6 +335,7 @@ class _RAGChat(Chat):
             else:
                 raise
 
+
 @cache
 def _get_qc():
     """Lazily create the QueryChat instance (deferred until first use)."""
@@ -341,6 +350,7 @@ def _get_qc():
         greeting=GREETING,
         client=client,
     )
+
 
 def _has_token():
     """Check whether GITHUB_TOKEN is available."""
