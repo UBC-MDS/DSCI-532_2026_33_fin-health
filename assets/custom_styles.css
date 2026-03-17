@@ -143,7 +143,7 @@ h3, h4 {
 }
 
 .kpi-label {
-    font-size: clamp(0.5rem, 0.75vw, 0.7rem);
+    font-size: clamp(0.65rem, 1vw, 0.85rem);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -633,4 +633,17 @@ body > .container-fluid {
     white-space: normal;
     word-wrap: break-word;
     padding: 0.5rem 1rem;
+}
+
+/* Tighter padding for 4-column KPI layout */
+.kpi-card-row .card .card-body {
+    padding: 0.2rem 0.5rem 0.4rem;
+}
+
+.kpi-card-row .card .card-header {
+    padding: 0.2rem 0.5rem 0;
+}
+
+.kpi-card-row .kpi-value {
+    font-size: clamp(1rem, 2vw, 1.75rem);
 }

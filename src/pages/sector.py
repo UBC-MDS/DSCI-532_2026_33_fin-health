@@ -57,7 +57,12 @@ def sector_ui():
     card_top_sector = kpi_card(
         header="Top Sector",
         value_id="p1_top_sector",
-        label_id="p1_index_performance_display",
+        label_id="p1_top_sector_label",
+    )
+    card_index_margin = kpi_card(
+        header="Index Margin",
+        value_id="p1_index_margin_value",
+        label_id="p1_index_margin_label",
     )
     card_revenue_growth = kpi_card(
         header="Revenue Growth",
@@ -69,8 +74,9 @@ def sector_ui():
         ui.layout_columns(
             card_avg_margin,
             card_top_sector,
+            card_index_margin,
             card_revenue_growth,
-            col_widths=[4, 4, 4],
+            col_widths=[3, 3, 3, 3],
         ),
         class_="kpi-card-row",
     )
@@ -210,9 +216,23 @@ def sector_server(input, output, session):
         top = filtered.groupby("Category")["Net Profit Margin"].mean().idxmax()
         return top
 
+    @render.ui
+    def p1_top_sector_label():
+        """Show the top sector's avg net profit margin as sublabel."""
+        filtered = p1_filtered_data()
+        if filtered.empty:
+            return ui.tags.span()
+        sector_margins = filtered.groupby("Category")["Net Profit Margin"].mean()
+        top_margin = sector_margins.max()
+        return ui.tags.p(
+            f"AVG NET PROFIT MARGIN FOR THE PERIOD: {top_margin:.1f}%",
+            class_="kpi-label",
+            style="margin-top: 0.5rem;",
+        )
+
     @reactive.calc
     def p1_index_margin():
-        """Calculate Index Performance for 'p1_index_performance_display'"""
+        """Calculate Index Performance for 'p1_index_margin_value'"""
         filtered_df = p1_filtered_data()
         if filtered_df.empty:
             return 0.0
@@ -223,15 +243,26 @@ def sector_server(input, output, session):
             return 0.0
         return (total_net_income / total_revenue) * 100
 
-    @render.ui
-    def p1_index_performance_display():
-        """Render Index Performance of the Top sector"""
+    @render.text
+    def p1_index_margin_value():
+        """Display the overall weighted profit margin."""
+        filtered = p1_filtered_data()
+        if filtered.empty:
+            return "Data Unavailable"
         margin = p1_index_margin()
+        return f"{margin:.1f}%"
+
+    @render.ui
+    def p1_index_margin_label():
+        """Show 'OVERALL WEIGHTED MARGIN' sublabel with company count."""
+        filtered = p1_filtered_data()
+        if filtered.empty:
+            return ui.tags.span()
+        n = filtered["Company"].nunique()
         return ui.tags.p(
-            "INDEX PERFORMANCE: ",
-            ui.tags.strong(f"{margin:.1f}%"),
-            " NET PROFIT MARGIN",
+            f"OVERALL WEIGHTED MARGIN \u00b7 {n} COMPANIES",
             class_="kpi-label",
+            style="margin-top: 0.5rem;",
         )
 
     # ---------------Revenue Growth---------------
@@ -261,8 +292,12 @@ def sector_server(input, output, session):
 
     @render.ui
     def p1_revenue_growth_label():
+        filtered = p1_filtered_data()
+        if filtered.empty:
+            return ui.tags.span()
+        n = filtered["Company"].nunique()
         return ui.tags.p(
-            "YEAR OVER YEAR",
+            f"AGGREGATE YOY \u00b7 {n} COMPANIES",
             class_="kpi-label",
             style="margin-top: 0.5rem;",
         )
