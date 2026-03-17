@@ -259,7 +259,6 @@ def _ensure_kb():
     _kb_vectorizer = TfidfVectorizer()
     _kb_vectors = _kb_vectorizer.fit_transform(_kb_chunks)
 
-
 _RAG_MAX_CHARS = 2500 # ~625 tokens (per query) — leaves room for system prompt + chat history
 
 def _retrieve(query: str, top_k: int = 3) -> list[str]:
@@ -288,6 +287,45 @@ def _retrieve(query: str, top_k: int = 3) -> list[str]:
         else:
             break
     return selected
+
+class _RAGChat(Chat):
+    """Chat subclass that injects per-query RAG context.
+
+    ChatGithub is a factory function (not a class), so we subclass Chat
+    directly and swap __class__ after creation. querychat internally
+    deep-copies the client per session — deepcopy preserves __class__,
+    so the override survives.
+    """
+
+    async def stream_async(self, *args, **kwargs):
+        if args:
+            user_input = args[0]
+            chunks = _retrieve(user_input, top_k=3)
+            if chunks:
+                context = "\n\n".join(chunks)
+                user_input = (
+                    f"Relevant domain context:\n{context}\n\nQuestion: {user_input}"
+                )
+            args = (user_input,) + args[1:]
+
+        stream = await super().stream_async(*args, **kwargs)
+        return self._safe_stream(stream)
+
+    @staticmethod
+    async def _safe_stream(stream):
+        """Wrap the chat stream to catch token-limit errors gracefully."""
+        try:
+            async for chunk in stream:
+                yield chunk
+        except Exception as e:
+            if "413" in str(e) or "tokens_limit" in str(e):
+                yield (
+                    "\n\n**Chat history is too long for this model's token limit.** "
+                    "Please click the **Reset Chat** button in the sidebar to "
+                    "start a new conversation."
+                )
+            else:
+                raise
 
 @cache
 def _get_qc():
