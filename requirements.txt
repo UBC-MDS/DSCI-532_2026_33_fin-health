@@ -15,4 +15,5 @@ vegafusion==2.0.3
 # AI & Utilities
 chatlas==0.15.2
 querychat==0.5.1
+scikit-learn==1.8.0
 python-dotenv==1.2.2
