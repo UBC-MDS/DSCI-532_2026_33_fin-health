@@ -105,6 +105,13 @@ def sector_ui():
         sector_select,
         metric_select,
         reset,
+        ui.hr(),
+        ui.tags.small(
+            "Hover over the ",
+            ui.tags.span("\u24d8", style="opacity:0.7;"),
+            " icon on any card for an explanation.",
+            style="color: var(--text-secondary, #6b7280); line-height: 1.4;",
+        ),
         open="desktop",
     )
 

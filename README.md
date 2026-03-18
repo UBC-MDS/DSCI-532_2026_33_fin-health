@@ -50,53 +50,50 @@ Below is a short preview of the dashboard interface.
 
 For a more comprehensive guide on development guidelines for this project, check out our contributing page [here](./CONTRIBUTING.md).
 
-1. Install [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) as a prerequisite.
+1.  Install [`conda`](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) as a prerequisite.
 
-2. Open terminal and run the following commands.
+2.  Open terminal and run the following commands.
 
-3. Clone the repository:
+3.  Clone the repository:
 
-```bash
-git clone https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health.git
-cd DSCI-532_2026_33_fin-health
-```
+    ```bash
+    git clone https://github.com/UBC-MDS/DSCI-532_2026_33_fin-health.git
+    cd DSCI-532_2026_33_fin-health
+    ```
 
-4. Create and activate the conda environment:
+4.  Create and activate the conda environment:
 
-```bash
-conda env create -f environment.yml
-conda activate fin-health
-```
+    ```bash
+    conda env create -f environment.yml
+    conda activate fin-health
+    ```
 
-5. Install `chromium` via `playwright`:
+5.  Install `chromium` via `playwright`:
+    
+    > Note that `playwright` is included in `environment.yml`
 
-```bash
-playwright install chromium
-```
+    ```bash
+    playwright install chromium
+    ```
 
-6. Run fin-health Shiny dashboard locally:
+6.  Run fin-health Shiny dashboard locally:
 
-```bash
-shiny run --reload src/app.py
-```
+    ```bash
+    shiny run --reload src/app.py
+    ```
 
-7. Run the test suite:
+7.  Run the test suite:
 
-To install playwright:
-```bash
-playwright install
-```
+    ```bash
+    # Unit tests only (fast)
+    pytest -v --ignore=tests/test_app_playwright.py
 
-```bash
-# Unit tests only (fast)
-pytest -v --ignore=tests/test_app_playwright.py
+    # Playwright end-to-end tests (requires playwright installed)
+    pytest tests/test_app_playwright.py -v --headed # headed flag to see browser testing
 
-# Playwright end-to-end tests (requires playwright installed)
-pytest tests/test_app_playwright.py -v
-
-# All tests
-pytest -v
-```
+    # All tests
+    pytest -v --headed # headed flag to see browser testing
+    ```
 
 ## Contributors
 

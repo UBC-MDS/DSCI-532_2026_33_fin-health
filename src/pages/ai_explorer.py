@@ -97,9 +97,9 @@ _METRIC_KEYWORDS = {
     "net income": "Net Income",
     "ebitda": "EBITDA",
     "current ratio": "Current Ratio",
-    "debt/equity": "Debt\\Equity Ratio",
-    "debt equity": "Debt\\Equity Ratio",
-    "debt to equity": "Debt\\Equity Ratio",
+    "debt/equity": "Debt/Equity Ratio",
+    "debt equity": "Debt/Equity Ratio",
+    "debt to equity": "Debt/Equity Ratio",
 }
 
 

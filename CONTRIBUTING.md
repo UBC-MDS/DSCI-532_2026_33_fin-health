@@ -125,8 +125,9 @@ local development.
    conda activate fin-health
    ```
 
-
 5. Install `chromium` via `playwright` for browser testing:
+   
+   > Note that `playwright` is included in `environment.yml`
 
    ```bash
    playwright install chromium
