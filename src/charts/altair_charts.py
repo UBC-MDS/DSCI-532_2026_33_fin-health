@@ -119,7 +119,13 @@ def build_metric_trend(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
         .encode(
             alt.X("Year:O", title="Year"),
             alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
-            color=alt.Color("Category:N", scale=alt.Scale(range=PALETTE)),
+            color=alt.Color(
+                "Category:N",
+                scale=alt.Scale(range=PALETTE),
+                legend=alt.Legend(
+                    orient="bottom", columns=4, title=None,
+                ),
+            ),
             tooltip=["Year", "Category", alt.Tooltip(f"{metric}:Q", format=".2f")],
         )
         .properties(
@@ -134,22 +140,35 @@ def build_peer_scatter(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
     """Scatter plot of Revenue vs selected metric."""
     if data.empty:
         return empty_chart()
+
+    # When metric is Revenue, Y-axis would duplicate X-axis — show Net Income instead
+    y_metric = "Net Income" if metric == "Revenue" else metric
+    y_unit = "USD" if metric == "Revenue" else unit
+
     return (
         alt.Chart(data)
-        .mark_circle(size=60)
+        .mark_circle(size=60, opacity=0.6)
         .encode(
             x=alt.X("Revenue:Q", title="Revenue ($)"),
-            y=alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
-            color=alt.Color("Category:N", scale=alt.Scale(range=PALETTE)),
+            y=alt.Y(f"{y_metric}:Q", title=f"{y_metric} {y_unit}"),
+            color=alt.Color(
+                "Category:N",
+                scale=alt.Scale(range=PALETTE),
+                legend=alt.Legend(
+                    orient="bottom", columns=4, title=None,
+                ),
+            ),
             tooltip=[
                 "Company",
                 "Category",
                 "Year:O",
                 alt.Tooltip("Revenue:Q", format=",.0f"),
-                alt.Tooltip(f"{metric}:Q", format=",.2f"),
+                alt.Tooltip(f"{y_metric}:Q", format=",.2f"),
             ],
         )
-        .properties(title=f"Revenue vs {metric}", width="container", height="container")
+        .properties(
+            title=f"Revenue vs {y_metric}", width="container", height="container"
+        )
     )
 
 
@@ -172,6 +191,7 @@ def build_revenue_over_time(data: pd.DataFrame, company: str) -> alt.Chart:
                     domain=["Revenue", "Net Income"],
                     range=["#2563eb", "#009e73"],
                 ),
+                legend=alt.Legend(orient="bottom", title=None),
             ),
             xOffset="Metric:N",
             tooltip=[
@@ -246,6 +266,7 @@ def build_cash_flows(data: pd.DataFrame, company: str) -> alt.Chart:
                     domain=["Operating", "Investing", "Financing"],
                     range=["#2563eb", "#c0392b", "#f59e0b"],
                 ),
+                legend=alt.Legend(orient="bottom", title=None),
             ),
             xOffset="Flow Type:N",
             tooltip=[
@@ -319,7 +340,11 @@ def build_company_trend(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart
         .encode(
             alt.X("Year:O", title="Year"),
             alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
-            color=alt.Color("Company:N", scale=alt.Scale(range=PALETTE)),
+            color=alt.Color(
+                "Company:N",
+                scale=alt.Scale(range=PALETTE),
+                legend=alt.Legend(orient="bottom", columns=4, title=None),
+            ),
             tooltip=["Year", "Company", alt.Tooltip(f"{metric}:Q", format=".2f")],
         )
         .properties(

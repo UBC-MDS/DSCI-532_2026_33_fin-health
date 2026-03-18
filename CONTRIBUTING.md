@@ -125,7 +125,15 @@ local development.
    conda activate fin-health
    ```
 
-5. Create a branch for local development using the default branch (typically `develop`) as a starting point. Use `fix` or `feature` as a prefix for your branch name.
+5. Install `chromium` via `playwright` for browser testing:
+   
+   > Note that `playwright` is included in `environment.yml`
+
+   ```bash
+   playwright install chromium
+   ```
+
+6. Create a branch for local development using the default branch (typically `develop`) as a starting point. Use `fix` or `feature` as a prefix for your branch name.
 
     ```shell
     git checkout develop
@@ -134,20 +142,20 @@ local development.
 
     Now you can make your changes locally.
 
-6. When you're done making changes, lint and format your code with [Ruff](https://docs.astral.sh/ruff/):
+7. When you're done making changes, lint and format your code with [Ruff](https://docs.astral.sh/ruff/):
 
     ```bash
     ruff check src/ --fix .
     ruff format src/
     ```
 
-7. Check that your changes pass our test suite.
+8. Check that your changes pass our test suite.
 
     ```bash
     pytest -v --cov --cov-branch --cov-report=term-missing --cov-report=xml
     ```
 
-8. Commit your changes and push your branch to GitHub. Please use [semantic
+9. Commit your changes and push your branch to GitHub. Please use [semantic
    commit messages](https://www.conventionalcommits.org/).
 
     ```shell
@@ -156,7 +164,7 @@ local development.
     git push -u origin fix-name-of-your-bugfix
     ```
 
-9. Open the link displayed in the message when pushing your new branch in order to submit a pull request.
+10. Open the link displayed in the message when pushing your new branch in order to submit a pull request.
 
 ### Pull Request Guidelines
 
@@ -165,3 +173,46 @@ Before you submit a pull request, check that it meets these guidelines:
 1. The pull request should include tests.
 2. If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring.
 3. Your pull request will automatically be checked by the full test suite. It needs to pass all of them before it can be considered for merging.
+
+## Milestone 3 Retrospective
+
+### What went well
+
+- **Modular refactor**: Breaking the monolithic `app.py` into `data.py`, `components/`, `charts/`, and `pages/` made parallel development much smoother. Team members could work on separate files without constant merge conflicts.
+- **Clear task ownership**: Assigning specific files to each team member (e.g., Jiro owns `data.py` and `ai_explorer.py`, Shruti owns adaptive charts) prevented overlap and reduced coordination overhead.
+- **querychat integration**: The fin-chat page with natural language data filtering was successfully delivered, adding significant user value.
+- **Page 2 completion**: All Company Health KPIs and charts became fully reactive, replacing M2 placeholders.
+
+### What could be improved
+
+- **Blocking dependencies**: Tasks 3–5 were blocked by Task 2 (data module extraction), which created a bottleneck early in the sprint. We should identify and merge blocking PRs within the first 2 days.
+- **Testing coverage**: LLM behavior tests were added but unit test coverage for chart builders and components was not comprehensive enough. M4 adds playwright end-to-end tests to address this.
+- **PR review turnaround**: Some PRs sat unreviewed for 2–3 days. Setting a 24-hour review SLA would help.
+
+### Key lessons
+
+1. Merge blocking PRs (data modules, shared utilities) within the first 2 days of a milestone.
+2. Each PR should include at least one test for the new functionality.
+3. Keep PR scope small — one logical change per PR.
+
+## Milestone 4 Collaboration Norms
+
+Building on M3 lessons, the team adopts the following norms for M4:
+
+1. **24-hour review SLA**: All PRs must receive at least one review within 24 hours of opening. If the assigned reviewer is unavailable, any team member may review.
+
+2. **Blocking PRs first**: Environment setup and data migration PRs must be merged within the first 2 days. All other work branches from the updated `develop`.
+
+3. **Test with every feature**: Every feature PR must include at least one test (unit or integration). Playwright tests count for UI features.
+
+4. **Spec before code**: Specification documents (`reports/m4_spec.md`) and `CONTRIBUTING.md` updates are merged before any feature branches are started.
+
+5. **Communication**: Post daily async standup updates in the team Slack channel covering: what you did, what you plan to do, and any blockers.
+
+6. **Branch naming**: Follow the established convention:
+   - `docs/` for documentation
+   - `chore/` for environment/config
+   - `feat/` for new features
+   - `fix/` for bug fixes
+
+7. **Commit messages**: Continue using [Conventional Commits](https://www.conventionalcommits.org/) format (e.g., `feat:`, `fix:`, `docs:`, `chore:`, `test:`).
