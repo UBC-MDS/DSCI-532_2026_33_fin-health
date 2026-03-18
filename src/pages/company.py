@@ -59,6 +59,18 @@ def company_ui():
         category_select,
         company_select,
         year_select,
+        ui.hr(),
+        ui.tags.small(
+            "Hover over the ",
+            ui.tags.span("\u24d8", style="opacity:0.7;"),
+            " icon on any card for an explanation. ",
+            "Hover over the ",
+            ui.tags.span("\u2713", style="color:#065f46; font-weight:bold;"),
+            " or ",
+            ui.tags.span("!", style="color:#92400e; font-weight:bold;"),
+            " status badges for health definitions.",
+            style="color: var(--text-secondary, #6b7280); line-height: 1.4;",
+        ),
         open="desktop",
     )
 

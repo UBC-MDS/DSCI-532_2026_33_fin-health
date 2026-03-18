@@ -119,7 +119,13 @@ def build_metric_trend(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
         .encode(
             alt.X("Year:O", title="Year"),
             alt.Y(f"{metric}:Q", title=f"{metric} {unit}"),
-            color=alt.Color("Category:N", scale=alt.Scale(range=PALETTE)),
+            color=alt.Color(
+                "Category:N",
+                scale=alt.Scale(range=PALETTE),
+                legend=alt.Legend(
+                    orient="bottom", columns=4, title=None,
+                ),
+            ),
             tooltip=["Year", "Category", alt.Tooltip(f"{metric}:Q", format=".2f")],
         )
         .properties(
@@ -145,7 +151,13 @@ def build_peer_scatter(data: pd.DataFrame, metric: str, unit: str) -> alt.Chart:
         .encode(
             x=alt.X("Revenue:Q", title="Revenue ($)"),
             y=alt.Y(f"{y_metric}:Q", title=f"{y_metric} {y_unit}"),
-            color=alt.Color("Category:N", scale=alt.Scale(range=PALETTE)),
+            color=alt.Color(
+                "Category:N",
+                scale=alt.Scale(range=PALETTE),
+                legend=alt.Legend(
+                    orient="bottom", columns=4, title=None,
+                ),
+            ),
             tooltip=[
                 "Company",
                 "Category",
