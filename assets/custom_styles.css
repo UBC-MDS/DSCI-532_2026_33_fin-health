@@ -16,6 +16,7 @@
     --slate-900: #0f172a;
     --section-blue: #2980b9;
     --section-red: #c0392b;
+    --surface: #ffffff;
 }
 
 html, body {
@@ -69,7 +70,7 @@ h3, h4 {
 }
 
 .sidebar {
-    background-color: white;
+    background-color: var(--surface);
     border-right: 1px solid var(--slate-200);
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
     max-height: calc(100vh - 80px);
@@ -90,7 +91,7 @@ h3, h4 {
     border: 1px solid var(--slate-200);
     border-radius: 0.75rem;
     box-shadow: none;
-    background-color: white;
+    background-color: var(--surface);
     position: relative;
     overflow: hidden;
     transition: box-shadow 0.2s ease;
@@ -348,7 +349,7 @@ textarea,
 
 /* ── Sidebar collapse-toggle button ── */
 .bslib-sidebar-layout > .collapse-toggle {
-    background-color: white;
+    background-color: var(--surface);
     border: 1px solid var(--slate-200);
     border-radius: 0.5rem;
     width: 1.75rem;
@@ -384,7 +385,7 @@ body > .container-fluid {
 
 /* Navbar styling */
 .navbar {
-    background-color: white;
+    background-color: var(--surface);
     border-bottom: 1px solid var(--slate-200);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -593,7 +594,7 @@ body > .container-fluid {
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--slate-600);
-    background-color: white;
+    background-color: var(--surface);
     border: 1px solid var(--slate-200);
     border-radius: 6px;
     cursor: pointer;
@@ -613,7 +614,7 @@ body > .container-fluid {
     border-color: var(--slate-400);
     box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
     outline: none;
-    background-color: white;
+    background-color: var(--surface);
 }
 
 /* fin-chat: undo aggressive card styles inside sidebar/chat */
@@ -646,4 +647,188 @@ body > .container-fluid {
 
 .kpi-card-row .kpi-value {
     font-size: clamp(1rem, 2vw, 1.75rem);
+}
+
+/* ── Dark theme overrides ── */
+body.dark-theme {
+    --primary: #60a5fa;
+    --primary-light: #93c5fd;
+    --success: #34d399;
+    --danger: #f87171;
+    --warning: #fbbf24;
+    --info: #7dd3fc;
+    --slate-50: #0f172a;
+    --slate-100: #1e293b;
+    --slate-200: #334155;
+    --slate-400: #64748b;
+    --slate-600: #94a3b8;
+    --slate-700: #cbd5e1;
+    --slate-900: #f1f5f9;
+    --section-blue: #3b82f6;
+    --section-red: #ef4444;
+    --surface: #1e293b;
+    color: var(--slate-900);
+}
+
+/* Bootstrap form controls in dark mode */
+body.dark-theme .form-control,
+body.dark-theme .form-select,
+body.dark-theme .selectize-input,
+body.dark-theme .selectize-dropdown,
+body.dark-theme .selectize-dropdown-content {
+    background-color: var(--slate-100);
+    color: var(--slate-900);
+    border-color: var(--slate-200);
+}
+
+body.dark-theme .selectize-input.focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+body.dark-theme .selectize-dropdown .option.active {
+    background-color: var(--slate-200);
+    color: var(--slate-900);
+}
+
+body.dark-theme .form-label,
+body.dark-theme .control-label,
+body.dark-theme label {
+    color: var(--slate-700);
+}
+
+/* Slider track dark mode */
+body.dark-theme .irs--shiny .irs-bar,
+body.dark-theme .irs--shiny .irs-bar--single {
+    background: var(--primary);
+}
+
+body.dark-theme .irs--shiny .irs-line {
+    background-color: var(--slate-200);
+}
+
+body.dark-theme .irs--shiny .irs-min,
+body.dark-theme .irs--shiny .irs-max,
+body.dark-theme .irs--shiny .irs-single,
+body.dark-theme .irs--shiny .irs-from,
+body.dark-theme .irs--shiny .irs-to {
+    color: var(--slate-700);
+    background-color: var(--slate-100);
+}
+
+/* Buttons in dark mode */
+body.dark-theme .btn-outline-secondary {
+    color: var(--slate-700);
+    border-color: var(--slate-200);
+}
+
+body.dark-theme .btn-outline-secondary:hover {
+    color: var(--slate-900);
+    background-color: var(--slate-200);
+    border-color: var(--slate-400);
+}
+
+body.dark-theme .btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+body.dark-theme .btn-outline-primary:hover {
+    color: var(--slate-900);
+    background-color: var(--primary);
+}
+
+/* KPI status badges — dark-safe tints */
+body.dark-theme .kpi-status.healthy {
+    background-color: rgba(52, 211, 153, 0.2);
+    color: #6ee7b7;
+}
+
+body.dark-theme .kpi-status.warning {
+    background-color: rgba(251, 191, 36, 0.2);
+    color: #fcd34d;
+}
+
+body.dark-theme .kpi-status.danger {
+    background-color: rgba(248, 113, 113, 0.2);
+    color: #fca5a5;
+}
+
+/* Grid section tints — brighter on dark */
+body.dark-theme .grid-section-blue {
+    background-color: rgba(59, 130, 246, 0.12);
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.25),
+                0 2px 10px rgba(59, 130, 246, 0.12);
+}
+
+body.dark-theme .grid-section-red {
+    background-color: rgba(239, 68, 68, 0.12);
+    box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.25),
+                0 2px 10px rgba(239, 68, 68, 0.12);
+}
+
+/* Table rows in dark mode */
+body.dark-theme .table {
+    color: var(--slate-700);
+    --bs-table-bg: transparent;
+}
+
+body.dark-theme .table thead {
+    background-color: var(--slate-100);
+}
+
+body.dark-theme .table tbody tr:nth-child(odd) {
+    background-color: rgba(15, 23, 42, 0.4);
+}
+
+body.dark-theme .table tbody tr:hover {
+    background-color: var(--slate-200);
+}
+
+/* Shiny data grid dark mode */
+body.dark-theme .shiny-data-grid table {
+    color: var(--slate-700);
+}
+
+body.dark-theme .shiny-data-grid thead th {
+    background-color: var(--slate-100);
+    color: var(--slate-900);
+    border-color: var(--slate-200);
+}
+
+body.dark-theme .shiny-data-grid tbody td {
+    border-color: var(--slate-200);
+}
+
+/* Altair chart text readability on dark background */
+body.dark-theme .vega-embed text {
+    fill: var(--slate-700) !important;
+}
+
+body.dark-theme .vega-embed .mark-rule line,
+body.dark-theme .vega-embed .mark-rule rect {
+    stroke: var(--slate-200) !important;
+}
+
+/* Card hover shadow in dark mode */
+body.dark-theme .card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Sidebar collapse toggle shadow */
+body.dark-theme .bslib-sidebar-layout > .collapse-toggle {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Chat messages in dark mode */
+body.dark-theme .chat-message {
+    color: var(--slate-900);
+}
+
+/* Theme toggle button styling */
+#theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.5rem;
 }
